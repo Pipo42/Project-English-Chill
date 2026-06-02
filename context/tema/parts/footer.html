@@ -1,0 +1,57 @@
+<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"center"}} -->
+<div class="wp-block-group"></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"center"}} -->
+<div class="wp-block-group"><!-- wp:html -->
+<div style="position: relative; width: 80px; height: 0px; margin: 0 auto; overflow: visible; pointer-events: none;">
+  <!-- Humo -->
+  <div class="smoke" style="left: 50%; animation-delay: -2s;"></div>
+  <div class="smoke" style="left: 40%; animation-delay: -3s;"></div>
+  <div class="smoke" style="left: 60%; animation-delay: -1s;"></div>
+  <div class="smoke" style="left: 45%; animation-delay: -4s;"></div>
+  <div class="smoke" style="left: 55%; animation-delay: -2.5s;"></div>
+  <div class="smoke" style="left: 50%; animation-delay: -3.5s;"></div>
+
+  <style>
+    .smoke {
+      position: absolute;
+      bottom: 0;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: rise 4s infinite ease-in-out;
+      pointer-events: none; /* ← añadido */
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 0.4;
+      }
+      50% {
+        transform: translateX(-10px) translateY(-60px) scale(1.2);
+        opacity: 0.2;
+      }
+      100% {
+        transform: translateX(10px) translateY(-120px) scale(1.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</div>
+<!-- /wp:html --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"center"}} -->
+<div class="wp-block-group"><!-- wp:image {"lightbox":{"enabled":false},"id":164,"width":"203px","height":"auto","sizeSlug":"full","linkDestination":"custom","align":"center","style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}}} -->
+<figure class="wp-block-image aligncenter size-full is-resized" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)"><a href="https://englishandchill.com/about/"><img src="https://englishandchill.com/wp-content/uploads/2025/04/EC-Logo.svg" alt="" class="wp-image-164" style="width:203px;height:auto"/></a></figure>
+<!-- /wp:image --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"center"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","fontSize":"large","fontFamily":"aboreto"} -->
+<p class="has-text-align-center has-aboreto-font-family has-large-font-size">©2025</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->

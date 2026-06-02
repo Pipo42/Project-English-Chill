@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3rd ESO – LC5 — English &amp; Chill</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* ── Section labels (Caveat Brush) ── */
+    .section-label {
+      font-family: 'Caveat Brush', cursive;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      text-align: center;
+      margin: 2.5rem 0 1rem;
+    }
+    .section-label.grammar    { color: var(--color-contrast); }
+    .section-label.grammarexs { color: #560319; }
+
+    /* ── Separator SVG ── */
+    .separator-img {
+      display: block;
+      margin: 2.5rem auto;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ── Grammar tables (exact original style) ── */
+    .grammar-table-wrap {
+      width: 100%;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .grammar-table {
+      border-collapse: collapse;
+      border: 1px solid #000;
+      background-color: #f8f8f8;
+      color: #000;
+      text-align: center;
+      margin: 0 auto;
+      display: table;
+      word-wrap: break-word;
+      white-space: normal;
+      width: auto;
+      max-width: 100%;
+    }
+    .grammar-table th.caption-row {
+      background-color: #d1f6ff;
+      padding: 8px 16px;
+      border: 1px solid black;
+      font-weight: bold;
+      text-align: center;
+    }
+    .grammar-table th.subheader {
+      background-color: #aaf0c9;
+      padding: 8px 12px;
+      border: 1px solid black;
+      font-weight: bold;
+      text-align: center;
+    }
+    .grammar-table td {
+      padding: 6px 12px;
+      border: 1px solid black;
+      text-align: center;
+      vertical-align: middle;
+      word-wrap: break-word;
+      white-space: normal;
+    }
+    /* Colour coding matching originals */
+    .c-blue   { color: blue; }
+    .c-red    { color: red; }
+    .c-green  { color: green; }
+    .c-purple { color: purple; }
+
+    /* ── Nav buttons row ── */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    /* ── Exercise heading (accent-3 = #560319) ── */
+    .ex-heading {
+      color: #560319;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      font-weight: 700;
+      margin: 2rem 0 0.5rem;
+    }
+
+    /* ── fill_gaps component (exact original) ── */
+    .fill_gaps-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0;
+    }
+
+    .fill_gaps {
+      font-family: 'Caveat Brush', cursive;
+      font-size: 1.5rem;
+      color: #560319;
+      max-width: 50rem;
+      width: 100%;
+      border: 1px solid #560319;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 0 #560319;
+      margin-bottom: 14px; /* offset for the shadow */
+    }
+
+    .fill_gaps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .fill_gaps-item {
+      display: block;
+      padding: 10px 0;
+      border-bottom: 1px solid #560319;
+    }
+    .fill_gaps-item:last-child { border-bottom: none; }
+
+    .fill_gaps input[type="text"] {
+      font-family: inherit;
+      font-size: inherit;
+      text-align: center;
+      padding: 6px 10px;
+      border: 1px solid #560319;
+      border-radius: 1.25rem;
+      background: none;
+      color: #560319;
+      min-width: 80px;
+      width: auto;
+      transition: width 0.25s ease, padding 0.25s ease;
+    }
+
+    .fill_gaps input.correct   { color: green; background: #d4edda; border-color: green; }
+    .fill_gaps input.incorrect { color: red;   background: #f8d7da; border-color: red; }
+    .fill_gaps input.checked   { border-width: 1px; }
+
+    .correct-answer {
+      color: #856404;
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 0.75rem;
+      padding: 2px 8px;
+      margin-left: 0.5rem;
+      font-size: 0.9em;
+    }
+
+    .fill_gaps-buttons {
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .feedback {
+      margin-top: 1rem;
+      font-size: 2rem;
+      color: blue;
+      text-align: center;
+    }
+
+    /* ── Up button ── */
+    .up-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body id="top">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <span class="dotted-line" aria-hidden="true"></span>
+      <span class="site-title">English &amp; Chill</span>
+      <span class="dotted-line" aria-hidden="true"></span>
+    </div>
+  </header>
+
+  <main class="site-content">
+
+    <!-- Back button -->
+    <div class="back-row">
+      <a href="../3rd-eso.html" class="fancy-button fancy-back-button" style="--button-color:#b5e2ff;">
+        <span class="button_top">
+          <span class="button-text">←</span>
+        </span>
+      </a>
+    </div>
+
+    <!-- Nav anchor buttons -->
+    <div class="nav-buttons">
+      <a href="#grammar" class="fancy-button" style="--button_outline:#000000;">
+        <span class="button_top"><span class="button-text">Grammar</span></span>
+      </a>
+      <a href="#grammarexs" class="fancy-button" style="--button_outline:#560319;">
+        <span class="button_top"><span class="button-text">Grammar EXS</span></span>
+      </a>
+    </div>
+
+    <!-- Separator -->
+    <img src="https://englishandchill.com/wp-content/uploads/2025/05/Separator-2.svg"
+         alt="" class="separator-img"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <hr style="display:none; border:none; border-top:2px dashed #D7D3CC; margin:2rem auto; max-width:600px;">
+
+    <!-- ══════════════════════════════════
+         GRAMMAR
+    ══════════════════════════════════ -->
+    <p class="section-label grammar" id="grammar">Grammar</p>
+
+    <h1 class="wp-block-heading" style="text-align:center; margin-bottom:1rem;">Present Perfect</h1>
+
+    <!-- Table: Main Structure -->
+    <div class="grammar-table-wrap">
+      <table class="grammar-table">
+        <tr><th class="caption-row" colspan="2">Main Structure</th></tr>
+        <tr>
+          <td><span class="c-blue"><strong>Affirmative</strong></span></td>
+          <td>I <span class="c-blue">have worked</span> here <span class="c-purple">for</span> 4 years.</td>
+        </tr>
+        <tr>
+          <td><strong><span class="c-red">Negative</span></strong></td>
+          <td>She <span class="c-red">hasn't seen</span> that movie <span class="c-purple">since</span> she was a baby.</td>
+        </tr>
+        <tr>
+          <td><strong><span class="c-green">Question</span></strong></td>
+          <td><span class="c-green">Have</span> you <span class="c-green">been</span> to Paris?</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Table: Keywords -->
+    <div class="grammar-table-wrap">
+      <table class="grammar-table">
+        <tr><th class="caption-row" colspan="3">Keywords</th></tr>
+        <tr>
+          <th class="subheader">Keyword</th>
+          <th class="subheader">Used for</th>
+          <th class="subheader">Examples</th>
+        </tr>
+        <tr>
+          <td><span class="c-purple">for</span></td>
+          <td><span class="c-purple">periods of time</span></td>
+          <td>five years<br>ten months<br>four hours<br>a lot of time<br>a while<br>ages</td>
+        </tr>
+        <tr>
+          <td><span class="c-purple">since</span></td>
+          <td><span class="c-purple">dates</span></td>
+          <td>1995<br>I was a kid<br>you left university<br>my childhood<br>last week<br>my first birthday</td>
+        </tr>
+        <tr>
+          <td><span class="c-purple">ever</span></td>
+          <td><span class="c-purple">'alguna vez'</span></td>
+          <td><span class="c-green">Have</span> you <span class="c-purple">ever</span> <span class="c-green">watched</span> this movie?<br><span class="c-green">Has</span> she <span class="c-purple">ever</span> <span class="c-green">visited</span> New York?</td>
+        </tr>
+        <tr>
+          <td><span class="c-purple">never</span></td>
+          <td><span class="c-purple">'nunca'</span></td>
+          <td>We <span class="c-blue">have</span> <span class="c-purple">never</span> <span class="c-blue">done</span> this before.<br>My brother <span class="c-blue">has</span> <span class="c-purple">never</span> <span class="c-blue">broken</span> any glass at home.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h1 class="wp-block-heading" style="text-align:center; margin:1.5rem 0 1rem;">Present Perfect vs. Past Simple</h1>
+
+    <!-- Table: PP vs PS -->
+    <div class="grammar-table-wrap">
+      <table class="grammar-table">
+        <tr><th class="caption-row" colspan="2">Present Perfect | Past Simple</th></tr>
+        <tr>
+          <th class="subheader">(for/since/ever/never)<br>we don't mention when it happened</th>
+          <th class="subheader">(yesterday, last week, this morning…)<br>we mention when it happened</th>
+        </tr>
+        <tr>
+          <td>Jane <span class="c-blue">has won</span> many awards as an actress.</td>
+          <td>Jane <span class="c-blue">volunteered</span> for Green Peace <span class="c-purple">in 2010</span>.</td>
+        </tr>
+        <tr>
+          <td>Alfred <span class="c-blue">has looked after</span> Bruce <span class="c-purple">since</span> he was 11.</td>
+          <td>Bruce <span class="c-blue">lost</span> his parents <span class="c-purple">when he was only a child</span>.</td>
+        </tr>
+        <tr>
+          <td>I <span class="c-blue">have</span> <span class="c-purple">never</span> <span class="c-blue">designed</span> a website before.</td>
+          <td>I <span class="c-blue">designed</span> a website <span class="c-purple">last year</span> at work.</td>
+        </tr>
+        <tr>
+          <td><span class="c-green">Have</span> you <span class="c-purple">ever</span> <span class="c-green">wondered</span> what you would do if your house was set on fire?</td>
+          <td><span class="c-purple">Last night</span> I <span class="c-blue">wondered</span> what I would do if my house was set on fire.</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Separator -->
+    <img src="https://englishandchill.com/wp-content/uploads/2025/05/Separator-2.svg"
+         alt="" class="separator-img"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <hr style="display:none; border:none; border-top:2px dashed #D7D3CC; margin:2rem auto; max-width:600px;">
+
+    <!-- ══════════════════════════════════
+         GRAMMAR EXAM SIMULATION
+    ══════════════════════════════════ -->
+    <p class="section-label grammarexs" id="grammarexs">Grammar Exam Simulation</p>
+
+    <!-- ── Exercise A ── -->
+    <h1 class="ex-heading">a. Use the correct form of the Present Perfect</h1>
+    <div class="fill_gaps-wrapper">
+      <div class="fill_gaps">
+        <div class="fill_gaps-list">
+          <div class="fill_gaps-item">1. Helen <input type="text" data-answers='["has lived"]' placeholder="?"> (live) in Paris since 2020.</div>
+          <div class="fill_gaps-item">2. I <input type="text" data-answers='["haven&apos;t seen","have not seen"]' placeholder="?"> (not see) my uncle for five years.</div>
+          <div class="fill_gaps-item">3. <input type="text" data-answers='["Have you known"]' placeholder="?"> (you/know) your best friend since childhood?</div>
+          <div class="fill_gaps-item">4. She <input type="text" data-answers='["has worked"]' placeholder="?"> (work) at this company for six months.</div>
+          <div class="fill_gaps-item">5. We <input type="text" data-answers='["haven&apos;t played","have not played"]' placeholder="?"> (not play) tennis since last summer.</div>
+          <div class="fill_gaps-item">6. I <input type="text" data-answers='["have had"]' placeholder="?"> (have) this car for ages.</div>
+          <div class="fill_gaps-item">7. <input type="text" data-answers='["Has he studied"]' placeholder="?"> (he/study) English since he was a child?</div>
+          <div class="fill_gaps-item">8. They <input type="text" data-answers='["have been"]' placeholder="?"> (be) married for ten years.</div>
+          <div class="fill_gaps-item">9. My sister <input type="text" data-answers='["hasn&apos;t felt","has not felt"]' placeholder="?"> (not feel) well since yesterday.</div>
+          <div class="fill_gaps-item">10. <input type="text" data-answers='["Have they lived"]' placeholder="?"> (they/live) in Spain for a long time?</div>
+        </div>
+        <div class="fill_gaps-buttons">
+          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+            <span class="button_top"><span class="button-text">Check Answers</span></span>
+          </a>
+          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+            <span class="button_top"><span class="button-text">Reload</span></span>
+          </a>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+
+    <!-- ── Exercise B ── -->
+    <h1 class="ex-heading">b. Fill the gaps with 'for' or 'since'</h1>
+    <div class="fill_gaps-wrapper">
+      <div class="fill_gaps">
+        <div class="fill_gaps-list">
+          <div class="fill_gaps-item">1. Helen has lived in Paris <input type="text" data-answers='["since"]' placeholder="?"> 2020.</div>
+          <div class="fill_gaps-item">2. I haven't seen my uncle <input type="text" data-answers='["for"]' placeholder="?"> five years.</div>
+          <div class="fill_gaps-item">3. Have you known your best friend <input type="text" data-answers='["since"]' placeholder="?"> childhood?</div>
+          <div class="fill_gaps-item">4. She has worked at this company <input type="text" data-answers='["for"]' placeholder="?"> six months.</div>
+          <div class="fill_gaps-item">5. We haven't played tennis <input type="text" data-answers='["since"]' placeholder="?"> last summer.</div>
+          <div class="fill_gaps-item">6. I have had this car <input type="text" data-answers='["for"]' placeholder="?"> ages.</div>
+          <div class="fill_gaps-item">7. Has he studied English <input type="text" data-answers='["since"]' placeholder="?"> he was a child?</div>
+          <div class="fill_gaps-item">8. They have been married <input type="text" data-answers='["since"]' placeholder="?"> COVID-19.</div>
+          <div class="fill_gaps-item">9. My sister hasn't felt well <input type="text" data-answers='["since"]' placeholder="?"> yesterday.</div>
+          <div class="fill_gaps-item">10. Have they lived in Spain <input type="text" data-answers='["for"]' placeholder="?"> a long time?</div>
+        </div>
+        <div class="fill_gaps-buttons">
+          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+            <span class="button_top"><span class="button-text">Check Answers</span></span>
+          </a>
+          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+            <span class="button_top"><span class="button-text">Reload</span></span>
+          </a>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+
+    <!-- ── Exercise C ── -->
+    <h1 class="ex-heading">c. Use 'ever' or 'never'</h1>
+    <div class="fill_gaps-wrapper">
+      <div class="fill_gaps">
+        <div class="fill_gaps-list">
+          <div class="fill_gaps-item">1. My friends have <input type="text" data-answers='["never"]' placeholder="?"> seen a dolphin in the ocean.</div>
+          <div class="fill_gaps-item">2. Have you <input type="text" data-answers='["ever"]' placeholder="?"> won a medal at school?</div>
+          <div class="fill_gaps-item">3. She has <input type="text" data-answers='["never"]' placeholder="?"> eaten broccoli because she doesn't like vegetables.</div>
+          <div class="fill_gaps-item">4. This is the biggest museum I have <input type="text" data-answers='["ever"]' placeholder="?"> visited.</div>
+          <div class="fill_gaps-item">5. Has your brother <input type="text" data-answers='["ever"]' placeholder="?"> ridden a horse?</div>
+          <div class="fill_gaps-item">6. We have <input type="text" data-answers='["never"]' placeholder="?"> missed the school bus this year.</div>
+          <div class="fill_gaps-item">7. Have they <input type="text" data-answers='["ever"]' placeholder="?"> played a video game together?</div>
+          <div class="fill_gaps-item">8. My teacher has <input type="text" data-answers='["never"]' placeholder="?"> shouted in class.</div>
+          <div class="fill_gaps-item">9. It is the most beautiful drawing you have <input type="text" data-answers='["ever"]' placeholder="?"> made.</div>
+          <div class="fill_gaps-item">10. I have <input type="text" data-answers='["never"]' placeholder="?"> broken a bone playing football.</div>
+        </div>
+        <div class="fill_gaps-buttons">
+          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+            <span class="button_top"><span class="button-text">Check Answers</span></span>
+          </a>
+          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+            <span class="button_top"><span class="button-text">Reload</span></span>
+          </a>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+
+    <!-- ── Exercise D ── -->
+    <h1 class="ex-heading">d. Use Present Perfect or Past Simple</h1>
+    <div class="fill_gaps-wrapper">
+      <div class="fill_gaps">
+        <div class="fill_gaps-list">
+          <div class="fill_gaps-item">1. I <input type="text" data-answers='["have lost"]' placeholder="?"> (lose) my favourite pen. I can't find it anywhere!</div>
+          <div class="fill_gaps-item">2. Last summer, we <input type="text" data-answers='["travelled","traveled"]' placeholder="?"> (travel) to the beach with my family.</div>
+          <div class="fill_gaps-item">3. <input type="text" data-answers='["Have you ever seen"]' placeholder="?"> (you/ever/see) a real elephant?</div>
+          <div class="fill_gaps-item">4. My brother <input type="text" data-answers='["didn&apos;t play","did not play"]' placeholder="?"> (not play) video games yesterday afternoon.</div>
+          <div class="fill_gaps-item">5. Look! Lucas <input type="text" data-answers='["has broken"]' placeholder="?"> (break) his toy car. He is crying.</div>
+          <div class="fill_gaps-item">6. They <input type="text" data-answers='["moved"]' placeholder="?"> (move) to this city three years ago.</div>
+          <div class="fill_gaps-item">7. She <input type="text" data-answers='["has finished"]' placeholder="?"> (finish) her homework, so she can watch TV.</div>
+          <div class="fill_gaps-item">8. We <input type="text" data-answers='["didn&apos;t go","did not go"]' placeholder="?"> (not go) to school last Monday because it was a holiday.</div>
+          <div class="fill_gaps-item">9. <input type="text" data-answers='["Did you watch"]' placeholder="?"> (you/watch) the football match on TV last night?</div>
+          <div class="fill_gaps-item">10. My parents <input type="text" data-answers='["have lived"]' placeholder="?"> (live) in this house since I was born.</div>
+        </div>
+        <div class="fill_gaps-buttons">
+          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+            <span class="button_top"><span class="button-text">Check Answers</span></span>
+          </a>
+          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+            <span class="button_top"><span class="button-text">Reload</span></span>
+          </a>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+
+    <!-- Up button -->
+    <div class="up-row">
+      <a href="#top" class="fancy-button" style="--button_outline:#000000;">
+        <span class="button_top"><span class="button-text">↑</span></span>
+      </a>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="smoke-container">
+      <div class="smoke" style="left:50%;animation-delay:-2s"></div>
+      <div class="smoke" style="left:40%;animation-delay:-3s"></div>
+      <div class="smoke" style="left:60%;animation-delay:-1s"></div>
+      <div class="smoke" style="left:45%;animation-delay:-4s"></div>
+      <div class="smoke" style="left:55%;animation-delay:-2.5s"></div>
+    </div>
+    <a href="../about.html">
+      <img src="../assets/images/EC-Logo.svg" alt="English &amp; Chill" class="footer-logo">
+    </a>
+    <p class="footer-copy">©2025</p>
+  </footer>
+
+  <script>
+  (function () {
+
+    /* ── Smooth scroll for all anchor links ── */
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return; // let btn-check / btn-reload handle these
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    /* ── Normalize helper ── */
+    function normalizeString(str) {
+      const t = document.createElement('textarea');
+      t.innerHTML = str;
+      str = t.value;
+      return str.trim().toLowerCase()
+        .replace(/[''‛‹›]/g, "'")
+        .replace(/[.,!?;:]$/, '');
+    }
+
+    /* ── Auto-size inputs ── */
+    function adjustInputWidth(input) {
+      const span = document.createElement('span');
+      span.style.cssText = 'visibility:hidden;position:absolute;white-space:pre;';
+      span.style.font = window.getComputedStyle(input).font;
+      span.textContent = input.value || input.placeholder || '?';
+      document.body.appendChild(span);
+      input.style.width = (span.offsetWidth + 10) + 'px';
+      document.body.removeChild(span);
+    }
+
+    /* ── Check ── */
+    function check(button) {
+      const container = button.closest('.fill_gaps');
+      const inputs = container.querySelectorAll('input[type="text"]');
+
+      inputs.forEach(input => {
+        if (input.classList.contains('checked')) return;
+        const user = normalizeString(input.value);
+        const valid = JSON.parse(input.dataset.answers).map(normalizeString);
+        input.disabled = true;
+        if (valid.includes(user)) {
+          input.classList.add('correct');
+        } else {
+          input.classList.add('incorrect');
+          const span = document.createElement('span');
+          span.className = 'correct-answer';
+          span.textContent = '(' + valid[0] + ')';
+          input.parentNode.appendChild(span);
+        }
+        input.classList.add('checked');
+      });
+
+      const correct = container.querySelectorAll('input.correct').length;
+      container.querySelector('.feedback').textContent = correct + ' / ' + inputs.length;
+      button.style.display = 'none';
+      container.querySelector('.btn-reload').style.display = 'inline-block';
+    }
+
+    /* ── Reload ── */
+    function reload(button) {
+      const container = button.closest('.fill_gaps');
+      const inputs = container.querySelectorAll('input[type="text"]');
+
+      inputs.forEach(input => {
+        input.value = '';
+        input.disabled = false;
+        input.classList.remove('correct', 'incorrect', 'checked');
+        adjustInputWidth(input);
+        const span = input.parentNode.querySelector('.correct-answer');
+        if (span) span.remove();
+      });
+
+      container.querySelector('.feedback').textContent = '';
+      button.style.display = 'none';
+      container.querySelector('.btn-check').style.display = 'inline-block';
+    }
+
+    /* ── Delegated click ── */
+    document.addEventListener('click', function (e) {
+      const checkBtn = e.target.closest('.btn-check');
+      if (checkBtn) { e.preventDefault(); check(checkBtn); return; }
+      const reloadBtn = e.target.closest('.btn-reload');
+      if (reloadBtn) { e.preventDefault(); reload(reloadBtn); }
+    });
+
+    /* ── Enter key → Check ── */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && e.target.matches('.fill_gaps input[type="text"]')) {
+        e.preventDefault();
+        const container = e.target.closest('.fill_gaps');
+        const checkBtn = container.querySelector('.btn-check');
+        if (checkBtn && checkBtn.style.display !== 'none') checkBtn.click();
+      }
+    });
+
+    /* ── Resize inputs on input event ── */
+    document.addEventListener('input', function (e) {
+      if (e.target.matches('.fill_gaps input[type="text"]')) adjustInputWidth(e.target);
+    });
+
+    /* ── Init widths ── */
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
+    });
+    // Also run immediately in case DOMContentLoaded already fired
+    document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
+
+  })();
+  </script>
+
+</body>
+</html>

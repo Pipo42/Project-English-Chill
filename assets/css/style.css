@@ -1,0 +1,269 @@
+/* =========================================================
+   English & Chill — Global Styles
+   Colors from theme.json palette
+   ========================================================= */
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../fonts/manrope/Manrope-VariableFont_wght.woff2') format('woff2');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Google Fonts for Aboreto (display/heading font) */
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  --color-base:     #ffffff;
+  --color-contrast: #191919;
+  --color-accent-1: #99aebb;  /* blue-grey — button default bg */
+  --color-accent-2: #F7E6FF;  /* light purple */
+  --color-accent-3: #560319;  /* dark red */
+  --color-accent-4: #5F5F5F;
+  --color-accent-5: #D7D3CC;
+  --color-accent-6: #19191933;
+
+  --font-body:    'Manrope', system-ui, sans-serif;
+  --font-display: 'Aboreto', system-ui;
+
+  --content-width: 800px;
+  --wide-width: 1340px;
+
+  --button-radius: 0.75em;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-contrast);
+  background: var(--color-accent-1);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .1em;
+}
+
+h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
+
+/* ── Layout ── */
+.site-content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: clamp(30px, 5vw, 50px) 1.5rem;
+}
+
+/* ── Header ── */
+.site-header {
+  width: 100%;
+  padding: clamp(20px, 4vw, 40px) 1.5rem clamp(10px, 2vw, 20px);
+  text-align: center;
+  position: relative;
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  max-width: var(--wide-width);
+  margin: 0 auto;
+}
+
+.site-title {
+  font-family: var(--font-body);
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 2.2;
+  letter-spacing: -0.01em;
+}
+
+.dotted-line {
+  flex: 1;
+  height: 2px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--color-contrast) 0,
+    var(--color-contrast) 6px,
+    transparent 6px,
+    transparent 14px
+  );
+  opacity: 0.25;
+  min-width: 40px;
+}
+
+/* ── Home: Choose Level heading ── */
+.choose-level {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  text-align: center;
+  margin-bottom: clamp(30px, 5vw, 50px);
+}
+
+/* ── Fancy Button ── */
+.fancy-button {
+  --button-outline: #000;
+  --button-color: var(--color-accent-1);
+
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  font-weight: 400;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--button-radius);
+  background: var(--button-outline);
+  padding: 0;
+  text-decoration: none;
+  white-space: normal;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.fancy-button .button_top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  box-sizing: border-box;
+  border: 1px solid var(--button-outline);
+  border-radius: var(--button-radius);
+  padding: 0.75em 1.5em;
+  background: var(--button-color);
+  color: var(--button-outline);
+  transform: translateY(-0.35em);
+  transition: transform 0.12s ease;
+  text-align: center;
+  width: 100%;
+  min-width: 4.5rem;
+}
+
+.fancy-button:hover .button_top  { transform: translateY(-0.5em); }
+.fancy-button:active .button_top { transform: translateY(0); }
+
+.fancy-button .button-text {
+  display: block;
+  font-weight: 300;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* ── Back Button ── */
+.fancy-back-button {
+  display: inline-block;
+  background: var(--button-outline, #000);
+  border-radius: var(--button-radius, 0.75em);
+  padding: 0;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.fancy-back-button .button_top {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  border: 1px solid var(--button-outline, #000);
+  border-radius: var(--button-radius, 0.75em);
+  padding: 0.6em 1.2em;
+  background: #b5e2ff;
+  color: var(--button-outline, #000);
+  transform: translateY(-0.35em);
+  transition: transform 0.1s ease;
+}
+
+.fancy-back-button:hover .button_top { transform: translateY(-0.5em); }
+.fancy-back-button:active .button_top { transform: translateY(0); }
+
+/* ── Button Grid (home & ESO pages) ── */
+.button-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 3vw, 28px);
+}
+
+/* ── Footer ── */
+.site-footer {
+  padding: clamp(20px, 4vw, 40px) 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Smoke animation */
+.smoke-container {
+  position: relative;
+  width: 80px;
+  height: 0;
+  margin: 0 auto;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.smoke {
+  position: absolute;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+  animation: rise 4s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes rise {
+  0%   { transform: translateX(0) translateY(0) scale(1); opacity: 0.4; }
+  50%  { transform: translateX(-10px) translateY(-60px) scale(1.2); opacity: 0.2; }
+  100% { transform: translateX(10px) translateY(-120px) scale(1.5); opacity: 0; }
+}
+
+.footer-logo {
+  display: block;
+  width: 203px;
+  height: auto;
+  margin: 20px auto;
+}
+
+.footer-copy {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  margin-top: 8px;
+}
+
+/* ── ESO page: coming soon label ── */
+.coming-soon-note {
+  text-align: center;
+  font-style: italic;
+  color: var(--color-accent-4);
+  margin-top: 3rem;
+  font-size: 1.1rem;
+}
+
+/* ── Back button row ── */
+.back-row {
+  margin-bottom: 2rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .site-title { font-size: 2rem; }
+  .fancy-button { font-size: 1.2rem; }
+  .fancy-button .button_top { padding: 0.65em 1em; }
+}
