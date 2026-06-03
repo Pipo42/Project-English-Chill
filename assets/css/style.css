@@ -8,11 +8,8 @@
   src: url('../fonts/manrope/Manrope-VariableFont_wght.woff2') format('woff2');
   font-weight: 200 800;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
-
-/* Google Fonts for Aboreto (display/heading font) */
-@import url('https://fonts.googleapis.com/css2?family=Aboreto&display=swap');
 
 /* ── CSS Variables ── */
 :root {

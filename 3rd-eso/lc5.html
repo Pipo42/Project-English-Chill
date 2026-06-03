@@ -4,45 +4,61 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3rd ESO – LC5 — English &amp; Chill</title>
+  <link rel="icon" href="../assets/images/ChatGPT-Image-4-may-2025-11_07_11.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="../assets/fonts/manrope/Manrope-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aboreto&family=Caveat+Brush&display=block">
   <link rel="stylesheet" href="../assets/css/style.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap');
-
-    /* Smooth scroll */
     html { scroll-behavior: smooth; }
 
-    /* Remove focus outline on buttons */
     .fancy-button:focus,
     .fancy-button:focus-visible { outline: none; }
 
-    /* ── Section labels (Caveat Brush) ── */
+    /* ── Header dotted line images ── */
+    .header-dots {
+      flex: 1;
+      min-width: 40px;
+      height: auto;
+      opacity: 0.7;
+    }
+
+    /* ── Section labels ── */
     .section-label {
       font-family: 'Caveat Brush', cursive;
       font-size: clamp(1.8rem, 5vw, 2.8rem);
       text-align: center;
       margin: 2.5rem 0 1rem;
     }
-    .section-label.vocabulary   { color: #1a5276; }
-    .section-label.grammar      { color: var(--color-contrast); }
-    .section-label.reading      { color: #1e8449; }
-    .section-label.listening    { color: #6c3483; }
-    .section-label.writing      { color: #935116; }
-    .section-label.exs          { color: var(--color-accent-3); }
+    .section-label.grammar { color: var(--color-contrast); }
+    .section-label.exs     { color: var(--color-accent-3); }
 
-    /* ── Horizontal dotted separator ── */
-    .section-sep {
-      border: none;
-      border-top: 2px dashed var(--color-accent-5);
-      margin: 2.5rem auto;
-      max-width: 600px;
+    /* ── Nav buttons ── */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 2rem;
+    }
+    .nav-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.4rem;
+    }
+    .btn-exs .button_top {
+      background: #fff0f0 !important;
+      color: var(--color-accent-3) !important;
+      border-color: var(--color-accent-3) !important;
+    }
+    .fancy-button.btn-exs {
+      background: var(--color-accent-3) !important;
     }
 
     /* ── Grammar tables ── */
-    .grammar-table-wrap {
-      width: 100%;
-      text-align: center;
-      margin: 20px 0;
-    }
+    .grammar-table-wrap { width: 100%; text-align: center; margin: 20px 0; }
     .grammar-table {
       border-collapse: collapse;
       border: 1px solid #000;
@@ -55,7 +71,7 @@
       white-space: normal;
       width: auto;
       max-width: 100%;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
     }
     .grammar-table th.caption-row {
       background-color: #d1f6ff;
@@ -63,7 +79,7 @@
       border: 1px solid black;
       font-weight: bold;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
     .grammar-table th.subheader {
       background-color: #aaf0c9;
@@ -71,7 +87,7 @@
       border: 1px solid black;
       font-weight: bold;
       text-align: center;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
     }
     .grammar-table td {
       padding: 8px 14px;
@@ -80,45 +96,14 @@
       vertical-align: middle;
       word-wrap: break-word;
       white-space: normal;
-      font-size: 1.05rem;
+      font-size: 1.15rem;
     }
     .c-blue   { color: blue; }
     .c-red    { color: red; }
     .c-green  { color: green; }
     .c-purple { color: purple; }
 
-    /* ── Nav buttons row ── */
-    .nav-buttons {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin: 1.5rem 0 2rem;
-    }
-
-    /* Group: main category button + optional EXS button side by side */
-    .nav-group {
-      display: flex;
-      align-items: flex-end;
-      gap: 0.4rem;
-    }
-
-    /* EXS button: scarlet, smaller */
-    .btn-exs {
-      font-size: 0.85rem !important;
-    }
-    .btn-exs .button_top {
-      padding: 0.5em 0.9em !important;
-      background: #fff0f0 !important;
-      color: var(--color-accent-3) !important;
-      border-color: var(--color-accent-3) !important;
-    }
-    .fancy-button.btn-exs {
-      background: var(--color-accent-3) !important;
-    }
-
-    /* ── Exercise heading — Caveat Brush, scarlet ── */
+    /* ── Exercise heading ── */
     .ex-heading {
       font-family: 'Caveat Brush', cursive;
       color: var(--color-accent-3);
@@ -128,12 +113,8 @@
       text-align: center;
     }
 
-    /* ── fill_gaps component ── */
-    .fill_gaps-wrapper {
-      display: flex;
-      justify-content: center;
-      padding: 1rem 0;
-    }
+    /* ── fill_gaps ── */
+    .fill_gaps-wrapper { display: flex; justify-content: center; padding: 1rem 0; }
     .fill_gaps {
       font-family: 'Caveat Brush', cursive;
       font-size: 1.5rem;
@@ -145,17 +126,10 @@
       padding: 20px;
       box-shadow: 0 10px 0 var(--color-accent-3);
       margin-bottom: 14px;
+      background: #fff0f0;
     }
-    .fill_gaps-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .fill_gaps-item {
-      display: block;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--color-accent-3);
-    }
+    .fill_gaps-list { display: flex; flex-direction: column; gap: 1rem; }
+    .fill_gaps-item { display: block; padding: 10px 0; border-bottom: 1px solid var(--color-accent-3); }
     .fill_gaps-item:last-child { border-bottom: none; }
     .fill_gaps input[type="text"] {
       font-family: inherit;
@@ -168,85 +142,77 @@
       color: var(--color-accent-3);
       min-width: 80px;
       width: auto;
-      transition: width 0.25s ease, padding 0.25s ease;
+      transition: width 0.25s ease;
     }
     .fill_gaps input.correct   { color: green; background: #d4edda; border-color: green; }
     .fill_gaps input.incorrect { color: red;   background: #f8d7da; border-color: red; }
-    .fill_gaps input.checked   { border-width: 1px; }
     .correct-answer {
-      color: #856404;
-      background: #fff3cd;
-      border: 1px solid #ffc107;
-      border-radius: 0.75rem;
-      padding: 2px 8px;
-      margin-left: 0.5rem;
-      font-size: 0.9em;
+      color: #856404; background: #fff3cd;
+      border: 1px solid #ffc107; border-radius: 0.75rem;
+      padding: 2px 8px; margin-left: 0.5rem; font-size: 0.9em;
     }
-    .fill_gaps-buttons {
-      margin-top: 1.5rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .feedback {
-      margin-top: 1rem;
-      font-size: 2rem;
-      color: blue;
-      text-align: center;
-    }
+    .fill_gaps-buttons { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .feedback { margin-top: 1rem; font-size: 2rem; color: blue; text-align: center; }
 
-    /* ── Up button row ── */
-    .up-row {
-      display: flex;
-      justify-content: center;
-      margin-top: 3rem;
-    }
-
-    /* ── Back row ── */
     .back-row { margin-bottom: 2rem; }
+
+    /* ── Floating scroll-to-top ── */
+    #scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(60px);
+      transition: opacity 0.45s cubic-bezier(.22,.68,0,1.2), transform 0.45s cubic-bezier(.22,.68,0,1.2);
+    }
+    #scroll-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    #drops-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 998;
+    }
   </style>
 </head>
 <body id="top">
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="site-header-inner">
-      <span class="dotted-line" aria-hidden="true"></span>
+      <img src="../assets/images/Dotted-Lines-left.svg" alt="" aria-hidden="true" class="header-dots">
       <a href="../index.html" style="text-decoration:none; color:inherit;">
         <span class="site-title">English &amp; Chill</span>
       </a>
-      <span class="dotted-line" aria-hidden="true"></span>
+      <img src="../assets/images/Dotted-Lines-right-1.svg" alt="" aria-hidden="true" class="header-dots">
     </div>
   </header>
 
   <main class="site-content">
 
-    <!-- Back button -->
     <div class="back-row">
-      <a href="../3rd-eso.html" class="fancy-button" style="--button-color: var(--color-accent-1); --button_outline: #000000; font-size:1rem;">
-        <span class="button_top" style="padding:0.6em 1.2em;">
-          <span class="button-text">←</span>
-        </span>
+      <a href="../3rd-eso.html" class="fancy-button" style="--button-color: var(--color-accent-1); --button-outline: #000000;">
+        <span class="button_top"><span class="button-text">←</span></span>
       </a>
     </div>
 
-    <!-- Nav anchor buttons -->
     <div class="nav-buttons">
-      <!-- Grammar + Grammar EXS -->
       <div class="nav-group">
-        <a href="#grammar" class="fancy-button" style="--button_outline:#000000; --button-color:var(--color-accent-1);">
+        <a href="#grammar" class="fancy-button" style="--button-outline:#000000; --button-color:var(--color-accent-1);">
           <span class="button_top"><span class="button-text">Grammar</span></span>
         </a>
-        <a href="#grammarexs" class="fancy-button btn-exs" style="--button_outline: var(--color-accent-3);">
+        <a href="#grammarexs" class="fancy-button btn-exs" style="--button-outline: var(--color-accent-3);">
           <span class="button_top"><span class="button-text">Grammar EXS</span></span>
         </a>
       </div>
     </div>
 
-    <!-- ══════════════════════════════════
-         GRAMMAR
-    ══════════════════════════════════ -->
+    <!-- GRAMMAR -->
     <p class="section-label grammar" id="grammar">Grammar</p>
 
     <h1 class="wp-block-heading" style="text-align:center; margin-bottom:1rem;">Present Perfect</h1>
@@ -328,136 +294,118 @@
       </table>
     </div>
 
-    <!-- Separator -->
-    <hr class="section-sep">
+    <img src="../assets/images/Separator-2.svg" alt="" style="display:block; margin:2.5rem auto; max-width:600px; width:100%; height:auto;">
 
-    <!-- ══════════════════════════════════
-         GRAMMAR EXAM SIMULATION
-    ══════════════════════════════════ -->
+    <!-- GRAMMAR EXS -->
     <p class="section-label exs" id="grammarexs">Grammar Exam Simulation</p>
 
-    <!-- Exercise A -->
     <h2 class="ex-heading">a. Use the correct form of the Present Perfect</h2>
-    <div class="fill_gaps-wrapper">
-      <div class="fill_gaps">
-        <div class="fill_gaps-list">
-          <div class="fill_gaps-item">1. Helen <input type="text" data-answers='["has lived"]' placeholder="?"> (live) in Paris since 2020.</div>
-          <div class="fill_gaps-item">2. I <input type="text" data-answers='["haven&apos;t seen","have not seen"]' placeholder="?"> (not see) my uncle for five years.</div>
-          <div class="fill_gaps-item">3. <input type="text" data-answers='["Have you known"]' placeholder="?"> (you/know) your best friend since childhood?</div>
-          <div class="fill_gaps-item">4. She <input type="text" data-answers='["has worked"]' placeholder="?"> (work) at this company for six months.</div>
-          <div class="fill_gaps-item">5. We <input type="text" data-answers='["haven&apos;t played","have not played"]' placeholder="?"> (not play) tennis since last summer.</div>
-          <div class="fill_gaps-item">6. I <input type="text" data-answers='["have had"]' placeholder="?"> (have) this car for ages.</div>
-          <div class="fill_gaps-item">7. <input type="text" data-answers='["Has he studied"]' placeholder="?"> (he/study) English since he was a child?</div>
-          <div class="fill_gaps-item">8. They <input type="text" data-answers='["have been"]' placeholder="?"> (be) married for ten years.</div>
-          <div class="fill_gaps-item">9. My sister <input type="text" data-answers='["hasn&apos;t felt","has not felt"]' placeholder="?"> (not feel) well since yesterday.</div>
-          <div class="fill_gaps-item">10. <input type="text" data-answers='["Have they lived"]' placeholder="?"> (they/live) in Spain for a long time?</div>
-        </div>
-        <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
-            <span class="button_top"><span class="button-text">Check Answers</span></span>
-          </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
-            <span class="button_top"><span class="button-text">Reload</span></span>
-          </a>
-        </div>
-        <div class="feedback"></div>
+    <div class="fill_gaps-wrapper"><div class="fill_gaps">
+      <div class="fill_gaps-list">
+        <div class="fill_gaps-item">1. Helen <input type="text" data-answers='["has lived"]' placeholder="?"> (live) in Paris since 2020.</div>
+        <div class="fill_gaps-item">2. I <input type="text" data-answers='["haven&apos;t seen","have not seen"]' placeholder="?"> (not see) my uncle for five years.</div>
+        <div class="fill_gaps-item">3. <input type="text" data-answers='["Have you known"]' placeholder="?"> (you/know) your best friend since childhood?</div>
+        <div class="fill_gaps-item">4. She <input type="text" data-answers='["has worked"]' placeholder="?"> (work) at this company for six months.</div>
+        <div class="fill_gaps-item">5. We <input type="text" data-answers='["haven&apos;t played","have not played"]' placeholder="?"> (not play) tennis since last summer.</div>
+        <div class="fill_gaps-item">6. I <input type="text" data-answers='["have had"]' placeholder="?"> (have) this car for ages.</div>
+        <div class="fill_gaps-item">7. <input type="text" data-answers='["Has he studied"]' placeholder="?"> (he/study) English since he was a child?</div>
+        <div class="fill_gaps-item">8. They <input type="text" data-answers='["have been"]' placeholder="?"> (be) married for ten years.</div>
+        <div class="fill_gaps-item">9. My sister <input type="text" data-answers='["hasn&apos;t felt","has not felt"]' placeholder="?"> (not feel) well since yesterday.</div>
+        <div class="fill_gaps-item">10. <input type="text" data-answers='["Have they lived"]' placeholder="?"> (they/live) in Spain for a long time?</div>
       </div>
-    </div>
+      <div class="fill_gaps-buttons">
+        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+          <span class="button_top"><span class="button-text">Check Answers</span></span>
+        </a>
+        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+          <span class="button_top"><span class="button-text">Reload</span></span>
+        </a>
+      </div>
+      <div class="feedback"></div>
+    </div></div>
 
-    <!-- Exercise B -->
     <h2 class="ex-heading">b. Fill the gaps with 'for' or 'since'</h2>
-    <div class="fill_gaps-wrapper">
-      <div class="fill_gaps">
-        <div class="fill_gaps-list">
-          <div class="fill_gaps-item">1. Helen has lived in Paris <input type="text" data-answers='["since"]' placeholder="?"> 2020.</div>
-          <div class="fill_gaps-item">2. I haven't seen my uncle <input type="text" data-answers='["for"]' placeholder="?"> five years.</div>
-          <div class="fill_gaps-item">3. Have you known your best friend <input type="text" data-answers='["since"]' placeholder="?"> childhood?</div>
-          <div class="fill_gaps-item">4. She has worked at this company <input type="text" data-answers='["for"]' placeholder="?"> six months.</div>
-          <div class="fill_gaps-item">5. We haven't played tennis <input type="text" data-answers='["since"]' placeholder="?"> last summer.</div>
-          <div class="fill_gaps-item">6. I have had this car <input type="text" data-answers='["for"]' placeholder="?"> ages.</div>
-          <div class="fill_gaps-item">7. Has he studied English <input type="text" data-answers='["since"]' placeholder="?"> he was a child?</div>
-          <div class="fill_gaps-item">8. They have been married <input type="text" data-answers='["since"]' placeholder="?"> COVID-19.</div>
-          <div class="fill_gaps-item">9. My sister hasn't felt well <input type="text" data-answers='["since"]' placeholder="?"> yesterday.</div>
-          <div class="fill_gaps-item">10. Have they lived in Spain <input type="text" data-answers='["for"]' placeholder="?"> a long time?</div>
-        </div>
-        <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
-            <span class="button_top"><span class="button-text">Check Answers</span></span>
-          </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
-            <span class="button_top"><span class="button-text">Reload</span></span>
-          </a>
-        </div>
-        <div class="feedback"></div>
+    <div class="fill_gaps-wrapper"><div class="fill_gaps">
+      <div class="fill_gaps-list">
+        <div class="fill_gaps-item">1. Helen has lived in Paris <input type="text" data-answers='["since"]' placeholder="?"> 2020.</div>
+        <div class="fill_gaps-item">2. I haven't seen my uncle <input type="text" data-answers='["for"]' placeholder="?"> five years.</div>
+        <div class="fill_gaps-item">3. Have you known your best friend <input type="text" data-answers='["since"]' placeholder="?"> childhood?</div>
+        <div class="fill_gaps-item">4. She has worked at this company <input type="text" data-answers='["for"]' placeholder="?"> six months.</div>
+        <div class="fill_gaps-item">5. We haven't played tennis <input type="text" data-answers='["since"]' placeholder="?"> last summer.</div>
+        <div class="fill_gaps-item">6. I have had this car <input type="text" data-answers='["for"]' placeholder="?"> ages.</div>
+        <div class="fill_gaps-item">7. Has he studied English <input type="text" data-answers='["since"]' placeholder="?"> he was a child?</div>
+        <div class="fill_gaps-item">8. They have been married <input type="text" data-answers='["since"]' placeholder="?"> COVID-19.</div>
+        <div class="fill_gaps-item">9. My sister hasn't felt well <input type="text" data-answers='["since"]' placeholder="?"> yesterday.</div>
+        <div class="fill_gaps-item">10. Have they lived in Spain <input type="text" data-answers='["for"]' placeholder="?"> a long time?</div>
       </div>
-    </div>
+      <div class="fill_gaps-buttons">
+        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+          <span class="button_top"><span class="button-text">Check Answers</span></span>
+        </a>
+        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+          <span class="button_top"><span class="button-text">Reload</span></span>
+        </a>
+      </div>
+      <div class="feedback"></div>
+    </div></div>
 
-    <!-- Exercise C -->
     <h2 class="ex-heading">c. Use 'ever' or 'never'</h2>
-    <div class="fill_gaps-wrapper">
-      <div class="fill_gaps">
-        <div class="fill_gaps-list">
-          <div class="fill_gaps-item">1. My friends have <input type="text" data-answers='["never"]' placeholder="?"> seen a dolphin in the ocean.</div>
-          <div class="fill_gaps-item">2. Have you <input type="text" data-answers='["ever"]' placeholder="?"> won a medal at school?</div>
-          <div class="fill_gaps-item">3. She has <input type="text" data-answers='["never"]' placeholder="?"> eaten broccoli because she doesn't like vegetables.</div>
-          <div class="fill_gaps-item">4. This is the biggest museum I have <input type="text" data-answers='["ever"]' placeholder="?"> visited.</div>
-          <div class="fill_gaps-item">5. Has your brother <input type="text" data-answers='["ever"]' placeholder="?"> ridden a horse?</div>
-          <div class="fill_gaps-item">6. We have <input type="text" data-answers='["never"]' placeholder="?"> missed the school bus this year.</div>
-          <div class="fill_gaps-item">7. Have they <input type="text" data-answers='["ever"]' placeholder="?"> played a video game together?</div>
-          <div class="fill_gaps-item">8. My teacher has <input type="text" data-answers='["never"]' placeholder="?"> shouted in class.</div>
-          <div class="fill_gaps-item">9. It is the most beautiful drawing you have <input type="text" data-answers='["ever"]' placeholder="?"> made.</div>
-          <div class="fill_gaps-item">10. I have <input type="text" data-answers='["never"]' placeholder="?"> broken a bone playing football.</div>
-        </div>
-        <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
-            <span class="button_top"><span class="button-text">Check Answers</span></span>
-          </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
-            <span class="button_top"><span class="button-text">Reload</span></span>
-          </a>
-        </div>
-        <div class="feedback"></div>
+    <div class="fill_gaps-wrapper"><div class="fill_gaps">
+      <div class="fill_gaps-list">
+        <div class="fill_gaps-item">1. My friends have <input type="text" data-answers='["never"]' placeholder="?"> seen a dolphin in the ocean.</div>
+        <div class="fill_gaps-item">2. Have you <input type="text" data-answers='["ever"]' placeholder="?"> won a medal at school?</div>
+        <div class="fill_gaps-item">3. She has <input type="text" data-answers='["never"]' placeholder="?"> eaten broccoli because she doesn't like vegetables.</div>
+        <div class="fill_gaps-item">4. This is the biggest museum I have <input type="text" data-answers='["ever"]' placeholder="?"> visited.</div>
+        <div class="fill_gaps-item">5. Has your brother <input type="text" data-answers='["ever"]' placeholder="?"> ridden a horse?</div>
+        <div class="fill_gaps-item">6. We have <input type="text" data-answers='["never"]' placeholder="?"> missed the school bus this year.</div>
+        <div class="fill_gaps-item">7. Have they <input type="text" data-answers='["ever"]' placeholder="?"> played a video game together?</div>
+        <div class="fill_gaps-item">8. My teacher has <input type="text" data-answers='["never"]' placeholder="?"> shouted in class.</div>
+        <div class="fill_gaps-item">9. It is the most beautiful drawing you have <input type="text" data-answers='["ever"]' placeholder="?"> made.</div>
+        <div class="fill_gaps-item">10. I have <input type="text" data-answers='["never"]' placeholder="?"> broken a bone playing football.</div>
       </div>
-    </div>
+      <div class="fill_gaps-buttons">
+        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+          <span class="button_top"><span class="button-text">Check Answers</span></span>
+        </a>
+        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+          <span class="button_top"><span class="button-text">Reload</span></span>
+        </a>
+      </div>
+      <div class="feedback"></div>
+    </div></div>
 
-    <!-- Exercise D -->
     <h2 class="ex-heading">d. Use Present Perfect or Past Simple</h2>
-    <div class="fill_gaps-wrapper">
-      <div class="fill_gaps">
-        <div class="fill_gaps-list">
-          <div class="fill_gaps-item">1. I <input type="text" data-answers='["have lost"]' placeholder="?"> (lose) my favourite pen. I can't find it anywhere!</div>
-          <div class="fill_gaps-item">2. Last summer, we <input type="text" data-answers='["travelled","traveled"]' placeholder="?"> (travel) to the beach with my family.</div>
-          <div class="fill_gaps-item">3. <input type="text" data-answers='["Have you ever seen"]' placeholder="?"> (you/ever/see) a real elephant?</div>
-          <div class="fill_gaps-item">4. My brother <input type="text" data-answers='["didn&apos;t play","did not play"]' placeholder="?"> (not play) video games yesterday afternoon.</div>
-          <div class="fill_gaps-item">5. Look! Lucas <input type="text" data-answers='["has broken"]' placeholder="?"> (break) his toy car. He is crying.</div>
-          <div class="fill_gaps-item">6. They <input type="text" data-answers='["moved"]' placeholder="?"> (move) to this city three years ago.</div>
-          <div class="fill_gaps-item">7. She <input type="text" data-answers='["has finished"]' placeholder="?"> (finish) her homework, so she can watch TV.</div>
-          <div class="fill_gaps-item">8. We <input type="text" data-answers='["didn&apos;t go","did not go"]' placeholder="?"> (not go) to school last Monday because it was a holiday.</div>
-          <div class="fill_gaps-item">9. <input type="text" data-answers='["Did you watch"]' placeholder="?"> (you/watch) the football match on TV last night?</div>
-          <div class="fill_gaps-item">10. My parents <input type="text" data-answers='["have lived"]' placeholder="?"> (live) in this house since I was born.</div>
-        </div>
-        <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
-            <span class="button_top"><span class="button-text">Check Answers</span></span>
-          </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
-            <span class="button_top"><span class="button-text">Reload</span></span>
-          </a>
-        </div>
-        <div class="feedback"></div>
+    <div class="fill_gaps-wrapper"><div class="fill_gaps">
+      <div class="fill_gaps-list">
+        <div class="fill_gaps-item">1. I <input type="text" data-answers='["have lost"]' placeholder="?"> (lose) my favourite pen. I can't find it anywhere!</div>
+        <div class="fill_gaps-item">2. Last summer, we <input type="text" data-answers='["travelled","traveled"]' placeholder="?"> (travel) to the beach with my family.</div>
+        <div class="fill_gaps-item">3. <input type="text" data-answers='["Have you ever seen"]' placeholder="?"> (you/ever/see) a real elephant?</div>
+        <div class="fill_gaps-item">4. My brother <input type="text" data-answers='["didn&apos;t play","did not play"]' placeholder="?"> (not play) video games yesterday afternoon.</div>
+        <div class="fill_gaps-item">5. Look! Lucas <input type="text" data-answers='["has broken"]' placeholder="?"> (break) his toy car. He is crying.</div>
+        <div class="fill_gaps-item">6. They <input type="text" data-answers='["moved"]' placeholder="?"> (move) to this city three years ago.</div>
+        <div class="fill_gaps-item">7. She <input type="text" data-answers='["has finished"]' placeholder="?"> (finish) her homework, so she can watch TV.</div>
+        <div class="fill_gaps-item">8. We <input type="text" data-answers='["didn&apos;t go","did not go"]' placeholder="?"> (not go) to school last Monday because it was a holiday.</div>
+        <div class="fill_gaps-item">9. <input type="text" data-answers='["Did you watch"]' placeholder="?"> (you/watch) the football match on TV last night?</div>
+        <div class="fill_gaps-item">10. My parents <input type="text" data-answers='["have lived"]' placeholder="?"> (live) in this house since I was born.</div>
       </div>
-    </div>
-
-    <!-- Up button -->
-    <div class="up-row">
-      <a href="#top" class="fancy-button" style="--button_outline:#000000; --button-color:var(--color-accent-1);">
-        <span class="button_top"><span class="button-text">↑</span></span>
-      </a>
-    </div>
+      <div class="fill_gaps-buttons">
+        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+          <span class="button_top"><span class="button-text">Check Answers</span></span>
+        </a>
+        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+          <span class="button_top"><span class="button-text">Reload</span></span>
+        </a>
+      </div>
+      <div class="feedback"></div>
+    </div></div>
 
   </main>
 
-  <!-- FOOTER -->
+  <canvas id="drops-canvas"></canvas>
+  <a href="#top" id="scroll-top" class="fancy-button" style="--button-outline:#000000; --button-color:var(--color-accent-1);">
+    <span class="button_top"><span class="button-text">↑</span></span>
+  </a>
+
   <footer class="site-footer">
     <div class="smoke-container">
       <div class="smoke" style="left:50%;animation-delay:-2s"></div>
@@ -466,50 +414,42 @@
       <div class="smoke" style="left:45%;animation-delay:-4s"></div>
       <div class="smoke" style="left:55%;animation-delay:-2.5s"></div>
     </div>
-    <a href="../index.html">
-      <img src="../assets/images/EC-Logo.svg" alt="English &amp; Chill" class="footer-logo">
+    <a href="../index.html" style="display:inline-block;">
+      <img src="../assets/images/EC-Logo.svg" alt="English &amp; Chill" class="footer-logo" style="width:203px; height:auto; display:block;">
     </a>
     <p class="footer-copy">©2025</p>
   </footer>
 
   <script>
+  /* ── Fill-gaps logic ── */
   (function () {
 
-    /* ── Smooth scroll for anchor links ── */
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
         if (href === '#') return;
         const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       });
     });
 
-    /* ── Normalize helper ── */
     function normalizeString(str) {
       const t = document.createElement('textarea');
       t.innerHTML = str;
       str = t.value;
-      return str.trim().toLowerCase()
-        .replace(/[''‛‹›]/g, "'")
-        .replace(/[.,!?;:]$/, '');
+      return str.trim().toLowerCase().replace(/[''‛‹›]/g, "'").replace(/[.,!?;:]$/, '');
     }
 
-    /* ── Auto-size inputs ── */
     function adjustInputWidth(input) {
       const span = document.createElement('span');
       span.style.cssText = 'visibility:hidden;position:absolute;white-space:pre;';
       span.style.font = window.getComputedStyle(input).font;
       span.textContent = input.value || input.placeholder || '?';
       document.body.appendChild(span);
-      input.style.width = (span.offsetWidth + 10) + 'px';
+      input.style.width = (span.offsetWidth + 32) + 'px';
       document.body.removeChild(span);
     }
 
-    /* ── Check ── */
     function check(button) {
       const container = button.closest('.fill_gaps');
       const inputs = container.querySelectorAll('input[type="text"]');
@@ -535,7 +475,6 @@
       container.querySelector('.btn-reload').style.display = 'inline-block';
     }
 
-    /* ── Reload ── */
     function reload(button) {
       const container = button.closest('.fill_gaps');
       const inputs = container.querySelectorAll('input[type="text"]');
@@ -552,7 +491,6 @@
       container.querySelector('.btn-check').style.display = 'inline-block';
     }
 
-    /* ── Delegated click ── */
     document.addEventListener('click', function (e) {
       const checkBtn = e.target.closest('.btn-check');
       if (checkBtn) { e.preventDefault(); checkBtn.blur(); check(checkBtn); return; }
@@ -560,7 +498,6 @@
       if (reloadBtn) { e.preventDefault(); reloadBtn.blur(); reload(reloadBtn); }
     });
 
-    /* ── Enter key → Check ── */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && e.target.matches('.fill_gaps input[type="text"]')) {
         e.preventDefault();
@@ -570,17 +507,273 @@
       }
     });
 
-    /* ── Resize inputs ── */
     document.addEventListener('input', function (e) {
       if (e.target.matches('.fill_gaps input[type="text"]')) adjustInputWidth(e.target);
     });
 
-    /* ── Init widths ── */
+    document.addEventListener('keydown', function (e) {
+      if (e.target.matches('.fill_gaps input[type="text"]')) {
+        requestAnimationFrame(() => adjustInputWidth(e.target));
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
     });
     document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
 
+  })();
+
+  /* ── Scroll-to-top: drops + fragment shatter ── */
+  (function () {
+    const btn    = document.getElementById('scroll-top');
+    const header = document.querySelector('.site-header');
+    const canvas = document.getElementById('drops-canvas');
+    const ctx    = canvas.getContext('2d');
+    let drops     = [];
+    let fragments = [];
+    let rafId     = null;
+    let wasVisible = false;
+
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    /* ── Unified loop ── */
+    function tick() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      tickShatter();
+      tickDrops();
+      tickFragments();
+      if (drops.length > 0 || fragments.length > 0 || shatter) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = null;
+      }
+    }
+    function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
+
+    /* ── DROPS ── */
+    function spawnDrops() {
+      const r = btn.getBoundingClientRect();
+      const bx = r.left, by = r.top, bw = r.width, bh = r.height;
+      const count = 28 + Math.floor(Math.random() * 12);
+      for (let i = 0; i < count; i++) {
+        const side = Math.random();
+        let ox, oy;
+        if      (side < 0.35) { ox = bx + Math.random()*bw; oy = by; }
+        else if (side < 0.55) { ox = bx; oy = by + Math.random()*bh; }
+        else if (side < 0.75) { ox = bx + bw; oy = by + Math.random()*bh; }
+        else                  { ox = bx + Math.random()*bw; oy = by + bh; }
+        const cx = bx + bw/2, cy = by + bh/2;
+        const base = Math.atan2(oy-cy, ox-cx);
+        const angle = base*0.35 + (-Math.PI/2)*0.65 + (Math.random()-0.5)*0.8;
+        const speed = 3.5 + Math.random()*4;
+        drops.push({
+          x: ox, y: oy,
+          vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed,
+          baseR: 0.8 + Math.random()*2,
+          wobblePhase: Math.random()*Math.PI*2,
+          wobbleSpeed: 0.18 + Math.random()*0.22,
+          wobbleAmp:   0.25 + Math.random()*0.35,
+          phase: 'fly', peaked: false, restTimer: 0, fadeLife: 0,
+          maxFade: 55 + Math.floor(Math.random()*35)
+        });
+      }
+      startLoop();
+    }
+
+    function drawDrop(d, alpha) {
+      const spd = Math.sqrt(d.vx*d.vx + d.vy*d.vy);
+      const N = 8;
+      const rot = spd > 0.5 ? Math.atan2(d.vy, d.vx) : 0;
+      const stretch = Math.min(spd*0.15, 0.8);
+      ctx.save();
+      ctx.translate(d.x, d.y);
+      ctx.rotate(rot);
+      ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        const theta = (i/N)*Math.PI*2;
+        const wob = d.phase === 'fly' ? Math.sin(d.wobblePhase*1.3 + i*1.1)*d.wobbleAmp : 0;
+        const rx = d.baseR*(1 + stretch + (i%2===0 ? wob : -wob*0.5));
+        const ry = d.baseR*(1 - stretch*0.5 + (i%2!==0 ? wob : -wob*0.4));
+        const px = Math.cos(theta)*rx, py = Math.sin(theta)*ry;
+        if (i === 0) { ctx.moveTo(px, py); }
+        else {
+          const pt = ((i-1)/N)*Math.PI*2;
+          const pw = d.phase === 'fly' ? Math.sin(d.wobblePhase*1.3+(i-1)*1.1)*d.wobbleAmp : 0;
+          const prx = d.baseR*(1+stretch+((i-1)%2===0?pw:-pw*0.5));
+          const pry = d.baseR*(1-stretch*0.5+((i-1)%2!==0?pw:-pw*0.4));
+          ctx.quadraticCurveTo(Math.cos(pt)*prx, Math.sin(pt)*pry, (Math.cos(pt)*prx+px)/2, (Math.sin(pt)*pry+py)/2);
+        }
+      }
+      ctx.closePath();
+      ctx.fillStyle = `rgba(25,25,25,${alpha})`;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function tickDrops() {
+      for (const d of drops) {
+        if (d.phase === 'fly') {
+          d.vy += 0.38; d.vx *= 0.985;
+          d.x += d.vx; d.y += d.vy;
+          if (!d.peaked && d.vy > 0) d.peaked = true;
+          if (d.peaked && d.vy > 1.8) { d.phase = 'rest'; d.restTimer = 0; }
+          d.wobblePhase += d.wobbleSpeed;
+          drawDrop(d, 1);
+        } else if (d.phase === 'rest') {
+          d.restTimer++;
+          if (d.restTimer > 20) { d.phase = 'fade'; d.fadeLife = 0; }
+          drawDrop(d, 1);
+        } else {
+          d.fadeLife++;
+          drawDrop(d, Math.max(0, 1 - d.fadeLife/d.maxFade));
+        }
+      }
+      drops = drops.filter(d => !(d.phase === 'fade' && d.fadeLife >= d.maxFade));
+    }
+
+    /* ── SHATTER ── */
+    let shatter = null;
+
+    function spawnShatter() {
+      const r = btn.getBoundingClientRect();
+      const bcx = r.left + r.width/2, bcy = r.top + r.height/2;
+      const bw = r.width, bh = r.height;
+      const blobPts = makeBlobPts(bcx, bcy, Math.max(bw, bh)*0.6, 12);
+      shatter = { phase: 'grow', life: 0, growDur: 18, bcx, bcy, bw, bh, blobPts };
+      startLoop();
+    }
+
+    function makeBlobPts(cx, cy, r, N) {
+      const pts = [];
+      for (let i = 0; i < N; i++) {
+        const a = (i/N)*Math.PI*2;
+        const jr = r * (0.75 + Math.random()*0.5);
+        pts.push([cx + Math.cos(a)*jr, cy + Math.sin(a)*jr]);
+      }
+      return pts;
+    }
+
+    function drawBlob(pts, alpha, scale, cx, cy) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(cx, cy);
+      ctx.scale(scale, scale);
+      ctx.translate(-cx, -cy);
+      ctx.beginPath();
+      const n = pts.length;
+      for (let i = 0; i < n; i++) {
+        const p0 = pts[(i-1+n)%n], p1 = pts[i], p2 = pts[(i+1)%n];
+        const cpx = (p1[0]+p2[0])/2, cpy = (p1[1]+p2[1])/2;
+        if (i === 0) ctx.moveTo((p0[0]+p1[0])/2, (p0[1]+p1[1])/2);
+        ctx.quadraticCurveTo(p1[0], p1[1], cpx, cpy);
+      }
+      ctx.closePath();
+      ctx.fillStyle = '#191919';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function explodeIntoChunks(bcx, bcy, blobPts) {
+      const n = blobPts.length;
+      for (let i = 0; i < n; i++) {
+        const next = (i+1)%n;
+        const cx = (bcx + blobPts[i][0] + blobPts[next][0]) / 3;
+        const cy = (bcy + blobPts[i][1] + blobPts[next][1]) / 3;
+        const dx = cx - bcx, dy = cy - bcy;
+        const dist = Math.sqrt(dx*dx+dy*dy)||1;
+        const speed = 3 + Math.random()*4;
+        const chunkR = 4 + Math.random()*8;
+        const subPts = makeBlobPts(0, 0, chunkR, 7);
+        fragments.push({
+          pts: subPts, cx, cy, ox: 0, oy: 0,
+          vx: (dx/dist)*speed, vy: (dy/dist)*speed - 1 - Math.random()*2,
+          rotSpeed: (Math.random()-0.5)*0.12, angle: 0,
+          wobblePhase: Math.random()*Math.PI*2,
+          wobbleSpeed: 0.15 + Math.random()*0.15,
+          alpha: 1, life: 0,
+          maxLife: 40 + Math.floor(Math.random()*30),
+          peaked: false
+        });
+      }
+    }
+
+    function tickShatter() {
+      if (!shatter) return;
+      shatter.life++;
+      if (shatter.phase === 'grow') {
+        const t = shatter.life / shatter.growDur;
+        drawBlob(shatter.blobPts, Math.min(1, t*1.5), Math.min(1, 0.2 + t*0.8), shatter.bcx, shatter.bcy);
+        if (shatter.life >= shatter.growDur) {
+          shatter.phase = 'explode';
+          btn.style.transition = 'none';
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.classList.remove('visible');
+          explodeIntoChunks(shatter.bcx, shatter.bcy, shatter.blobPts);
+          shatter = null;
+        }
+      }
+    }
+
+    function tickFragments() {
+      for (const f of fragments) {
+        f.life++;
+        f.vy += 0.2; f.vx *= 0.97;
+        f.ox += f.vx; f.oy += f.vy;
+        f.angle += f.rotSpeed;
+        f.wobblePhase += f.wobbleSpeed;
+        f.alpha = Math.max(0, 1 - f.life/f.maxLife);
+        const wPts = f.pts.map(([px,py], i) => {
+          const w = Math.sin(f.wobblePhase + i*0.9) * 0.25;
+          return [px*(1+w), py*(1+w)];
+        });
+        ctx.save();
+        ctx.globalAlpha = f.alpha;
+        ctx.translate(f.cx + f.ox, f.cy + f.oy);
+        ctx.rotate(f.angle);
+        ctx.beginPath();
+        const n = wPts.length;
+        for (let i = 0; i < n; i++) {
+          const p1 = wPts[i], p2 = wPts[(i+1)%n];
+          const cpx = (p1[0]+p2[0])/2, cpy = (p1[1]+p2[1])/2;
+          if (i === 0) ctx.moveTo((wPts[(n-1)%n][0]+p1[0])/2, (wPts[(n-1)%n][1]+p1[1])/2);
+          ctx.quadraticCurveTo(p1[0], p1[1], cpx, cpy);
+        }
+        ctx.closePath();
+        ctx.fillStyle = '#191919';
+        ctx.fill();
+        ctx.restore();
+      }
+      fragments = fragments.filter(f => f.alpha > 0);
+    }
+
+    /* ── Observer ── */
+    const observer = new IntersectionObserver(function (entries) {
+      const visible = entries[0].isIntersecting;
+      if (!visible) {
+        btn.style.transition = '';
+        btn.style.opacity = '';
+        btn.style.pointerEvents = '';
+        btn.classList.add('visible');
+        if (!wasVisible) spawnDrops();
+        wasVisible = true;
+      } else {
+        if (wasVisible) {
+          spawnShatter();
+          setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
+        }
+        wasVisible = false;
+      }
+    }, { threshold: 0 });
+    observer.observe(header);
+
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   })();
   </script>
 
