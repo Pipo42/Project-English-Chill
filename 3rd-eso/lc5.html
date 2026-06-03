@@ -11,6 +11,10 @@
     /* Smooth scroll */
     html { scroll-behavior: smooth; }
 
+    /* Remove focus outline on buttons */
+    .fancy-button:focus,
+    .fancy-button:focus-visible { outline: none; }
+
     /* ── Section labels (Caveat Brush) ── */
     .section-label {
       font-family: 'Caveat Brush', cursive;
@@ -18,18 +22,22 @@
       text-align: center;
       margin: 2.5rem 0 1rem;
     }
-    .section-label.grammar    { color: var(--color-contrast); }
-    .section-label.grammarexs { color: #560319; }
+    .section-label.vocabulary   { color: #1a5276; }
+    .section-label.grammar      { color: var(--color-contrast); }
+    .section-label.reading      { color: #1e8449; }
+    .section-label.listening    { color: #6c3483; }
+    .section-label.writing      { color: #935116; }
+    .section-label.exs          { color: var(--color-accent-3); }
 
-    /* ── Separator SVG ── */
-    .separator-img {
-      display: block;
+    /* ── Horizontal dotted separator ── */
+    .section-sep {
+      border: none;
+      border-top: 2px dashed var(--color-accent-5);
       margin: 2.5rem auto;
-      max-width: 100%;
-      height: auto;
+      max-width: 600px;
     }
 
-    /* ── Grammar tables (exact original style) ── */
+    /* ── Grammar tables ── */
     .grammar-table-wrap {
       width: 100%;
       text-align: center;
@@ -47,30 +55,33 @@
       white-space: normal;
       width: auto;
       max-width: 100%;
+      font-size: 1.05rem;
     }
     .grammar-table th.caption-row {
       background-color: #d1f6ff;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border: 1px solid black;
       font-weight: bold;
       text-align: center;
+      font-size: 1.1rem;
     }
     .grammar-table th.subheader {
       background-color: #aaf0c9;
-      padding: 8px 12px;
+      padding: 10px 14px;
       border: 1px solid black;
       font-weight: bold;
       text-align: center;
+      font-size: 1.05rem;
     }
     .grammar-table td {
-      padding: 6px 12px;
+      padding: 8px 14px;
       border: 1px solid black;
       text-align: center;
       vertical-align: middle;
       word-wrap: break-word;
       white-space: normal;
+      font-size: 1.05rem;
     }
-    /* Colour coding matching originals */
     .c-blue   { color: blue; }
     .c-red    { color: red; }
     .c-green  { color: green; }
@@ -80,70 +91,88 @@
     .nav-buttons {
       display: flex;
       justify-content: center;
-      gap: 1rem;
+      align-items: flex-end;
+      gap: 0.75rem;
       flex-wrap: wrap;
-      margin: 1.5rem 0;
+      margin: 1.5rem 0 2rem;
     }
 
-    /* ── Exercise heading (accent-3 = #560319) ── */
+    /* Group: main category button + optional EXS button side by side */
+    .nav-group {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.4rem;
+    }
+
+    /* EXS button: scarlet, smaller */
+    .btn-exs {
+      font-size: 0.85rem !important;
+    }
+    .btn-exs .button_top {
+      padding: 0.5em 0.9em !important;
+      background: #fff0f0 !important;
+      color: var(--color-accent-3) !important;
+      border-color: var(--color-accent-3) !important;
+    }
+    .fancy-button.btn-exs {
+      background: var(--color-accent-3) !important;
+    }
+
+    /* ── Exercise heading — Caveat Brush, scarlet ── */
     .ex-heading {
-      color: #560319;
-      font-size: clamp(1rem, 2.5vw, 1.3rem);
-      font-weight: 700;
+      font-family: 'Caveat Brush', cursive;
+      color: var(--color-accent-3);
+      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+      font-weight: 400;
       margin: 2rem 0 0.5rem;
+      text-align: center;
     }
 
-    /* ── fill_gaps component (exact original) ── */
+    /* ── fill_gaps component ── */
     .fill_gaps-wrapper {
       display: flex;
       justify-content: center;
       padding: 1rem 0;
     }
-
     .fill_gaps {
       font-family: 'Caveat Brush', cursive;
       font-size: 1.5rem;
-      color: #560319;
+      color: var(--color-accent-3);
       max-width: 50rem;
       width: 100%;
-      border: 1px solid #560319;
+      border: 1px solid var(--color-accent-3);
       border-radius: 20px;
       padding: 20px;
-      box-shadow: 0 10px 0 #560319;
-      margin-bottom: 14px; /* offset for the shadow */
+      box-shadow: 0 10px 0 var(--color-accent-3);
+      margin-bottom: 14px;
     }
-
     .fill_gaps-list {
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
-
     .fill_gaps-item {
       display: block;
       padding: 10px 0;
-      border-bottom: 1px solid #560319;
+      border-bottom: 1px solid var(--color-accent-3);
     }
     .fill_gaps-item:last-child { border-bottom: none; }
-
     .fill_gaps input[type="text"] {
       font-family: inherit;
       font-size: inherit;
       text-align: center;
       padding: 6px 10px;
-      border: 1px solid #560319;
+      border: 1px solid var(--color-accent-3);
       border-radius: 1.25rem;
       background: none;
-      color: #560319;
+      color: var(--color-accent-3);
       min-width: 80px;
       width: auto;
       transition: width 0.25s ease, padding 0.25s ease;
     }
-
     .fill_gaps input.correct   { color: green; background: #d4edda; border-color: green; }
     .fill_gaps input.incorrect { color: red;   background: #f8d7da; border-color: red; }
     .fill_gaps input.checked   { border-width: 1px; }
-
     .correct-answer {
       color: #856404;
       background: #fff3cd;
@@ -153,7 +182,6 @@
       margin-left: 0.5rem;
       font-size: 0.9em;
     }
-
     .fill_gaps-buttons {
       margin-top: 1.5rem;
       display: flex;
@@ -161,7 +189,6 @@
       justify-content: center;
       flex-wrap: wrap;
     }
-
     .feedback {
       margin-top: 1rem;
       font-size: 2rem;
@@ -169,12 +196,15 @@
       text-align: center;
     }
 
-    /* ── Up button ── */
+    /* ── Up button row ── */
     .up-row {
       display: flex;
       justify-content: center;
       margin-top: 3rem;
     }
+
+    /* ── Back row ── */
+    .back-row { margin-bottom: 2rem; }
   </style>
 </head>
 <body id="top">
@@ -183,7 +213,9 @@
   <header class="site-header">
     <div class="site-header-inner">
       <span class="dotted-line" aria-hidden="true"></span>
-      <span class="site-title">English &amp; Chill</span>
+      <a href="../index.html" style="text-decoration:none; color:inherit;">
+        <span class="site-title">English &amp; Chill</span>
+      </a>
       <span class="dotted-line" aria-hidden="true"></span>
     </div>
   </header>
@@ -192,8 +224,8 @@
 
     <!-- Back button -->
     <div class="back-row">
-      <a href="../3rd-eso.html" class="fancy-button fancy-back-button" style="--button-color:#b5e2ff;">
-        <span class="button_top">
+      <a href="../3rd-eso.html" class="fancy-button" style="--button-color: var(--color-accent-1); --button_outline: #000000; font-size:1rem;">
+        <span class="button_top" style="padding:0.6em 1.2em;">
           <span class="button-text">←</span>
         </span>
       </a>
@@ -201,19 +233,16 @@
 
     <!-- Nav anchor buttons -->
     <div class="nav-buttons">
-      <a href="#grammar" class="fancy-button" style="--button_outline:#000000;">
-        <span class="button_top"><span class="button-text">Grammar</span></span>
-      </a>
-      <a href="#grammarexs" class="fancy-button" style="--button_outline:#560319;">
-        <span class="button_top"><span class="button-text">Grammar EXS</span></span>
-      </a>
+      <!-- Grammar + Grammar EXS -->
+      <div class="nav-group">
+        <a href="#grammar" class="fancy-button" style="--button_outline:#000000; --button-color:var(--color-accent-1);">
+          <span class="button_top"><span class="button-text">Grammar</span></span>
+        </a>
+        <a href="#grammarexs" class="fancy-button btn-exs" style="--button_outline: var(--color-accent-3);">
+          <span class="button_top"><span class="button-text">Grammar EXS</span></span>
+        </a>
+      </div>
     </div>
-
-    <!-- Separator -->
-    <img src="https://englishandchill.com/wp-content/uploads/2025/05/Separator-2.svg"
-         alt="" class="separator-img"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-    <hr style="display:none; border:none; border-top:2px dashed #D7D3CC; margin:2rem auto; max-width:600px;">
 
     <!-- ══════════════════════════════════
          GRAMMAR
@@ -222,7 +251,6 @@
 
     <h1 class="wp-block-heading" style="text-align:center; margin-bottom:1rem;">Present Perfect</h1>
 
-    <!-- Table: Main Structure -->
     <div class="grammar-table-wrap">
       <table class="grammar-table">
         <tr><th class="caption-row" colspan="2">Main Structure</th></tr>
@@ -241,7 +269,6 @@
       </table>
     </div>
 
-    <!-- Table: Keywords -->
     <div class="grammar-table-wrap">
       <table class="grammar-table">
         <tr><th class="caption-row" colspan="3">Keywords</th></tr>
@@ -275,7 +302,6 @@
 
     <h1 class="wp-block-heading" style="text-align:center; margin:1.5rem 0 1rem;">Present Perfect vs. Past Simple</h1>
 
-    <!-- Table: PP vs PS -->
     <div class="grammar-table-wrap">
       <table class="grammar-table">
         <tr><th class="caption-row" colspan="2">Present Perfect | Past Simple</th></tr>
@@ -303,18 +329,15 @@
     </div>
 
     <!-- Separator -->
-    <img src="https://englishandchill.com/wp-content/uploads/2025/05/Separator-2.svg"
-         alt="" class="separator-img"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-    <hr style="display:none; border:none; border-top:2px dashed #D7D3CC; margin:2rem auto; max-width:600px;">
+    <hr class="section-sep">
 
     <!-- ══════════════════════════════════
          GRAMMAR EXAM SIMULATION
     ══════════════════════════════════ -->
-    <p class="section-label grammarexs" id="grammarexs">Grammar Exam Simulation</p>
+    <p class="section-label exs" id="grammarexs">Grammar Exam Simulation</p>
 
-    <!-- ── Exercise A ── -->
-    <h1 class="ex-heading">a. Use the correct form of the Present Perfect</h1>
+    <!-- Exercise A -->
+    <h2 class="ex-heading">a. Use the correct form of the Present Perfect</h2>
     <div class="fill_gaps-wrapper">
       <div class="fill_gaps">
         <div class="fill_gaps-list">
@@ -330,10 +353,10 @@
           <div class="fill_gaps-item">10. <input type="text" data-answers='["Have they lived"]' placeholder="?"> (they/live) in Spain for a long time?</div>
         </div>
         <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
             <span class="button_top"><span class="button-text">Check Answers</span></span>
           </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
             <span class="button_top"><span class="button-text">Reload</span></span>
           </a>
         </div>
@@ -341,8 +364,8 @@
       </div>
     </div>
 
-    <!-- ── Exercise B ── -->
-    <h1 class="ex-heading">b. Fill the gaps with 'for' or 'since'</h1>
+    <!-- Exercise B -->
+    <h2 class="ex-heading">b. Fill the gaps with 'for' or 'since'</h2>
     <div class="fill_gaps-wrapper">
       <div class="fill_gaps">
         <div class="fill_gaps-list">
@@ -358,10 +381,10 @@
           <div class="fill_gaps-item">10. Have they lived in Spain <input type="text" data-answers='["for"]' placeholder="?"> a long time?</div>
         </div>
         <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
             <span class="button_top"><span class="button-text">Check Answers</span></span>
           </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
             <span class="button_top"><span class="button-text">Reload</span></span>
           </a>
         </div>
@@ -369,8 +392,8 @@
       </div>
     </div>
 
-    <!-- ── Exercise C ── -->
-    <h1 class="ex-heading">c. Use 'ever' or 'never'</h1>
+    <!-- Exercise C -->
+    <h2 class="ex-heading">c. Use 'ever' or 'never'</h2>
     <div class="fill_gaps-wrapper">
       <div class="fill_gaps">
         <div class="fill_gaps-list">
@@ -386,10 +409,10 @@
           <div class="fill_gaps-item">10. I have <input type="text" data-answers='["never"]' placeholder="?"> broken a bone playing football.</div>
         </div>
         <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
             <span class="button_top"><span class="button-text">Check Answers</span></span>
           </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
             <span class="button_top"><span class="button-text">Reload</span></span>
           </a>
         </div>
@@ -397,8 +420,8 @@
       </div>
     </div>
 
-    <!-- ── Exercise D ── -->
-    <h1 class="ex-heading">d. Use Present Perfect or Past Simple</h1>
+    <!-- Exercise D -->
+    <h2 class="ex-heading">d. Use Present Perfect or Past Simple</h2>
     <div class="fill_gaps-wrapper">
       <div class="fill_gaps">
         <div class="fill_gaps-list">
@@ -414,10 +437,10 @@
           <div class="fill_gaps-item">10. My parents <input type="text" data-answers='["have lived"]' placeholder="?"> (live) in this house since I was born.</div>
         </div>
         <div class="fill_gaps-buttons">
-          <a href="#" class="fancy-button btn-check" style="--button_outline:#560319;">
+          <a href="#" class="fancy-button btn-check" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0;">
             <span class="button_top"><span class="button-text">Check Answers</span></span>
           </a>
-          <a href="#" class="fancy-button btn-reload" style="--button_outline:#560319; display:none;">
+          <a href="#" class="fancy-button btn-reload" style="--button_outline: var(--color-accent-3); --button-color:#fff0f0; display:none;">
             <span class="button_top"><span class="button-text">Reload</span></span>
           </a>
         </div>
@@ -427,7 +450,7 @@
 
     <!-- Up button -->
     <div class="up-row">
-      <a href="#top" class="fancy-button" style="--button_outline:#000000;">
+      <a href="#top" class="fancy-button" style="--button_outline:#000000; --button-color:var(--color-accent-1);">
         <span class="button_top"><span class="button-text">↑</span></span>
       </a>
     </div>
@@ -443,7 +466,7 @@
       <div class="smoke" style="left:45%;animation-delay:-4s"></div>
       <div class="smoke" style="left:55%;animation-delay:-2.5s"></div>
     </div>
-    <a href="../about.html">
+    <a href="../index.html">
       <img src="../assets/images/EC-Logo.svg" alt="English &amp; Chill" class="footer-logo">
     </a>
     <p class="footer-copy">©2025</p>
@@ -452,11 +475,11 @@
   <script>
   (function () {
 
-    /* ── Smooth scroll for all anchor links ── */
+    /* ── Smooth scroll for anchor links ── */
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
-        if (href === '#') return; // let btn-check / btn-reload handle these
+        if (href === '#') return;
         const target = document.querySelector(href);
         if (target) {
           e.preventDefault();
@@ -490,7 +513,6 @@
     function check(button) {
       const container = button.closest('.fill_gaps');
       const inputs = container.querySelectorAll('input[type="text"]');
-
       inputs.forEach(input => {
         if (input.classList.contains('checked')) return;
         const user = normalizeString(input.value);
@@ -507,7 +529,6 @@
         }
         input.classList.add('checked');
       });
-
       const correct = container.querySelectorAll('input.correct').length;
       container.querySelector('.feedback').textContent = correct + ' / ' + inputs.length;
       button.style.display = 'none';
@@ -518,7 +539,6 @@
     function reload(button) {
       const container = button.closest('.fill_gaps');
       const inputs = container.querySelectorAll('input[type="text"]');
-
       inputs.forEach(input => {
         input.value = '';
         input.disabled = false;
@@ -527,7 +547,6 @@
         const span = input.parentNode.querySelector('.correct-answer');
         if (span) span.remove();
       });
-
       container.querySelector('.feedback').textContent = '';
       button.style.display = 'none';
       container.querySelector('.btn-check').style.display = 'inline-block';
@@ -536,9 +555,9 @@
     /* ── Delegated click ── */
     document.addEventListener('click', function (e) {
       const checkBtn = e.target.closest('.btn-check');
-      if (checkBtn) { e.preventDefault(); check(checkBtn); return; }
+      if (checkBtn) { e.preventDefault(); checkBtn.blur(); check(checkBtn); return; }
       const reloadBtn = e.target.closest('.btn-reload');
-      if (reloadBtn) { e.preventDefault(); reload(reloadBtn); }
+      if (reloadBtn) { e.preventDefault(); reloadBtn.blur(); reload(reloadBtn); }
     });
 
     /* ── Enter key → Check ── */
@@ -551,7 +570,7 @@
       }
     });
 
-    /* ── Resize inputs on input event ── */
+    /* ── Resize inputs ── */
     document.addEventListener('input', function (e) {
       if (e.target.matches('.fill_gaps input[type="text"]')) adjustInputWidth(e.target);
     });
@@ -560,7 +579,6 @@
     document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
     });
-    // Also run immediately in case DOMContentLoaded already fired
     document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
 
   })();
