@@ -9,9 +9,24 @@
   let rafId     = null;
   let wasVisible = false;
 
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  /* Canvas always covers the visual viewport, anchored top-left.
+     getBoundingClientRect() returns coords in visual-viewport space,
+     so they map directly onto canvas coords — no offset needed. */
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.width  = window.innerWidth  + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    canvas.style.top  = '0';
+    canvas.style.left = '0';
+  }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
+
+  /* Returns btn rect in canvas coordinates (== visual-viewport coords) */
+  function btnRect() {
+    return btn.getBoundingClientRect();
+  }
 
   /* ── Unified loop ── */
   function tick() {
@@ -29,7 +44,7 @@
 
   /* ── DROPS ── */
   function spawnDrops() {
-    const r = btn.getBoundingClientRect();
+    const r = btnRect();
     const bx = r.left, by = r.top, bw = r.width, bh = r.height;
     const count = 28 + Math.floor(Math.random() * 12);
     for (let i = 0; i < count; i++) {
@@ -98,7 +113,7 @@
         d.vy += 0.38; d.vx *= 0.985;
         d.x += d.vx; d.y += d.vy;
         if (!d.peaked && d.vy > 0) d.peaked = true;
-        if (d.peaked && d.vy > 1.8) { d.phase = 'rest'; d.restTimer = 0; }
+        if (d.peaked && d.vy > 4.5) { d.phase = 'rest'; d.restTimer = 0; }
         d.wobblePhase += d.wobbleSpeed;
         drawDrop(d, 1);
       } else if (d.phase === 'rest') {
@@ -116,8 +131,8 @@
   /* ── SHATTER ── */
   let shatter = null;
 
-  function spawnShatter() {
-    const r = btn.getBoundingClientRect();
+  function spawnShatter(r) {
+    r = r || btnRect();
     const bcx = r.left + r.width/2, bcy = r.top + r.height/2;
     const bw = r.width, bh = r.height;
     const blobPts = makeBlobPts(bcx, bcy, Math.max(bw, bh)*0.6, 12);
@@ -229,20 +244,68 @@
     fragments = fragments.filter(f => f.alpha > 0);
   }
 
+  /* ── Keep btn pinned to visual viewport (bottom-right on desktop, bottom-center on mobile/tablet) ── */
+  function isMobileTablet() { return window.innerWidth <= 1024; }
+
+  function anchorBtn() {
+    if (!wasVisible) return;
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const margin = rem * 4;
+    btn.style.bottom = (window.innerHeight - vv.offsetTop - vv.height + margin) + 'px';
+    if (isMobileTablet()) {
+      btn.style.right = '';
+      btn.style.left  = '50%';
+    } else {
+      btn.style.left  = '';
+      btn.style.right = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
+    }
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', anchorBtn);
+    window.visualViewport.addEventListener('scroll', anchorBtn);
+  }
+
   /* ── Observer ── */
   const observer = new IntersectionObserver(function (entries) {
     const visible = entries[0].isIntersecting;
     if (!visible) {
-      btn.style.transition = '';
-      btn.style.opacity = '';
-      btn.style.pointerEvents = '';
-      btn.classList.add('visible');
-      if (!wasVisible) spawnDrops();
       wasVisible = true;
+      anchorBtn();
+      /* Place btn at start position (below), then animate to visible */
+      btn.style.transition = 'none';
+      btn.style.opacity = '0';
+      const isMobile = isMobileTablet();
+      btn.style.transform = isMobile ? 'translateX(-50%) translateY(80px)' : 'translateY(80px)';
+      btn.classList.remove('visible');
+      void btn.getBoundingClientRect(); /* trigger reflow */
+      spawnDrops();
+      /* Re-enable transition and animate to final position */
+      requestAnimationFrame(() => {
+        btn.style.transition = '';
+        btn.style.opacity = '';
+        btn.style.transform = '';
+        btn.classList.add('visible');
+      });
+      btn.style.pointerEvents = 'auto';
     } else {
       if (wasVisible) {
-        spawnShatter();
-        setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
+        /* Read position before hiding */
+        const rect = btnRect();
+        btn.style.transition = 'none';
+        btn.style.opacity = '0';
+        btn.style.pointerEvents = 'none';
+        btn.classList.remove('visible');
+        spawnShatter(rect);
+        setTimeout(() => {
+          btn.style.transition = '';
+          btn.style.opacity = '';
+          btn.style.pointerEvents = '';
+          btn.style.bottom = '';
+          btn.style.right  = '';
+          btn.style.left   = '';
+        }, 50);
       }
       wasVisible = false;
     }
