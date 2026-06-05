@@ -118,13 +118,16 @@
     updateThumb();
   })();
 
-  // Navigate immediately — no fade-out delay
+  // Fade-out then navigate
   document.addEventListener('click', function (e) {
     const a = e.target.closest('a[href]');
     if (!a) return;
     const href = a.getAttribute('href');
     if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
     if (a.target === '_blank') return;
-    // No preventDefault, no setTimeout — browser navigates instantly
+
+    e.preventDefault();
+    document.body.classList.add('page-fadeout');
+    setTimeout(function () { window.location.href = href; }, 80);
   }, true);
 })();
