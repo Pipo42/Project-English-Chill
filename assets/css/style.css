@@ -62,22 +62,7 @@ body {
   flex-direction: column;
 }
 
-/* ── Page transition ── */
-body.page-init { visibility: visible; }
 
-.reveal-block {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-.reveal-block.from-hidden {
-  opacity: 0;
-  transform: translateY(22px);
-}
-.reveal-block.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 a {
   color: inherit;
