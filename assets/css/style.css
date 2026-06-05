@@ -11,6 +11,22 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: 'Aboreto';
+  src: url('../fonts/aboreto/aboreto-v2-latin-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Caveat Brush';
+  src: url('../fonts/caveat-brush/caveat-brush-v12-latin-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
 /* ── CSS Variables ── */
 :root {
   --color-base:     #ffffff;
@@ -46,9 +62,9 @@ body {
   flex-direction: column;
 }
 
-/* ── Page transition ── */
+/* ── Page transition ── (disabled for debug)
 body { visibility: hidden; }
-body.page-init { visibility: visible; }
+body.page-init { visibility: visible; } */
 
 .reveal-block {
   opacity: 0;
