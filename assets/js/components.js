@@ -48,13 +48,20 @@
     document.querySelector('main.site-content'),
     document.querySelector('footer.site-footer')
   ];
-  blocks.forEach(function (el) { if (el) el.classList.add('reveal-block'); });
+  blocks.forEach(function (el) {
+    if (el) {
+      el.classList.add('reveal-block', 'from-hidden');
+    }
+  });
 
   window.addEventListener('pageshow', function () {
     document.body.classList.add('page-init');
     blocks.forEach(function (el, i) {
       if (!el) return;
-      setTimeout(function () { el.classList.add('visible'); }, i * 120);
+      setTimeout(function () {
+        el.classList.remove('from-hidden');
+        el.classList.add('visible');
+      }, i * 120);
     });
   });
 
