@@ -14,15 +14,6 @@
   const base = '../'.repeat(depth) + 'assets/';
   const root = '../'.repeat(depth);
 
-  /* ── Page fade-in on arrival ── */
-  window.addEventListener('pageshow', function () {
-    var main = document.querySelector('main.site-content');
-    if (main) {
-      main.classList.remove('page-fadein');
-      void main.offsetWidth; // reflow to restart animation
-      main.classList.add('page-fadein');
-    }
-  });
 
   /* ── HEADER ── */
   const headerEl = document.querySelector('header.site-header');
@@ -118,16 +109,4 @@
     updateThumb();
   })();
 
-  // Fade-out then navigate
-  document.addEventListener('click', function (e) {
-    const a = e.target.closest('a[href]');
-    if (!a) return;
-    const href = a.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-    if (a.target === '_blank') return;
-
-    e.preventDefault();
-    document.body.classList.add('page-fadeout');
-    setTimeout(function () { window.location.href = href; }, 80);
-  }, true);
 })();
