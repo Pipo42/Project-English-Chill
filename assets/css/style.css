@@ -75,11 +75,6 @@ body.page-init { visibility: visible; }
   opacity: 1;
   transform: translateY(0);
 }
-body.page-leaving .reveal-block {
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.12s ease, transform 0.12s ease;
-}
 
 a {
   color: inherit;
