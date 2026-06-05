@@ -35,6 +35,27 @@
     document.body.removeChild(span);
   }
 
+  /* ── Score colour: 0=red, 0.25=orange, 0.5=yellow, 0.75=yellow-green, 1=green ── */
+  function scoreColor(ratio) {
+    // Keyframes: [ratio, [r,g,b]]
+    const stops = [
+      [0,    [220,  50,  50]],
+      [0.25, [230, 120,   0]],
+      [0.5,  [210, 180,   0]],
+      [0.75, [140, 190,  40]],
+      [1,    [  0, 160,  60]],
+    ];
+    let lo = stops[0], hi = stops[stops.length - 1];
+    for (let i = 0; i < stops.length - 1; i++) {
+      if (ratio >= stops[i][0] && ratio <= stops[i + 1][0]) { lo = stops[i]; hi = stops[i + 1]; break; }
+    }
+    const t = lo[0] === hi[0] ? 0 : (ratio - lo[0]) / (hi[0] - lo[0]);
+    const r = Math.round(lo[1][0] + t * (hi[1][0] - lo[1][0]));
+    const g = Math.round(lo[1][1] + t * (hi[1][1] - lo[1][1]));
+    const b = Math.round(lo[1][2] + t * (hi[1][2] - lo[1][2]));
+    return `rgb(${r},${g},${b})`;
+  }
+
   /* ── Init: hide btn-reload, make btn-check the single toggle ── */
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-reload').forEach(btn => { btn.style.display = 'none'; });
@@ -44,31 +65,54 @@
   function check(button) {
     const container = button.closest('.fill_gaps');
     const inputs = container.querySelectorAll('input[type="text"]');
-    inputs.forEach(input => {
-      if (input.classList.contains('checked')) return;
+    let delay = 0;
+    let correctCount = 0;
+    const unchecked = Array.from(inputs).filter(i => !i.classList.contains('checked'));
+    unchecked.forEach(input => {
       const user = normalizeString(input.value);
       const valid = JSON.parse(input.dataset.answers).map(normalizeString);
       input.disabled = true;
-      if (valid.includes(user)) {
-        input.classList.add('correct');
-      } else {
-        input.classList.add('incorrect');
-        const span = document.createElement('span');
-        span.className = 'correct-answer';
-        span.textContent = '(' + valid[0] + ')';
-        input.parentNode.appendChild(span);
-      }
+      const isCorrect = valid.includes(user);
+      if (isCorrect) correctCount++;
+      setTimeout(() => {
+        if (isCorrect) {
+          input.classList.add('correct');
+        } else {
+          input.classList.add('incorrect');
+          const span = document.createElement('span');
+          span.className = 'correct-answer';
+          span.textContent = '(' + valid[0] + ')';
+          input.parentNode.appendChild(span);
+          requestAnimationFrame(() => requestAnimationFrame(() => span.classList.add('visible')));
+        }
+      }, delay);
       input.classList.add('checked');
+      delay += 60;
     });
-    const correct = container.querySelectorAll('input.correct').length;
+    // Also count already-checked correct inputs
+    correctCount += container.querySelectorAll('input.correct').length;
+    const totalCorrect = correctCount;
+    const ratio = inputs.length > 0 ? totalCorrect / inputs.length : 0;
+    const color = scoreColor(ratio);
     const fb = container.querySelector('.feedback');
-    fb.textContent = correct + ' / ' + inputs.length;
-    fb.classList.add('visible');
+    const afterStagger = delay + 100;
+    setTimeout(() => {
+      fb.textContent = totalCorrect + ' / ' + inputs.length;
+      fb.style.color = color;
+      fb.classList.add('visible');
+      container.classList.remove('shake');
+      void container.offsetWidth; // reflow para reiniciar la animación si se repite
+      container.classList.add('shake');
+    }, afterStagger);
     /* Flip button to reload state — lock width first to prevent resize */
     button.style.width = button.offsetWidth + 'px';
     button.dataset.state = 'reload';
     button.querySelector('.button-text').textContent = 'Reload';
-    button.classList.add('btn-inverted');
+    /* Apply score colour to button and form */
+    button.style.setProperty('--button-outline', color);
+    button.style.background = color;
+    container.style.setProperty('--score-color', color);
+    container.classList.add('checked-state');
   }
 
   function reload(button) {
@@ -84,12 +128,16 @@
     });
     const fb2 = container.querySelector('.feedback');
     fb2.classList.remove('visible');
-    setTimeout(() => { fb2.textContent = ''; }, 400);
+    setTimeout(() => { fb2.textContent = ''; fb2.style.color = ''; }, 400);
     /* Flip button back to check state — release fixed width */
     button.style.width = '';
     button.dataset.state = 'check';
     button.querySelector('.button-text').textContent = 'Check Answers';
-    button.classList.remove('btn-inverted');
+    /* Restore scarlet */
+    button.style.setProperty('--button-outline', 'var(--color-accent-3)');
+    button.style.background = 'var(--color-accent-3)';
+    container.style.removeProperty('--score-color');
+    container.classList.remove('checked-state', 'shake');
   }
 
   document.addEventListener('click', function (e) {

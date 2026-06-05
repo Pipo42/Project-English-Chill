@@ -34,7 +34,8 @@
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { font-size: 16px; }
+html { font-size: 16px; scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
 
 body {
   font-family: var(--font-body);
@@ -43,6 +44,25 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* ── Page transition ── */
+body { visibility: hidden; }
+body.page-init { visibility: visible; }
+
+.reveal-block {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.reveal-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+body.page-leaving .reveal-block {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
 }
 
 a {
@@ -77,6 +97,13 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
   gap: 1rem;
   max-width: var(--wide-width);
   margin: 0 auto;
+}
+
+.header-dots {
+  flex: 1;
+  min-width: 40px;
+  height: auto;
+  opacity: 0.7;
 }
 
 .site-title {
@@ -151,24 +178,13 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 .fancy-button:hover .button_top  { transform: translateY(-0.5em); }
 .fancy-button:active .button_top { transform: translateY(0); }
 
-/* ── Inverted state for check/reload toggle ── */
+/* ── Check/reload toggle transitions ── */
 .fancy-button.btn-check {
   transition: background 0.35s ease;
   border: 1px solid transparent;
 }
-.fancy-button.btn-check.btn-inverted {
-  border-color: var(--color-accent-3) !important;
-}
 .fancy-button.btn-check .button_top {
   transition: transform 0.12s ease, background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
-}
-.fancy-button.btn-check.btn-inverted {
-  background: var(--button-color) !important;
-}
-.fancy-button.btn-check.btn-inverted .button_top {
-  background: var(--button-outline) !important;
-  color: var(--button-color) !important;
-  border-color: var(--button-outline) !important;
 }
 
 .fancy-button .button-text {
@@ -215,6 +231,49 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
   align-items: center;
   gap: clamp(16px, 3vw, 28px);
 }
+
+/* ── Custom scrollbar ── */
+#custom-scrollbar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 56px;
+  height: 100vh;
+  z-index: 998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#custom-scrollbar.scrollbar-visible {
+  opacity: 1;
+}
+#custom-scrollbar-thumb {
+  position: absolute;
+  right: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-body);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #000;
+  background: transparent;
+  border: 1.5px solid #000;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: auto;
+  user-select: none;
+  transition: opacity 0.35s ease, color 0.2s ease, background 0.2s ease;
+}
+#custom-scrollbar-thumb:active { }
+#custom-scrollbar-thumb:hover {
+  background: #000;
+  color: #fff;
+}
+#custom-scrollbar-thumb.thumb-faded { opacity: 0; pointer-events: none; }
 
 /* ── Footer ── */
 .site-footer {

@@ -16,12 +16,15 @@
     .fancy-button:focus,
     .fancy-button:focus-visible { outline: none; }
 
-    /* ── Header dotted line images ── */
-    .header-dots {
-      flex: 1;
-      min-width: 40px;
-      height: auto;
-      opacity: 0.7;
+    /* ── Page label ── */
+    .page-label {
+      font-family: 'Aboreto', system-ui;
+      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+      text-align: center;
+      color: var(--color-contrast);
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      margin-bottom: 0;
     }
 
     /* ── Section labels ── */
@@ -41,7 +44,7 @@
       align-items: flex-end;
       gap: 0.75rem;
       flex-wrap: wrap;
-      margin: 1.5rem 0 2rem;
+      margin: 2.5rem 0 2rem;
     }
     .nav-group {
       display: flex;
@@ -142,7 +145,7 @@
       color: var(--color-accent-3);
       min-width: 80px;
       width: auto;
-      transition: width 0.25s ease;
+      transition: width 0.25s ease, color 0.35s ease, background 0.35s ease, border-color 0.35s ease;
     }
     .fill_gaps input.correct   { color: green; background: #d4edda; border-color: green; }
     .fill_gaps input.incorrect { color: red;   background: #f8d7da; border-color: red; }
@@ -150,14 +153,27 @@
       color: #856404; background: #fff3cd;
       border: 1px solid #ffc107; border-radius: 0.75rem;
       padding: 2px 8px; margin-left: 0.5rem; font-size: 0.9em;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    .correct-answer.visible { opacity: 1; }
     .fill_gaps-buttons { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .fill_gaps { transition: border-color 0.35s ease, box-shadow 0.35s ease; }
+    .fill_gaps.checked-state { border-color: var(--score-color, green); box-shadow: 0 10px 0 var(--score-color, green); }
+    .fill_gaps.checked-state .fill_gaps-item { border-bottom-color: var(--score-color, green); transition: border-color 0.35s ease; }
+    @keyframes fg-shake {
+      0%   { transform: translateX(0); }
+      30%  { transform: translateX(-3px) rotate(-0.2deg); }
+      70%  { transform: translateX( 2px) rotate( 0.15deg); }
+      100% { transform: translateX(0); }
+    }
+    .fill_gaps.shake { animation: fg-shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
     .feedback {
-      margin-top: 1rem; font-size: 2rem; color: blue; text-align: center;
+      margin-top: 1rem; font-size: 2rem; text-align: center;
       overflow: hidden;
       max-height: 0;
       opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.35s ease;
+      transition: max-height 0.4s ease, opacity 0.35s ease, color 0.35s ease;
     }
     .feedback.visible {
       max-height: 4rem;
@@ -169,8 +185,8 @@
     /* ── Floating scroll-to-top ── */
     #scroll-top {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
+      bottom: 4rem;
+      right: 4rem;
       z-index: 999;
       opacity: 0;
       pointer-events: none;
@@ -193,19 +209,12 @@
 </head>
 <body id="top">
 
-  <header class="site-header">
-    <div class="site-header-inner">
-      <img src="../assets/images/Dotted-Lines-left.svg" alt="" aria-hidden="true" class="header-dots">
-      <a href="../index.html" style="text-decoration:none; color:inherit;">
-        <span class="site-title">English &amp; Chill</span>
-      </a>
-      <img src="../assets/images/Dotted-Lines-right-1.svg" alt="" aria-hidden="true" class="header-dots">
-    </div>
-  </header>
+  <header class="site-header"></header>
 
   <main class="site-content">
 
     <div class="back-row"></div>
+    <p class="page-label">3rd ESO – LC5</p>
     <div class="nav-buttons"></div>
 
     <!-- GRAMMAR -->
@@ -402,19 +411,9 @@
     <span class="button_top"><span class="button-text">↑</span></span>
   </a>
 
-  <footer class="site-footer">
-    <div class="smoke-container">
-      <div class="smoke" style="left:50%;animation-delay:-2s"></div>
-      <div class="smoke" style="left:40%;animation-delay:-3s"></div>
-      <div class="smoke" style="left:60%;animation-delay:-1s"></div>
-      <div class="smoke" style="left:45%;animation-delay:-4s"></div>
-      <div class="smoke" style="left:55%;animation-delay:-2.5s"></div>
-    </div>
-    <a href="../index.html" style="display:inline-block;">
-      <img src="../assets/images/EC-Logo.svg" alt="English &amp; Chill" class="footer-logo" style="width:203px; height:auto; display:block;">
-    </a>
-    <p class="footer-copy">©2025</p>
-  </footer>
+  <footer class="site-footer"></footer>
+  <script src="../assets/js/components.js"></script>
+  <script src="../assets/js/cursor.js"></script>
 
   <script>
     const LC_BACK = '../3rd-eso.html';
