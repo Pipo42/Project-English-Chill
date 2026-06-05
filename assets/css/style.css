@@ -47,6 +47,15 @@
   --button-radius: 0.75em;
 }
 
+/* ── Page fade-in ── */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-fadein {
+  animation: pageFadeIn 0.35s ease both;
+}
+
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 

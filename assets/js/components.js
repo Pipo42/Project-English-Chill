@@ -14,6 +14,16 @@
   const base = '../'.repeat(depth) + 'assets/';
   const root = '../'.repeat(depth);
 
+  /* ── Page fade-in on arrival ── */
+  window.addEventListener('pageshow', function () {
+    var main = document.querySelector('main.site-content');
+    if (main) {
+      main.classList.remove('page-fadein');
+      void main.offsetWidth; // reflow to restart animation
+      main.classList.add('page-fadein');
+    }
+  });
+
   /* ── HEADER ── */
   const headerEl = document.querySelector('header.site-header');
   if (headerEl) {
