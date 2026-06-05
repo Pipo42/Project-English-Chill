@@ -62,9 +62,9 @@ body {
   flex-direction: column;
 }
 
-/* ── Page transition ── (disabled for debug)
+/* ── Page transition ── */
 body { visibility: hidden; }
-body.page-init { visibility: visible; } */
+body.page-init { visibility: visible; }
 
 .reveal-block {
   opacity: 0;
