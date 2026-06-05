@@ -53,9 +53,8 @@
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-header.site-header  { animation: pageFadeIn 0.35s ease both; }
-main.site-content   { animation: pageFadeIn 0.35s ease 0.1s both; }
-footer.site-footer  { animation: pageFadeIn 0.35s ease 0.2s both; }
+main.site-content   { animation: pageFadeIn 0.35s ease both; }
+footer.site-footer  { animation: pageFadeIn 0.35s ease 0.1s both; }
 
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
