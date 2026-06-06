@@ -13,15 +13,23 @@
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
   function resizeCanvas() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.width  = window.innerWidth  + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    canvas.style.top  = '0';
-    canvas.style.left = '0';
+    const vv = window.visualViewport;
+    const vvW = vv ? vv.width  : window.innerWidth;
+    const vvH = vv ? vv.height : window.innerHeight;
+    canvas.width  = vvW;
+    canvas.height = vvH;
+    canvas.style.width  = vvW + 'px';
+    canvas.style.height = vvH + 'px';
+    /* Pin canvas to the visual viewport, not the layout viewport */
+    canvas.style.top  = (vv ? vv.offsetTop  : 0) + 'px';
+    canvas.style.left = (vv ? vv.offsetLeft : 0) + 'px';
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', resizeCanvas);
+    window.visualViewport.addEventListener('scroll', resizeCanvas);
+  }
 
   /* Returns btn rect in canvas coordinates (== visual-viewport coords).
      getBoundingClientRect() is relative to the layout viewport; on mobile
