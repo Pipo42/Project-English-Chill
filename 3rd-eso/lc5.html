@@ -169,39 +169,14 @@
       margin-top: 1rem; font-size: 2rem; text-align: center;
       overflow: hidden;
       max-height: 0;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.35s ease, color 0.35s ease;
+      color: transparent;
+      transition: max-height 0.4s ease, color 0.4s ease;
     }
     .feedback.visible {
       max-height: 4rem;
-      opacity: 1;
     }
 
     .back-row { margin-bottom: 2rem; }
-
-    /* ── Floating scroll-to-top ── */
-    #scroll-top {
-      position: fixed;
-      bottom: 4rem;
-      right: 4rem;
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(60px);
-      transition: opacity 0.45s cubic-bezier(.22,.68,0,1.2), transform 0.45s cubic-bezier(.22,.68,0,1.2);
-    }
-    #scroll-top.visible {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-    #drops-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      pointer-events: none;
-      z-index: 998;
-    }
   </style>
 </head>
 <body id="top">
@@ -403,10 +378,6 @@
 
   </main>
 
-  <canvas id="drops-canvas"></canvas>
-  <a href="#top" id="scroll-top" class="fancy-button" style="--button-outline:#000000; --button-color:var(--color-accent-1);">
-    <span class="button_top"><span class="button-text">↑</span></span>
-  </a>
 
   <footer class="site-footer"></footer>
   <script src="../assets/js/components.js"></script>
@@ -418,7 +389,6 @@
   </script>
   <script src="../assets/js/nav.js"></script>
   <script src="../assets/js/fill-gaps.js"></script>
-  <script src="../assets/js/scroll-top.js"></script>
 
 </body>
 </html>

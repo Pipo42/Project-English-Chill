@@ -3,22 +3,17 @@
   const btn    = document.getElementById('scroll-top');
   const header = document.querySelector('.site-header');
   const canvas = document.getElementById('drops-canvas');
+  if (!btn || !canvas || !header) return;
   const ctx    = canvas.getContext('2d');
   let drops     = [];
   let fragments = [];
   let rafId     = null;
   let wasVisible = false;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   /* Canvas always covers the visual viewport, anchored top-left.
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
   function resizeCanvas() {
-    /* Don't resize while effects are active — it would shift already-drawn
-       particles whose coords are fixed in the old canvas space. */
-    if (drops.length > 0 || fragments.length > 0 || shatter) return;
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
     canvas.style.width  = window.innerWidth  + 'px';
@@ -26,66 +21,14 @@
     canvas.style.top  = '0';
     canvas.style.left = '0';
   }
-=======
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', resizeCanvas);
-  }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  /* Returns btn rect in canvas coordinates.
-     getBoundingClientRect() is relative to the layout viewport, which matches
-     the canvas coordinate space — no offset correction needed. */
+  /* Returns btn rect in canvas coordinates (== visual-viewport coords) */
   function btnRect() {
     return btn.getBoundingClientRect();
   }
 
-  /* Returns the resting position the button will occupy once visible,
-     in canvas (visual-viewport) coordinates — used to spawn effects at
-     the correct spot even when the button still has its entry transform. */
-  function btnRestRect() {
-    const rem    = parseFloat(getComputedStyle(document.documentElement).fontSize);
-    const margin = rem * 4;
-    const bw = btn.offsetWidth;
-    const bh = btn.offsetHeight;
-
-    /* On mobile, CSS `bottom` resolves against the visual viewport height,
-       but the canvas origin (top:0) is the layout viewport top. We need
-       canvas coords, so: canvasTop = vv.offsetTop + (vvH - margin - bh). */
-    const vv  = window.visualViewport;
-    const W   = vv ? vv.width  : window.innerWidth;
-    const vvH = vv ? vv.height : window.innerHeight;
-    const vvOffsetTop  = vv ? vv.offsetTop  : 0;
-    const vvOffsetLeft = vv ? vv.offsetLeft : 0;
-
-    let bLeft, bTop;
-    if (isMobileTablet()) {
-      bLeft = vvOffsetLeft + (W - bw) / 2;
-      bTop  = vvOffsetTop + vvH - margin - bh;
-    } else {
-      bLeft = vvOffsetLeft + W - margin - bw;
-      bTop  = vvOffsetTop + vvH - margin - bh;
-    }
-    return { left: bLeft, top: bTop, right: bLeft + bw, bottom: bTop + bh, width: bw, height: bh };
-  }
-
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   /* ── Unified loop ── */
   function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -101,19 +44,8 @@
   function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
 
   /* ── DROPS ── */
-<<<<<<< HEAD
-  function spawnDrops(r) {
-    r = r || btnRestRect();
-=======
   function spawnDrops() {
-    const r = btn.getBoundingClientRect();
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
+    const r = btnRect();
     const bx = r.left, by = r.top, bw = r.width, bh = r.height;
     const count = 28 + Math.floor(Math.random() * 12);
     for (let i = 0; i < count; i++) {
@@ -182,7 +114,7 @@
         d.vy += 0.38; d.vx *= 0.985;
         d.x += d.vx; d.y += d.vy;
         if (!d.peaked && d.vy > 0) d.peaked = true;
-        if (d.peaked && d.vy > 1.8) { d.phase = 'rest'; d.restTimer = 0; }
+        if (d.peaked && d.vy > 4.5) { d.phase = 'rest'; d.restTimer = 0; }
         d.wobblePhase += d.wobbleSpeed;
         drawDrop(d, 1);
       } else if (d.phase === 'rest') {
@@ -200,8 +132,8 @@
   /* ── SHATTER ── */
   let shatter = null;
 
-  function spawnShatter() {
-    const r = btn.getBoundingClientRect();
+  function spawnShatter(r) {
+    r = r || btnRect();
     const bcx = r.left + r.width/2, bcy = r.top + r.height/2;
     const bw = r.width, bh = r.height;
     const blobPts = makeBlobPts(bcx, bcy, Math.max(bw, bh)*0.6, 12);
@@ -313,9 +245,6 @@
     fragments = fragments.filter(f => f.alpha > 0);
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   /* ── Keep btn pinned to visual viewport (bottom-right on desktop, bottom-center on mobile/tablet) ── */
   function isMobileTablet() { return window.innerWidth <= 1024; }
 
@@ -325,20 +254,13 @@
     if (!vv) return;
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = rem * 4;
+    btn.style.bottom = (window.innerHeight - vv.offsetTop - vv.height + margin) + 'px';
     if (isMobileTablet()) {
-      /* On mobile, don't recalculate bottom on every scroll event — it causes
-         the button to jump when the browser chrome appears/disappears.
-         Just keep it at a fixed bottom; CSS `position:fixed` already anchors
-         it to the visual viewport on iOS/Android. */
-      btn.style.bottom = margin + 'px';
-      btn.style.top    = '';
-      btn.style.right  = '';
-      btn.style.left   = '50%';
+      btn.style.right = '';
+      btn.style.left  = '50%';
     } else {
-      btn.style.top    = '';
-      btn.style.left   = '';
-      btn.style.bottom = (window.innerHeight - vv.offsetTop - vv.height + margin) + 'px';
-      btn.style.right  = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
+      btn.style.left  = '';
+      btn.style.right = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
     }
   }
   if (window.visualViewport) {
@@ -346,25 +268,11 @@
     window.visualViewport.addEventListener('scroll', anchorBtn);
   }
 
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   /* ── Observer ── */
   const observer = new IntersectionObserver(function (entries) {
     const visible = entries[0].isIntersecting;
     if (!visible) {
-      btn.style.transition = '';
-      btn.style.opacity = '';
-      btn.style.pointerEvents = '';
-      btn.classList.add('visible');
-      if (!wasVisible) spawnDrops();
       wasVisible = true;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       anchorBtn();
       /* Place btn at start position (below), then animate to visible */
       btn.style.transition = 'none';
@@ -373,7 +281,7 @@
       btn.style.transform = isMobile ? 'translateX(-50%) translateY(80px)' : 'translateY(80px)';
       btn.classList.remove('visible');
       void btn.getBoundingClientRect(); /* trigger reflow */
-      spawnDrops(btnRestRect());
+      spawnDrops();
       /* Re-enable transition and animate to final position */
       requestAnimationFrame(() => {
         btn.style.transition = '';
@@ -385,7 +293,7 @@
     } else {
       if (wasVisible) {
         /* Read position before hiding */
-        const rect = btnRestRect();
+        const rect = btnRect();
         btn.style.transition = 'none';
         btn.style.opacity = '0';
         btn.style.pointerEvents = 'none';
@@ -399,24 +307,6 @@
           btn.style.right  = '';
           btn.style.left   = '';
         }, 50);
-=======
-    } else {
-      if (wasVisible) {
-        spawnShatter();
-        setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
-    } else {
-      if (wasVisible) {
-        spawnShatter();
-        setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
-=======
-    } else {
-      if (wasVisible) {
-        spawnShatter();
-        setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
->>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
       }
       wasVisible = false;
     }

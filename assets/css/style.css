@@ -60,6 +60,9 @@ footer.site-footer { animation: pageFadeIn 0.35s ease 0.1s both; }
 /* ── Reset ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Remove tap highlight on mobile */
+* { -webkit-tap-highlight-color: transparent; }
+
 html { font-size: 16px; scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
 
@@ -351,4 +354,38 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
   .site-title { font-size: 2rem; }
   .fancy-button { font-size: 1.2rem; }
   .fancy-button .button_top { padding: 0.65em 1em; }
+}
+
+/* ── Floating scroll-to-top ── */
+#scroll-top {
+  position: fixed;
+  bottom: 4rem;
+  right: 4rem;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(80px);
+  transition: opacity 0.5s cubic-bezier(.22,.68,0,1.35), transform 0.55s cubic-bezier(.22,.68,0,1.35);
+  will-change: transform, opacity;
+}
+#scroll-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+@media (max-width: 1024px) {
+  #scroll-top {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+  }
+  #scroll-top.visible {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+#drops-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 998;
 }

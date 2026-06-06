@@ -109,4 +109,32 @@
     updateThumb();
   })();
 
+  /* ── Scroll-to-top button (all pages) ── */
+  (function () {
+    // Don't inject if already in the HTML
+    if (document.getElementById('scroll-top')) return;
+
+    // Only show if page is tall enough to warrant scrolling
+    function hasEnoughScroll() {
+      return document.documentElement.scrollHeight > window.innerHeight * 1.5;
+    }
+    if (!hasEnoughScroll()) return;
+
+    var canvas = document.createElement('canvas');
+    canvas.id = 'drops-canvas';
+    document.body.appendChild(canvas);
+
+    var btn = document.createElement('a');
+    btn.href = '#top';
+    btn.id = 'scroll-top';
+    btn.className = 'fancy-button';
+    btn.style.cssText = '--button-outline:#000000; --button-color:var(--color-accent-1);';
+    btn.innerHTML = '<span class="button_top"><span class="button-text">↑</span></span>';
+    document.body.appendChild(btn);
+
+    var s = document.createElement('script');
+    s.src = base + 'js/scroll-top.js';
+    document.body.appendChild(s);
+  })();
+
 })();
