@@ -288,6 +288,16 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 }
 #custom-scrollbar-thumb.thumb-faded { opacity: 0; pointer-events: none; }
 
+@media (pointer: coarse) {
+  #custom-scrollbar { width: 24px; }
+  #custom-scrollbar-thumb {
+    width: 20px;
+    height: 36px;
+    border-radius: 2px;
+    right: 2px;
+  }
+}
+
 /* ── Footer ── */
 .site-footer {
   padding: clamp(20px, 4vw, 40px) 1.5rem;
