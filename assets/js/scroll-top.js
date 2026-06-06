@@ -23,9 +23,43 @@
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
-  /* Returns btn rect in canvas coordinates (== visual-viewport coords) */
+  /* Returns btn rect in canvas coordinates (== visual-viewport coords).
+     getBoundingClientRect() is relative to the layout viewport; on mobile
+     the visual viewport may be offset (vv.offsetTop > 0 when the browser
+     chrome is visible), so we subtract that offset to get canvas coords. */
   function btnRect() {
-    return btn.getBoundingClientRect();
+    const r   = btn.getBoundingClientRect();
+    const vv  = window.visualViewport;
+    const top = vv ? vv.offsetTop : 0;
+    const left = vv ? vv.offsetLeft : 0;
+    return { left: r.left - left, top: r.top - top, right: r.right - left, bottom: r.bottom - top, width: r.width, height: r.height };
+  }
+
+  /* Returns the resting position the button will occupy once visible,
+     in canvas (visual-viewport) coordinates — used to spawn effects at
+     the correct spot even when the button still has its entry transform. */
+  function btnRestRect() {
+    const rem    = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const margin = rem * 4;
+    const vv     = window.visualViewport;
+    const vvW    = vv ? vv.width  : window.innerWidth;
+    const vvH    = vv ? vv.height : window.innerHeight;
+
+    // Measure actual button dimensions (transform doesn't affect these)
+    const bw = btn.offsetWidth;
+    const bh = btn.offsetHeight;
+
+    let bLeft, bTop;
+    if (isMobileTablet()) {
+      // centered horizontally, fixed margin from bottom of visual viewport
+      bLeft = (vvW - bw) / 2;
+      bTop  = vvH - margin - bh;
+    } else {
+      // right + bottom margin
+      bLeft = vvW - margin - bw;
+      bTop  = vvH - margin - bh;
+    }
+    return { left: bLeft, top: bTop, right: bLeft + bw, bottom: bTop + bh, width: bw, height: bh };
   }
 
   /* ── Unified loop ── */
@@ -43,8 +77,8 @@
   function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
 
   /* ── DROPS ── */
-  function spawnDrops() {
-    const r = btnRect();
+  function spawnDrops(r) {
+    r = r || btnRestRect();
     const bx = r.left, by = r.top, bw = r.width, bh = r.height;
     const count = 28 + Math.floor(Math.random() * 12);
     for (let i = 0; i < count; i++) {
@@ -287,7 +321,7 @@
       btn.style.transform = isMobile ? 'translateX(-50%) translateY(80px)' : 'translateY(80px)';
       btn.classList.remove('visible');
       void btn.getBoundingClientRect(); /* trigger reflow */
-      spawnDrops();
+      spawnDrops(btnRestRect());
       /* Re-enable transition and animate to final position */
       requestAnimationFrame(() => {
         btn.style.transition = '';
@@ -299,7 +333,7 @@
     } else {
       if (wasVisible) {
         /* Read position before hiding */
-        const rect = btnRect();
+        const rect = btnRestRect();
         btn.style.transition = 'none';
         btn.style.opacity = '0';
         btn.style.pointerEvents = 'none';
