@@ -20,9 +20,7 @@
   if (headerEl) {
     headerEl.innerHTML =
       '<div class="site-header-inner">' +
-        '<img src="' + base + 'images/Dotted-Lines-left.svg" alt="" aria-hidden="true" class="header-dots">' +
-        '<a href="' + root + 'index.html" style="text-decoration:none;color:inherit;"><span class="site-title">English &amp; Chill</span></a>' +
-        '<img src="' + base + 'images/Dotted-Lines-right-1.svg" alt="" aria-hidden="true" class="header-dots">' +
+        '<a href="' + root + 'index.html" style="text-decoration:none;display:inline-block;"><img src="' + base + 'images/E&amp;C Logo.svg" alt="English &amp; Chill" class="site-title-logo" style="height:clamp(100px,14vw,190px);width:auto;display:block;"></a>' +
       '</div>';
   }
 
@@ -30,16 +28,6 @@
   const footerEl = document.querySelector('footer.site-footer');
   if (footerEl) {
     footerEl.innerHTML =
-      '<div class="smoke-container">' +
-        '<div class="smoke" style="left:50%;animation-delay:-2s"></div>' +
-        '<div class="smoke" style="left:40%;animation-delay:-3s"></div>' +
-        '<div class="smoke" style="left:60%;animation-delay:-1s"></div>' +
-        '<div class="smoke" style="left:45%;animation-delay:-4s"></div>' +
-        '<div class="smoke" style="left:55%;animation-delay:-2.5s"></div>' +
-      '</div>' +
-      '<a href="' + root + 'index.html" style="display:inline-block;">' +
-        '<img src="' + base + 'images/EC-Logo.svg" alt="English &amp; Chill" class="footer-logo" style="width:203px;height:auto;display:block;">' +
-      '</a>' +
       '<p class="footer-copy">©' + new Date().getFullYear() + '</p>';
   }
 
