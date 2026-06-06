@@ -25,7 +25,16 @@
 - Tablas: font-size 1.15rem (headers 1.2rem), fondo #f8f8f8
 - Exercise headings (.ex-heading): Caveat Brush, escarlata
 - fill_gaps: fondo #fff0f0, borde/sombra escarlata; inputs se autoajustan con margen 32px
-- Check Answers / Reload: escarlata (`--button-outline` + `background: var(--color-accent-3)`)
+- fill_gaps inputs: NO llevar `placeholder` en el HTML — `fill-gaps.js` lo inyecta automáticamente como `"..."`
+- Botón check: texto "Check Answers", escarlata. Tras check: texto "Try Again" (lo gestiona fill-gaps.js)
+- line-height: 2.6 en .fill_gaps-item para evitar solapamiento en wrap
+
+### Progress tracker
+- `assets/js/tracker.js` — se incluye en todas las LC pages tras `fill-gaps.js`
+- Aparece automáticamente al entrar en cualquier sección EXS (IntersectionObserver 50% viewport)
+- PC: vertical, fijo a la izquierda del contenido. Móvil: horizontal, parte superior
+- Círculos con letra del ejercicio (extraída del `.ex-heading` — formato obligatorio `"a. Texto..."`)
+- Al completar un ejercicio se rellena con color pastel del score; borde y texto vuelven a negro
 
 ### Botón back (←)
 - `fancy-button` estándar (no `fancy-back-button`), mismo alto que los demás
@@ -36,10 +45,8 @@
 - Enlaza a `../index.html`
 
 ### Botón ↑ flotante
-- Aparece (bottom-right fijo) cuando el header sale de pantalla — animación emerge del suelo
-- Al aparecer: gotas de agua negras desde el contorno del botón, parábola, descanso, alpha 0
-- Al desaparecer: blob negro crece sobre el botón → explota en chunks de agua → alpha 0
-- Loop RAF unificado (drops + shatter + fragments en un solo tick)
+- Aparece cuando el header sale de pantalla — fade in/out suave (igual en PC y móvil)
+- Sin partículas ni canvas — lógica en `scroll-top.js`
 
 ## Reglas de edición
 - `lc5.html` tiene JS largo al final. Usar `python3` para parchear, no el Edit tool.

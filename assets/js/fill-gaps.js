@@ -100,7 +100,7 @@
     button.style.width = button.offsetWidth + 'px';
     button.dataset.state = 'reload';
     button.dataset.locked = 'true';
-    button.querySelector('.button-text').textContent = 'Reload';
+    button.querySelector('.button-text').textContent = 'Try Again';
     /* Inyectar texto ya (invisible por color:transparent) y expandir espacio */
     fb.textContent = totalCorrect + ' / ' + inputs.length;
     fb.classList.add('visible');
@@ -173,8 +173,14 @@
   });
 
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
+    document.querySelectorAll('.fill_gaps input[type="text"]').forEach(input => {
+      input.placeholder = '...';
+      adjustInputWidth(input);
+    });
   });
-  document.querySelectorAll('.fill_gaps input[type="text"]').forEach(adjustInputWidth);
+  document.querySelectorAll('.fill_gaps input[type="text"]').forEach(input => {
+    input.placeholder = '...';
+    adjustInputWidth(input);
+  });
 
 })();
