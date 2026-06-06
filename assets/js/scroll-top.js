@@ -253,13 +253,20 @@
     if (!vv) return;
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = rem * 4;
-    btn.style.bottom = (window.innerHeight - vv.offsetTop - vv.height + margin) + 'px';
     if (isMobileTablet()) {
-      btn.style.right = '';
-      btn.style.left  = '50%';
+      /* On mobile, don't recalculate bottom on every scroll event — it causes
+         the button to jump when the browser chrome appears/disappears.
+         Just keep it at a fixed bottom; CSS `position:fixed` already anchors
+         it to the visual viewport on iOS/Android. */
+      btn.style.bottom = margin + 'px';
+      btn.style.top    = '';
+      btn.style.right  = '';
+      btn.style.left   = '50%';
     } else {
-      btn.style.left  = '';
-      btn.style.right = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
+      btn.style.top    = '';
+      btn.style.left   = '';
+      btn.style.bottom = (window.innerHeight - vv.offsetTop - vv.height + margin) + 'px';
+      btn.style.right  = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
     }
   }
   if (window.visualViewport) {
