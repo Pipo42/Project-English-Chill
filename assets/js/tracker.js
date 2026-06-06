@@ -43,7 +43,7 @@
   function buildSentinel(sectionLabel) {
     const sentinel = document.createElement('div');
     sentinel.className = 'tracker-sentinel';
-    sentinel.style.cssText = 'pointer-events:auto;';
+    sentinel.style.cssText = '';
     sectionLabel.parentNode.insertBefore(sentinel, sectionLabel);
     sentinel.appendChild(sectionLabel);
     let next = sentinel.nextElementSibling;
@@ -105,7 +105,6 @@
       if (color) applyColor(circle, dot, color);
 
       dot.style.cursor = 'pointer';
-      dot.style.pointerEvents = 'auto';
       dot.addEventListener('click', () => {
         let heading = ex.wrapper.previousElementSibling;
         while (heading && !heading.classList.contains('ex-heading')) {
@@ -252,6 +251,9 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    #ex-tracker.tracker-visible {
+      pointer-events: auto;
     }
 
     /* ── PC: vertical ── */
