@@ -10,6 +10,7 @@
   let wasVisible = false;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   /* Canvas always covers the visual viewport, anchored top-left.
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
@@ -27,12 +28,16 @@
 =======
   function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 >>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
+=======
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', resizeCanvas);
   }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   /* Returns btn rect in canvas coordinates.
      getBoundingClientRect() is relative to the layout viewport, which matches
@@ -72,6 +77,8 @@
 
 =======
 >>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
+=======
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   /* ── Unified loop ── */
   function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -93,6 +100,9 @@
 =======
   function spawnDrops() {
     const r = btn.getBoundingClientRect();
+<<<<<<< HEAD
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
+=======
 >>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
     const bx = r.left, by = r.top, bw = r.width, bh = r.height;
     const count = 28 + Math.floor(Math.random() * 12);
@@ -294,6 +304,7 @@
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   /* ── Keep btn pinned to visual viewport (bottom-right on desktop, bottom-center on mobile/tablet) ── */
   function isMobileTablet() { return window.innerWidth <= 1024; }
 
@@ -326,6 +337,8 @@
 
 =======
 >>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
+=======
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   /* ── Observer ── */
   const observer = new IntersectionObserver(function (entries) {
     const visible = entries[0].isIntersecting;
@@ -336,6 +349,7 @@
       btn.classList.add('visible');
       if (!wasVisible) spawnDrops();
       wasVisible = true;
+<<<<<<< HEAD
 <<<<<<< HEAD
       anchorBtn();
       /* Place btn at start position (below), then animate to visible */
@@ -371,6 +385,12 @@
           btn.style.right  = '';
           btn.style.left   = '';
         }, 50);
+=======
+    } else {
+      if (wasVisible) {
+        spawnShatter();
+        setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
 =======
     } else {
       if (wasVisible) {
