@@ -221,12 +221,11 @@ var PuzzleBuilder = (function () {
 
     if (!stageEl) { console.warn('PuzzleBuilder: stageId "' + cfg.stageId + '" not found'); return; }
 
-    /* ── Responsive: recalcula dimensiones y reconstruye piezas ── */
-    function rebuild() {
+    /* ── Calcula dimensiones según viewport ── */
+    function calcDimensions() {
       var container = sectionEl || stageEl.parentElement;
       var available = container.clientWidth - 32;
       var n = cfg.pieces.length;
-      // naturalW con dimensiones base
       var naturalW = (W_BASE - TAB_R_BASE) * n + TAB_R_BASE * 2;
       if (naturalW > available) {
         var ratio = available / naturalW;
@@ -240,7 +239,20 @@ var PuzzleBuilder = (function () {
         W = W_BASE; H = H_BASE; TAB_R = TAB_R_BASE; TAB_H = TAB_H_BASE;
         FONT_WORD = FONT_WORD_BASE; FONT_LBL = FONT_LBL_BASE;
       }
+    }
+
+    /* ── Reconstruye y si ya se animó, muestra piezas en estado final ── */
+    function rebuild() {
+      calcDimensions();
       buildStage(stageEl, cfg.pieces);
+      if (played) {
+        var wraps = stageEl.querySelectorAll('.puzzle-piece-wrap');
+        wraps.forEach(function (w) {
+          w.style.opacity = '1';
+          w.style.transform = 'translateX(0) scale(1,1)';
+          w.classList.add('landed');
+        });
+      }
     }
 
     var played = false;
