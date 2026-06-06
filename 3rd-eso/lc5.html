@@ -177,6 +177,16 @@
     }
 
     .back-row { margin-bottom: 2rem; }
+
+    /* ── Puzzle builder ── */
+    .puzzle-section { margin: 1rem 0; overflow: visible; }
+    .puzzle-title { font-family: 'Caveat Brush', cursive; color: var(--color-accent-3); font-size: clamp(1.2rem,3vw,1.6rem); text-align: center; margin-bottom: .3rem; font-weight: 400; }
+    .puzzle-stage { width: 100%; overflow: visible; padding: 40px 10px 20px; margin-bottom: 1.2rem; }
+    .puzzle-stage-inner { display: flex; align-items: center; justify-content: center; gap: 0; min-width: max-content; margin: 0 auto; }
+    .puzzle-piece-wrap { display: block; opacity: 0; flex-shrink: 0; }
+    .puzzle-piece-wrap + .puzzle-piece-wrap { margin-left: -18px; }
+    .puzzle-piece-wrap svg path.piece-path { transition: fill 0.55s ease 0.15s; }
+    .puzzle-piece-wrap.landed svg path.piece-path { fill: var(--piece-color) !important; }
   </style>
 </head>
 <body id="top">
@@ -210,6 +220,25 @@
           <td><span class="c-green">Have</span> you <span class="c-green">been</span> to Paris?</td>
         </tr>
       </table>
+    </div>
+
+
+    <!-- ── AFFIRMATIVE ── -->
+    <div class="puzzle-section" id="section-affirmative">
+      <p class="puzzle-title">Affirmative</p>
+      <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-affirmative"></div></div>
+    </div>
+
+    <!-- ── NEGATIVE ── -->
+    <div class="puzzle-section" id="section-negative">
+      <p class="puzzle-title">Negative</p>
+      <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-negative"></div></div>
+    </div>
+
+    <!-- ── QUESTION ── -->
+    <div class="puzzle-section" id="section-question">
+      <p class="puzzle-title">Question</p>
+      <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-question"></div></div>
     </div>
 
     <div class="grammar-table-wrap">
@@ -391,5 +420,43 @@
   <script src="../assets/js/fill-gaps.js"></script>
   <script src="../assets/js/tracker.js"></script>
 
+  <script src="../assets/js/puzzle-builder.js"></script>
+  <script>
+    PuzzleBuilder.init({
+      sectionId:'section-affirmative', stageId:'stage-affirmative',
+      exampleId:'ex-affirmative', exTextId:'exText-affirmative',
+      example:'She has visited Paris twice.',
+      pieces:[
+        {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
+        {word:'has',     label:'Auxiliary',       fill:'#ede9fb', lt:'in',   rt:'out'},
+        {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
+        {word:'Paris',   label:'Object',          fill:'#fef4dc', lt:'in',   rt:'out'},
+        {word:'twice',   label:'Time expression', fill:'#e8f8f0', lt:'in',   rt:'none'}
+      ]
+    });
+    PuzzleBuilder.init({
+      sectionId:'section-negative', stageId:'stage-negative',
+      exampleId:'ex-negative', exTextId:'exText-negative',
+      example:"She hasn't visited Paris.",
+      pieces:[
+        {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
+        {word:"hasn't",  label:'Auxiliary + not', fill:'#ffd6d6', lt:'in',   rt:'out'},
+        {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
+        {word:'Paris',   label:'Object',          fill:'#fef4dc', lt:'in',   rt:'none'}
+      ]
+    });
+    PuzzleBuilder.init({
+      sectionId:'section-question', stageId:'stage-question',
+      exampleId:'ex-question', exTextId:'exText-question',
+      example:'Has she visited Paris?',
+      pieces:[
+        {word:'Has',     label:'Auxiliary',       fill:'#ede9fb', lt:'none', rt:'out'},
+        {word:'she',     label:'Subject',         fill:'#ddeeff', lt:'in',   rt:'out'},
+        {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
+        {word:'Paris',   label:'Object',          fill:'#fef4dc', lt:'in',   rt:'out'},
+        {word:'?',       label:'',                fill:'#f5f5f5', lt:'in',   rt:'none'}
+      ]
+    });
+  </script>
 </body>
 </html>
