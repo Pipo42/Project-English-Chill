@@ -96,28 +96,23 @@
     const color = scoreColor(ratio);
     const fb = container.querySelector('.feedback');
     const afterStagger = delay + 100;
-    /* Flip button to reload immediately, lock until animation ends; expand feedback space now */
+    setTimeout(() => {
+      fb.textContent = totalCorrect + ' / ' + inputs.length;
+      fb.style.color = color;
+      fb.classList.add('visible');
+      container.classList.remove('shake');
+      void container.offsetWidth; // reflow para reiniciar la animación si se repite
+      container.classList.add('shake');
+    }, afterStagger);
+    /* Flip button to reload state — lock width first to prevent resize */
     button.style.width = button.offsetWidth + 'px';
     button.dataset.state = 'reload';
-    button.dataset.locked = 'true';
     button.querySelector('.button-text').textContent = 'Reload';
-    /* Inyectar texto ya (invisible por color:transparent) y expandir espacio */
-    fb.textContent = totalCorrect + ' / ' + inputs.length;
-    fb.classList.add('visible');
-    setTimeout(() => {
-      /* Apply score colour to button and form — same tick as shake */
-      button.style.setProperty('--button-outline', color);
-      button.style.background = color;
-      container.style.setProperty('--score-color', color);
-      container.classList.add('checked-state');
-      container.classList.remove('shake');
-      void container.offsetWidth; // reflow para reiniciar animación shake
-      container.classList.add('shake');
-      /* Fade in: transicionar de transparent al color real */
-      fb.style.color = color;
-      /* Unlock reload after shake completes (400ms) */
-      setTimeout(() => { button.dataset.locked = 'false'; }, 400);
-    }, afterStagger);
+    /* Apply score colour to button and form */
+    button.style.setProperty('--button-outline', color);
+    button.style.background = color;
+    container.style.setProperty('--score-color', color);
+    container.classList.add('checked-state');
   }
 
   function reload(button) {
@@ -132,9 +127,8 @@
       if (span) span.remove();
     });
     const fb2 = container.querySelector('.feedback');
-    fb2.style.color = '';
     fb2.classList.remove('visible');
-    setTimeout(() => { fb2.textContent = ''; }, 400);
+    setTimeout(() => { fb2.textContent = ''; fb2.style.color = ''; }, 400);
     /* Flip button back to check state — release fixed width */
     button.style.width = '';
     button.dataset.state = 'check';
@@ -150,7 +144,7 @@
     const btn = e.target.closest('.btn-check');
     if (!btn) return;
     e.preventDefault(); btn.blur();
-    if (btn.dataset.state === 'reload') { if (btn.dataset.locked !== 'true') reload(btn); } else { check(btn); }
+    if (btn.dataset.state === 'reload') { reload(btn); } else { check(btn); }
   });
 
   document.addEventListener('keydown', function (e) {

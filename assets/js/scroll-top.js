@@ -9,6 +9,7 @@
   let rafId     = null;
   let wasVisible = false;
 
+<<<<<<< HEAD
   /* Canvas always covers the visual viewport, anchored top-left.
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
@@ -23,12 +24,16 @@
     canvas.style.top  = '0';
     canvas.style.left = '0';
   }
+=======
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', resizeCanvas);
   }
 
+<<<<<<< HEAD
   /* Returns btn rect in canvas coordinates.
      getBoundingClientRect() is relative to the layout viewport, which matches
      the canvas coordinate space — no offset correction needed. */
@@ -65,6 +70,8 @@
     return { left: bLeft, top: bTop, right: bLeft + bw, bottom: bTop + bh, width: bw, height: bh };
   }
 
+=======
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   /* ── Unified loop ── */
   function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -80,8 +87,13 @@
   function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
 
   /* ── DROPS ── */
+<<<<<<< HEAD
   function spawnDrops(r) {
     r = r || btnRestRect();
+=======
+  function spawnDrops() {
+    const r = btn.getBoundingClientRect();
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
     const bx = r.left, by = r.top, bw = r.width, bh = r.height;
     const count = 28 + Math.floor(Math.random() * 12);
     for (let i = 0; i < count; i++) {
@@ -150,7 +162,7 @@
         d.vy += 0.38; d.vx *= 0.985;
         d.x += d.vx; d.y += d.vy;
         if (!d.peaked && d.vy > 0) d.peaked = true;
-        if (d.peaked && d.vy > 4.5) { d.phase = 'rest'; d.restTimer = 0; }
+        if (d.peaked && d.vy > 1.8) { d.phase = 'rest'; d.restTimer = 0; }
         d.wobblePhase += d.wobbleSpeed;
         drawDrop(d, 1);
       } else if (d.phase === 'rest') {
@@ -168,8 +180,8 @@
   /* ── SHATTER ── */
   let shatter = null;
 
-  function spawnShatter(r) {
-    r = r || btnRect();
+  function spawnShatter() {
+    const r = btn.getBoundingClientRect();
     const bcx = r.left + r.width/2, bcy = r.top + r.height/2;
     const bw = r.width, bh = r.height;
     const blobPts = makeBlobPts(bcx, bcy, Math.max(bw, bh)*0.6, 12);
@@ -281,6 +293,7 @@
     fragments = fragments.filter(f => f.alpha > 0);
   }
 
+<<<<<<< HEAD
   /* ── Keep btn pinned to visual viewport (bottom-right on desktop, bottom-center on mobile/tablet) ── */
   function isMobileTablet() { return window.innerWidth <= 1024; }
 
@@ -311,11 +324,19 @@
     window.visualViewport.addEventListener('scroll', anchorBtn);
   }
 
+=======
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
   /* ── Observer ── */
   const observer = new IntersectionObserver(function (entries) {
     const visible = entries[0].isIntersecting;
     if (!visible) {
+      btn.style.transition = '';
+      btn.style.opacity = '';
+      btn.style.pointerEvents = '';
+      btn.classList.add('visible');
+      if (!wasVisible) spawnDrops();
       wasVisible = true;
+<<<<<<< HEAD
       anchorBtn();
       /* Place btn at start position (below), then animate to visible */
       btn.style.transition = 'none';
@@ -350,6 +371,12 @@
           btn.style.right  = '';
           btn.style.left   = '';
         }, 50);
+=======
+    } else {
+      if (wasVisible) {
+        spawnShatter();
+        setTimeout(() => { btn.style.transition = ''; btn.style.opacity = ''; }, 50);
+>>>>>>> parent of 9482cb9 (fix(up button in phone), perf(fill gaps))
       }
       wasVisible = false;
     }
