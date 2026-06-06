@@ -245,23 +245,18 @@
     fragments = fragments.filter(f => f.alpha > 0);
   }
 
-  /* ── Keep btn pinned to visual viewport (bottom-right on desktop, bottom-center on mobile/tablet) ── */
+  /* ── Keep btn pinned to visual viewport (desktop only — mobile uses CSS fixed) ── */
   function isMobileTablet() { return window.innerWidth <= 1024; }
 
   function anchorBtn() {
-    if (!wasVisible) return;
+    if (!wasVisible || isMobileTablet()) return;
     const vv = window.visualViewport;
     if (!vv) return;
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = rem * 4;
     btn.style.bottom = (window.innerHeight - vv.offsetTop - vv.height + margin) + 'px';
-    if (isMobileTablet()) {
-      btn.style.right = '';
-      btn.style.left  = '50%';
-    } else {
-      btn.style.left  = '';
-      btn.style.right = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
-    }
+    btn.style.left  = '';
+    btn.style.right = (window.innerWidth - vv.offsetLeft - vv.width + margin) + 'px';
   }
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', anchorBtn);
@@ -273,7 +268,7 @@
     const visible = entries[0].isIntersecting;
     if (!visible) {
       wasVisible = true;
-      anchorBtn();
+      if (!isMobileTablet()) anchorBtn();
       /* Place btn at start position (below), then animate to visible */
       btn.style.transition = 'none';
       btn.style.opacity = '0';
@@ -303,9 +298,11 @@
           btn.style.transition = '';
           btn.style.opacity = '';
           btn.style.pointerEvents = '';
-          btn.style.bottom = '';
-          btn.style.right  = '';
-          btn.style.left   = '';
+          if (!isMobileTablet()) {
+            btn.style.bottom = '';
+            btn.style.right  = '';
+            btn.style.left   = '';
+          }
         }, 50);
       }
       wasVisible = false;
