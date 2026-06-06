@@ -9,63 +9,32 @@
   let fragments = [];
   let rafId     = null;
   let wasVisible = false;
-  /* Visual viewport offset at the time particles were spawned.
-     Used in tick() to compensate for viewport movement during animation. */
-  let spawnVvTop = 0, spawnVvLeft = 0;
 
   /* Canvas always covers the visual viewport, anchored top-left.
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
   function resizeCanvas() {
-    const vv = window.visualViewport;
-    const w = vv ? Math.round(vv.width)  : window.innerWidth;
-    const h = vv ? Math.round(vv.height) : window.innerHeight;
-    const t = vv ? Math.round(vv.offsetTop)  : 0;
-    const l = vv ? Math.round(vv.offsetLeft) : 0;
-    canvas.width  = w;
-    canvas.height = h;
-    canvas.style.width  = w + 'px';
-    canvas.style.height = h + 'px';
-    canvas.style.top  = t + 'px';
-    canvas.style.left = l + 'px';
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.width  = window.innerWidth  + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    canvas.style.top  = '0';
+    canvas.style.left = '0';
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', resizeCanvas);
-    window.visualViewport.addEventListener('scroll', resizeCanvas);
-  }
 
-  /* Returns btn rect in canvas coordinates (visual-viewport space).
-     Optionally strips the current CSS transform so we get the final
-     resting position even if called while the button is mid-animation. */
-  function btnRect(ignoreTransform) {
-    if (ignoreTransform) {
-      const saved = btn.style.transform;
-      btn.style.transform = isMobileTablet() ? 'translateX(-50%)' : 'none';
-      void btn.getBoundingClientRect(); // reflow
-      const r = btn.getBoundingClientRect();
-      btn.style.transform = saved;
-      return r;
-    }
+  /* Returns btn rect in canvas coordinates (== visual-viewport coords) */
+  function btnRect() {
     return btn.getBoundingClientRect();
   }
 
   /* ── Unified loop ── */
   function tick() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    /* Compensate for visual viewport movement since spawn time.
-       The canvas moves with the visual viewport (resizeCanvas keeps it anchored),
-       so we translate by the delta to keep particles in the right visual spot. */
-    const vv = window.visualViewport;
-    const dvx = vv ? (vv.offsetLeft - spawnVvLeft) : 0;
-    const dvy = vv ? (vv.offsetTop  - spawnVvTop)  : 0;
-    ctx.save();
-    ctx.translate(-dvx, -dvy);
     tickShatter();
     tickDrops();
     tickFragments();
-    ctx.restore();
     if (drops.length > 0 || fragments.length > 0 || shatter) {
       rafId = requestAnimationFrame(tick);
     } else {
@@ -76,10 +45,7 @@
 
   /* ── DROPS ── */
   function spawnDrops() {
-    const vv = window.visualViewport;
-    spawnVvTop  = vv ? vv.offsetTop  : 0;
-    spawnVvLeft = vv ? vv.offsetLeft : 0;
-    const r = btnRect(true);
+    const r = btnRect();
     const bx = r.left, by = r.top, bw = r.width, bh = r.height;
     const count = 28 + Math.floor(Math.random() * 12);
     for (let i = 0; i < count; i++) {
@@ -168,9 +134,6 @@
 
   function spawnShatter(r) {
     r = r || btnRect();
-    const vv = window.visualViewport;
-    spawnVvTop  = vv ? vv.offsetTop  : 0;
-    spawnVvLeft = vv ? vv.offsetLeft : 0;
     const bcx = r.left + r.width/2, bcy = r.top + r.height/2;
     const bw = r.width, bh = r.height;
     const blobPts = makeBlobPts(bcx, bcy, Math.max(bw, bh)*0.6, 12);
@@ -305,42 +268,65 @@
     const visible = entries[0].isIntersecting;
     if (!visible) {
       wasVisible = true;
-      if (!isMobileTablet()) anchorBtn();
-      /* Place btn at start position (below), then animate to visible */
-      btn.style.transition = 'none';
-      btn.style.opacity = '0';
-      const isMobile = isMobileTablet();
-      btn.style.transform = isMobile ? 'translateX(-50%) translateY(80px)' : 'translateY(80px)';
-      btn.classList.remove('visible');
-      void btn.getBoundingClientRect(); /* trigger reflow */
-      spawnDrops();
-      /* Re-enable transition and animate to final position */
-      requestAnimationFrame(() => {
-        btn.style.transition = '';
-        btn.style.opacity = '';
-        btn.style.transform = '';
-        btn.classList.add('visible');
-      });
-      btn.style.pointerEvents = 'auto';
-    } else {
-      if (wasVisible) {
-        /* Read position before hiding */
-        const rect = btnRect();
+      if (isMobileTablet()) {
+        /* Mobile: simple slide-up + fade in, no particles */
         btn.style.transition = 'none';
         btn.style.opacity = '0';
-        btn.style.pointerEvents = 'none';
+        btn.style.transform = 'translateX(-50%) translateY(80px)';
         btn.classList.remove('visible');
-        spawnShatter(rect);
-        setTimeout(() => {
+        void btn.getBoundingClientRect();
+        requestAnimationFrame(() => {
           btn.style.transition = '';
           btn.style.opacity = '';
-          btn.style.pointerEvents = '';
-          if (!isMobileTablet()) {
+          btn.style.transform = '';
+          btn.classList.add('visible');
+        });
+        btn.style.pointerEvents = 'auto';
+      } else {
+        anchorBtn();
+        btn.style.transition = 'none';
+        btn.style.opacity = '0';
+        btn.style.transform = 'translateY(80px)';
+        btn.classList.remove('visible');
+        void btn.getBoundingClientRect();
+        spawnDrops();
+        requestAnimationFrame(() => {
+          btn.style.transition = '';
+          btn.style.opacity = '';
+          btn.style.transform = '';
+          btn.classList.add('visible');
+        });
+        btn.style.pointerEvents = 'auto';
+      }
+    } else {
+      if (wasVisible) {
+        if (isMobileTablet()) {
+          /* Mobile: simple slide-down + fade out, no particles */
+          btn.style.pointerEvents = 'none';
+          btn.classList.remove('visible');
+          setTimeout(() => {
+            if (!isMobileTablet()) return;
+            btn.style.transition = 'none';
+            btn.style.opacity = '';
+            btn.style.transform = '';
+            btn.style.pointerEvents = '';
+          }, 550);
+        } else {
+          const rect = btnRect();
+          btn.style.transition = 'none';
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+          btn.classList.remove('visible');
+          spawnShatter(rect);
+          setTimeout(() => {
+            btn.style.transition = '';
+            btn.style.opacity = '';
+            btn.style.pointerEvents = '';
             btn.style.bottom = '';
             btn.style.right  = '';
             btn.style.left   = '';
-          }
-        }, 50);
+          }, 50);
+        }
       }
       wasVisible = false;
     }
