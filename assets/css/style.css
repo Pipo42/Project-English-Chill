@@ -379,9 +379,25 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
     left: 50%;
     transform: translateX(-50%) translateY(80px);
     -webkit-tap-highlight-color: transparent;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #scroll-top:focus,
+  #scroll-top:active {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
   }
   #scroll-top.visible {
     transform: translateX(-50%) translateY(0);
+  }
+  #scroll-top .button_top {
+    padding: 0;
+    width: 3.8em;
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 #drops-canvas {

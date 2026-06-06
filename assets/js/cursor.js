@@ -63,11 +63,13 @@
     if (!rafRunning) raf();
   }
 
-  document.addEventListener('mousedown',   (e) => {
-    if (e.target.closest('a[href]')) return;
-    spawnInk(e.clientX, e.clientY);
-  });
-  document.addEventListener('contextmenu', (e) => spawnInk(e.clientX, e.clientY));
+  if (window.innerWidth > 1024) {
+    document.addEventListener('mousedown',   (e) => {
+      if (e.target.closest('a[href]')) return;
+      spawnInk(e.clientX, e.clientY);
+    });
+    document.addEventListener('contextmenu', (e) => spawnInk(e.clientX, e.clientY));
+  }
 
   let rafRunning = false;
   function raf() {
