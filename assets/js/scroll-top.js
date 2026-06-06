@@ -36,22 +36,25 @@
   function btnRestRect() {
     const rem    = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = rem * 4;
-    /* CSS `position:fixed` with `bottom/right` is relative to the layout
-       viewport (window.innerWidth/Height). The canvas also covers the layout
-       viewport. Use those values so spawn coords always match the button. */
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-
     const bw = btn.offsetWidth;
     const bh = btn.offsetHeight;
 
+    /* On mobile, CSS `bottom` resolves against the visual viewport height,
+       but the canvas origin (top:0) is the layout viewport top. We need
+       canvas coords, so: canvasTop = vv.offsetTop + (vvH - margin - bh). */
+    const vv  = window.visualViewport;
+    const W   = vv ? vv.width  : window.innerWidth;
+    const vvH = vv ? vv.height : window.innerHeight;
+    const vvOffsetTop  = vv ? vv.offsetTop  : 0;
+    const vvOffsetLeft = vv ? vv.offsetLeft : 0;
+
     let bLeft, bTop;
     if (isMobileTablet()) {
-      bLeft = (W - bw) / 2;
-      bTop  = H - margin - bh;
+      bLeft = vvOffsetLeft + (W - bw) / 2;
+      bTop  = vvOffsetTop + vvH - margin - bh;
     } else {
-      bLeft = W - margin - bw;
-      bTop  = H - margin - bh;
+      bLeft = vvOffsetLeft + W - margin - bw;
+      bTop  = vvOffsetTop + vvH - margin - bh;
     }
     return { left: bLeft, top: bTop, right: bLeft + bw, bottom: bTop + bh, width: bw, height: bh };
   }
