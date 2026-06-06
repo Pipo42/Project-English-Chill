@@ -13,6 +13,9 @@
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
   function resizeCanvas() {
+    /* Don't resize while effects are active — it would shift already-drawn
+       particles whose coords are fixed in the old canvas space. */
+    if (drops.length > 0 || fragments.length > 0 || shatter) return;
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
     canvas.style.width  = window.innerWidth  + 'px';
@@ -22,6 +25,9 @@
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', resizeCanvas);
+  }
 
   /* Returns btn rect in canvas coordinates.
      getBoundingClientRect() is relative to the layout viewport, which matches
