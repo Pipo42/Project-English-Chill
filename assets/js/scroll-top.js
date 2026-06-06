@@ -13,34 +13,21 @@
      getBoundingClientRect() returns coords in visual-viewport space,
      so they map directly onto canvas coords — no offset needed. */
   function resizeCanvas() {
-    const vv = window.visualViewport;
-    const vvW = vv ? vv.width  : window.innerWidth;
-    const vvH = vv ? vv.height : window.innerHeight;
-    canvas.width  = vvW;
-    canvas.height = vvH;
-    canvas.style.width  = vvW + 'px';
-    canvas.style.height = vvH + 'px';
-    /* Pin canvas to the visual viewport, not the layout viewport */
-    canvas.style.top  = (vv ? vv.offsetTop  : 0) + 'px';
-    canvas.style.left = (vv ? vv.offsetLeft : 0) + 'px';
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvas.style.width  = window.innerWidth  + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    canvas.style.top  = '0';
+    canvas.style.left = '0';
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', resizeCanvas);
-    window.visualViewport.addEventListener('scroll', resizeCanvas);
-  }
 
-  /* Returns btn rect in canvas coordinates (== visual-viewport coords).
-     getBoundingClientRect() is relative to the layout viewport; on mobile
-     the visual viewport may be offset (vv.offsetTop > 0 when the browser
-     chrome is visible), so we subtract that offset to get canvas coords. */
+  /* Returns btn rect in canvas coordinates.
+     getBoundingClientRect() is relative to the layout viewport, which matches
+     the canvas coordinate space — no offset correction needed. */
   function btnRect() {
-    const r   = btn.getBoundingClientRect();
-    const vv  = window.visualViewport;
-    const top = vv ? vv.offsetTop : 0;
-    const left = vv ? vv.offsetLeft : 0;
-    return { left: r.left - left, top: r.top - top, right: r.right - left, bottom: r.bottom - top, width: r.width, height: r.height };
+    return btn.getBoundingClientRect();
   }
 
   /* Returns the resting position the button will occupy once visible,
@@ -49,23 +36,22 @@
   function btnRestRect() {
     const rem    = parseFloat(getComputedStyle(document.documentElement).fontSize);
     const margin = rem * 4;
-    const vv     = window.visualViewport;
-    const vvW    = vv ? vv.width  : window.innerWidth;
-    const vvH    = vv ? vv.height : window.innerHeight;
+    /* CSS `position:fixed` with `bottom/right` is relative to the layout
+       viewport (window.innerWidth/Height). The canvas also covers the layout
+       viewport. Use those values so spawn coords always match the button. */
+    const W = window.innerWidth;
+    const H = window.innerHeight;
 
-    // Measure actual button dimensions (transform doesn't affect these)
     const bw = btn.offsetWidth;
     const bh = btn.offsetHeight;
 
     let bLeft, bTop;
     if (isMobileTablet()) {
-      // centered horizontally, fixed margin from bottom of visual viewport
-      bLeft = (vvW - bw) / 2;
-      bTop  = vvH - margin - bh;
+      bLeft = (W - bw) / 2;
+      bTop  = H - margin - bh;
     } else {
-      // right + bottom margin
-      bLeft = vvW - margin - bw;
-      bTop  = vvH - margin - bh;
+      bLeft = W - margin - bw;
+      bTop  = H - margin - bh;
     }
     return { left: bLeft, top: bTop, right: bLeft + bw, bottom: bTop + bh, width: bw, height: bh };
   }
