@@ -5,8 +5,12 @@
 
 var PuzzleBuilder = (function () {
 
-  /* ── Dimensiones globales de pieza ── */
-  var W = 140, H = 110, TAB_R = 18, TAB_H = 22, CR = 0;
+  /* ── Dimensiones base de pieza (desktop) ── */
+  var W_BASE = 140, H_BASE = 110, TAB_R_BASE = 18, TAB_H_BASE = 22, CR = 0;
+  var FONT_WORD_BASE = 24, FONT_LBL_BASE = 9;
+  /* ── Dimensiones activas (se recalculan según viewport) ── */
+  var W = W_BASE, H = H_BASE, TAB_R = TAB_R_BASE, TAB_H = TAB_H_BASE;
+  var FONT_WORD = FONT_WORD_BASE, FONT_LBL = FONT_LBL_BASE;
 
   /* ── Genera el path SVG de una pieza ── */
   function makePath(lt, rt) {
@@ -80,7 +84,7 @@ var PuzzleBuilder = (function () {
     word.setAttribute('x', cx); word.setAttribute('y', H / 2 - 8);
     word.setAttribute('text-anchor', 'middle'); word.setAttribute('dominant-baseline', 'middle');
     word.setAttribute('fill', '#111'); word.setAttribute('font-family', "'Caveat Brush', cursive");
-    word.setAttribute('font-size', '24');
+    word.setAttribute('font-size', FONT_WORD);
     word.textContent = piece.word;
     g.appendChild(word);
 
@@ -88,7 +92,7 @@ var PuzzleBuilder = (function () {
     lbl.setAttribute('x', cx); lbl.setAttribute('y', H / 2 + 16);
     lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('dominant-baseline', 'middle');
     lbl.setAttribute('fill', '#555'); lbl.setAttribute('font-family', "'Manrope', sans-serif");
-    lbl.setAttribute('font-size', '9'); lbl.setAttribute('font-weight', '700');
+    lbl.setAttribute('font-size', FONT_LBL); lbl.setAttribute('font-weight', '700');
     lbl.setAttribute('letter-spacing', '1.2');
     lbl.textContent = piece.label.toUpperCase();
     g.appendChild(lbl);
@@ -217,9 +221,32 @@ var PuzzleBuilder = (function () {
 
     if (!stageEl) { console.warn('PuzzleBuilder: stageId "' + cfg.stageId + '" not found'); return; }
 
-    buildStage(stageEl, cfg.pieces);
+    /* ── Responsive: recalcula dimensiones y reconstruye piezas ── */
+    function rebuild() {
+      var container = sectionEl || stageEl.parentElement;
+      var available = container.clientWidth - 32;
+      var n = cfg.pieces.length;
+      // naturalW con dimensiones base
+      var naturalW = (W_BASE - TAB_R_BASE) * n + TAB_R_BASE * 2;
+      if (naturalW > available) {
+        var ratio = available / naturalW;
+        W     = Math.floor(W_BASE     * ratio);
+        H     = Math.floor(H_BASE     * ratio);
+        TAB_R = Math.floor(TAB_R_BASE * ratio);
+        TAB_H = Math.floor(TAB_H_BASE * ratio);
+        FONT_WORD = Math.floor(FONT_WORD_BASE * ratio);
+        FONT_LBL  = Math.max(6, Math.floor(FONT_LBL_BASE * ratio));
+      } else {
+        W = W_BASE; H = H_BASE; TAB_R = TAB_R_BASE; TAB_H = TAB_H_BASE;
+        FONT_WORD = FONT_WORD_BASE; FONT_LBL = FONT_LBL_BASE;
+      }
+      buildStage(stageEl, cfg.pieces);
+    }
 
     var played = false;
+
+    rebuild();
+    window.addEventListener('resize', function () { rebuild(); });
     var trigger = sectionEl || stageEl;
 
     var obs = new IntersectionObserver(function (entries) {
