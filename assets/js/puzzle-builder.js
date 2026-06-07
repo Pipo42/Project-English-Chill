@@ -6,7 +6,7 @@
 var PuzzleBuilder = (function () {
 
   /* ── Dimensiones base de pieza (desktop) ── */
-  var W_BASE = 140, H_BASE = 110, TAB_R_BASE = 18, TAB_H_BASE = 22, CR = 0;
+  var W_BASE = 140, H_BASE = 110, TAB_R_BASE = 18, TAB_H_BASE = 22, CR = 18;
   var FONT_WORD_BASE = 24, FONT_LBL_BASE = 9;
   /* ── Dimensiones activas (se recalculan según viewport) ── */
   var W = W_BASE, H = H_BASE, TAB_R = TAB_R_BASE, TAB_H = TAB_H_BASE;
@@ -55,25 +55,40 @@ var PuzzleBuilder = (function () {
     var fid = 'f' + Math.random().toString(36).slice(2, 7);
 
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    var SHADOW_DY = 6;
     svg.setAttribute('width', svgW);
-    svg.setAttribute('height', H);
-    svg.setAttribute('viewBox', (-extraL) + ' 0 ' + svgW + ' ' + H);
+    svg.setAttribute('height', H + SHADOW_DY);
+    svg.setAttribute('viewBox', (-extraL) + ' 0 ' + svgW + ' ' + (H + SHADOW_DY));
     svg.style.display = 'block';
     svg.style.overflow = 'visible';
 
     var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    defs.innerHTML = '<filter id="' + fid + '" x="-15%" y="-15%" width="130%" height="130%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.12)"/></filter>';
+    /* clipPath que solo deja ver la sombra por debajo del path original */
+    var clipId = 'c' + fid;
+    defs.innerHTML = '<clipPath id="' + clipId + '">' +
+      '<rect x="' + (-extraL - 10) + '" y="' + (H / 2) + '" width="' + (svgW + 20) + '" height="' + (H / 2 + SHADOW_DY + 10) + '"/>' +
+      '</clipPath>';
     svg.appendChild(defs);
 
     var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('filter', 'url(#' + fid + ')');
 
+    /* capa inferior: sombra sólida negra, visible solo en la mitad inferior */
+    var shadowEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    shadowEl.setAttribute('d', makePath(piece.lt, piece.rt));
+    shadowEl.setAttribute('fill', '#222');
+    shadowEl.setAttribute('stroke', '#222');
+    shadowEl.setAttribute('stroke-width', '1.5');
+    shadowEl.setAttribute('transform', 'translate(0,' + SHADOW_DY + ')');
+    shadowEl.setAttribute('clip-path', 'url(#' + clipId + ')');
+    g.appendChild(shadowEl);
+
+    /* capa superior: fondo del color de página + borde del color de énfasis */
     var pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     pathEl.setAttribute('d', makePath(piece.lt, piece.rt));
-    pathEl.setAttribute('fill', 'transparent');
+    pathEl.setAttribute('fill', getComputedStyle(document.body).backgroundColor || '#99aebb');
     pathEl.setAttribute('stroke', '#222');
     pathEl.classList.add('piece-path');
-    pathEl.setAttribute('stroke-width', '1');
+    pathEl.setAttribute('stroke-width', '1.5');
     pathEl.setAttribute('stroke-linejoin', 'round');
     pathEl.setAttribute('stroke-linecap', 'round');
     g.appendChild(pathEl);
@@ -88,13 +103,29 @@ var PuzzleBuilder = (function () {
     word.textContent = piece.word;
     g.appendChild(word);
 
+    var lblY = H / 2 + 16;
+    var lblText = piece.label.toUpperCase();
+    var lblFontSize = FONT_LBL;
+    /* estima ancho del texto para el rect de fondo */
+    var lblW = lblText.length * lblFontSize * 0.62 + 16;
+    var lblH = lblFontSize + 10;
+    var lblRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    lblRect.setAttribute('x', cx - lblW / 2);
+    lblRect.setAttribute('y', lblY - lblH / 2);
+    lblRect.setAttribute('width', lblW);
+    lblRect.setAttribute('height', lblH);
+    lblRect.setAttribute('rx', lblH / 2);
+    lblRect.setAttribute('ry', lblH / 2);
+    lblRect.setAttribute('fill', piece.fill);
+    g.appendChild(lblRect);
+
     var lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    lbl.setAttribute('x', cx); lbl.setAttribute('y', H / 2 + 16);
+    lbl.setAttribute('x', cx); lbl.setAttribute('y', lblY);
     lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('dominant-baseline', 'middle');
-    lbl.setAttribute('fill', '#555'); lbl.setAttribute('font-family', "'Manrope', sans-serif");
-    lbl.setAttribute('font-size', FONT_LBL); lbl.setAttribute('font-weight', '700');
+    lbl.setAttribute('fill', '#111'); lbl.setAttribute('font-family', "'Manrope', sans-serif");
+    lbl.setAttribute('font-size', lblFontSize); lbl.setAttribute('font-weight', '700');
     lbl.setAttribute('letter-spacing', '1.2');
-    lbl.textContent = piece.label.toUpperCase();
+    lbl.textContent = lblText;
     g.appendChild(lbl);
 
     svg.appendChild(g);
@@ -169,17 +200,106 @@ var PuzzleBuilder = (function () {
     requestAnimationFrame(frame);
   }
 
+  /* ── SVG de flecha simple hacia arriba ── */
+  function makeArrowUp(color) {
+    var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', '24'); s.setAttribute('height', '28');
+    s.setAttribute('viewBox', '0 0 24 28');
+    s.style.cssText = 'display:block;margin:0 auto;';
+    s.innerHTML = '<line x1="12" y1="28" x2="12" y2="8" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round"/>' +
+      '<polyline points="5,14 12,6 19,14" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    return s;
+  }
+
+  /* ── Media flecha curva: 'right' sale de izq hacia der, 'left' al revés ── */
+  function makeSwapArrowHalf(dir, color) {
+    var w = 60, h = 34;
+    var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('width', w); s.setAttribute('height', h);
+    s.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    s.style.cssText = 'display:block;overflow:visible;';
+    if (dir === 'right') {
+      /* arco de izq a der por arriba, punta en la derecha */
+      s.innerHTML = '<path d="M 4 28 Q 30 4 56 28" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<polyline points="49,22 57,29 50,34" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    } else {
+      /* arco de der a izq por arriba, punta en la izquierda */
+      s.innerHTML = '<path d="M 56 28 Q 30 4 4 28" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<polyline points="11,22 3,29 10,34" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    }
+    return s;
+  }
+
   /* ── Construye el stage DOM ── */
-  function buildStage(stageEl, pieces) {
+  function buildStage(stageEl, pieces, cfg) {
     stageEl.innerHTML = '';
-    pieces.forEach(function (p) {
+    pieces.forEach(function (p, i) {
       var wrap = document.createElement('div');
       wrap.className = 'puzzle-piece-wrap';
       wrap.style.setProperty('--piece-color', p.fill);
+      wrap.style.position = 'relative';
+
       wrap.appendChild(makeSVG(p));
+
+      /* flecha hacia arriba bajo la pieza (negativo) */
+      if (cfg.arrowBelow !== undefined && cfg.arrowBelow === i) {
+        var extraLa = p.lt === 'out' ? TAB_R : 0;
+        var visualCX = extraLa + W / 2;
+        var arrowWrap = document.createElement('div');
+        arrowWrap.style.cssText = 'position:absolute;bottom:-34px;left:' + visualCX + 'px;transform:translateX(-50%);';
+        arrowWrap.appendChild(makeArrowUp(p.fill));
+        wrap.appendChild(arrowWrap);
+      }
+
+      /* flechas de swap (pregunta): flecha superior en pieza A, inferior en pieza B */
+      if (cfg.swapArrows !== undefined) {
+        var idxA = cfg.swapArrows[0], idxB = cfg.swapArrows[1];
+        var extraLs = p.lt === 'out' ? TAB_R : 0;
+        var vcx = extraLs + W / 2;
+        if (i === idxA) {
+          /* arco superior: sale del centro de A, llega al centro de B, punta apuntando abajo-derecha */
+          var spanW = W - TAB_R;
+          var colorA2 = pieces[idxA].fill;
+          var sw = spanW + 8, sh = 36;
+          var sv = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          sv.setAttribute('width', sw); sv.setAttribute('height', sh);
+          sv.setAttribute('viewBox','0 0 '+sw+' '+sh);
+          sv.style.cssText = 'display:block;overflow:visible;';
+          var mx = sw/2;
+          sv.innerHTML =
+            '<path d="M 4 30 Q '+mx+' 2 '+(sw-4)+' 30" fill="none" stroke="'+colorA2+'" stroke-width="2.5" stroke-linecap="round"/>' +
+            '<polyline points="'+(sw-12)+',22 '+(sw-3)+',30 '+(sw-14)+',34" fill="none" stroke="'+colorA2+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+          var ac = document.createElement('div');
+          ac.style.cssText = 'position:absolute;top:-40px;left:'+vcx+'px;transform:translateX(-4px);pointer-events:none;overflow:visible;';
+          ac.appendChild(sv);
+          wrap.appendChild(ac);
+        }
+        if (i === idxB) {
+          /* arco inferior: sale del centro de B, llega al centro de A, punta apuntando arriba-izquierda */
+          var spanW2 = W - TAB_R;
+          var colorB2 = pieces[idxB].fill;
+          var sw2 = spanW2 + 8, sh2 = 36;
+          var sv2 = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          sv2.setAttribute('width', sw2); sv2.setAttribute('height', sh2);
+          sv2.setAttribute('viewBox','0 0 '+sw2+' '+sh2);
+          sv2.style.cssText = 'display:block;overflow:visible;';
+          var mx2 = sw2/2;
+          sv2.innerHTML =
+            '<path d="M '+(sw2-4)+' 6 Q '+mx2+' '+(sh2+4)+' 4 6" fill="none" stroke="'+colorB2+'" stroke-width="2.5" stroke-linecap="round"/>' +
+            '<polyline points="14,2 4,6 8,16" fill="none" stroke="'+colorB2+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+          var ac2 = document.createElement('div');
+          ac2.style.cssText = 'position:absolute;bottom:-40px;left:'+(vcx - sw2 + 4)+'px;pointer-events:none;overflow:visible;';
+          ac2.appendChild(sv2);
+          wrap.appendChild(ac2);
+        }
+      }
+
       stageEl.appendChild(wrap);
     });
+
   }
+
+  /* ── Posiciona las flechas swap una vez las piezas están en su sitio ── */
 
   /* ── Lanza la animación completa ── */
   function playPuzzle(stageEl, exampleEl, exTextEl, pieces, example) {
@@ -244,7 +364,7 @@ var PuzzleBuilder = (function () {
     /* ── Reconstruye y si ya se animó, muestra piezas en estado final ── */
     function rebuild() {
       calcDimensions();
-      buildStage(stageEl, cfg.pieces);
+      buildStage(stageEl, cfg.pieces, cfg);
       if (played) {
         var wraps = stageEl.querySelectorAll('.puzzle-piece-wrap');
         wraps.forEach(function (w) {

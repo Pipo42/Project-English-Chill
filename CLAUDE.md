@@ -52,3 +52,4 @@
 - `lc5.html` tiene JS largo al final. Usar `python3` para parchear, no el Edit tool.
 - Verificar tras editar: `tail -3 "3rd-eso/lc5.html"` debe terminar en `</html>`
 - Al añadir nuevas secciones/features a la plantilla, respetar todo lo anterior listado aquí.
+- **No reescribir archivos enteros.** Siempre editar solo la parte mínima necesaria. Usar Edit tool para cambios puntuales, nunca Write para sobrescribir un archivo existente salvo que sea imprescindible.

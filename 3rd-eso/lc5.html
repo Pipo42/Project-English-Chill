@@ -178,15 +178,54 @@
 
     .back-row { margin-bottom: 2rem; }
 
+    /* ── Structure icons ── */
+    .structure-icons-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0 2rem;
+    }
+    .structure-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 200px;
+    }
+    .structure-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+    }
+    .structure-symbol {
+      font-family: 'Caveat Brush', cursive;
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+    .affirmative-icon .structure-symbol,
+    .negative-icon    .structure-symbol,
+    .question-icon    .structure-symbol { color: #000; }
+    .structure-example {
+      font-size: 1rem;
+      text-align: center;
+      margin: 0;
+      line-height: 1.5;
+    }
+
     /* ── Puzzle builder ── */
-    .puzzle-section { margin: 1rem 0; overflow: visible; }
+    .puzzle-section { margin: 1rem 0; overflow: visible; display: flex; flex-direction: column; align-items: center; }
     .puzzle-title { font-family: 'Caveat Brush', cursive; color: var(--color-accent-3); font-size: clamp(1.2rem,3vw,1.6rem); text-align: center; margin-bottom: .3rem; font-weight: 400; }
-    .puzzle-stage { width: 100%; overflow: visible; padding: 40px 10px 20px; margin-bottom: 1.2rem; }
+    .puzzle-stage { width: 100%; overflow: visible; padding: 40px 10px 50px; margin-bottom: 1.2rem; position: relative; }
     .puzzle-stage-inner { display: flex; align-items: center; justify-content: center; gap: 0; min-width: max-content; margin: 0 auto; }
     .puzzle-piece-wrap { display: block; opacity: 0; flex-shrink: 0; }
-    .puzzle-piece-wrap + .puzzle-piece-wrap { margin-left: -18px; }
-    .puzzle-piece-wrap svg path.piece-path { transition: fill 0.55s ease 0.15s; }
-    .puzzle-piece-wrap.landed svg path.piece-path { fill: var(--piece-color) !important; }
+    .puzzle-piece-wrap + .puzzle-piece-wrap { margin-left: -20px; }
   </style>
 </head>
 <body id="top">
@@ -204,40 +243,21 @@
 
     <h1 class="wp-block-heading" style="text-align:center; margin-bottom:1rem;">Present Perfect</h1>
 
-    <div class="grammar-table-wrap">
-      <table class="grammar-table">
-        <tr><th class="caption-row" colspan="2">Main Structure</th></tr>
-        <tr>
-          <td><span class="c-blue"><strong>Affirmative</strong></span></td>
-          <td>I <span class="c-blue">have worked</span> here <span class="c-purple">for</span> 4 years.</td>
-        </tr>
-        <tr>
-          <td><strong><span class="c-red">Negative</span></strong></td>
-          <td>She <span class="c-red">hasn't seen</span> that movie <span class="c-purple">since</span> she was a baby.</td>
-        </tr>
-        <tr>
-          <td><strong><span class="c-green">Question</span></strong></td>
-          <td><span class="c-green">Have</span> you <span class="c-green">been</span> to Paris?</td>
-        </tr>
-      </table>
-    </div>
-
-
     <!-- ── AFFIRMATIVE ── -->
     <div class="puzzle-section" id="section-affirmative">
-      <p class="puzzle-title">Affirmative</p>
+      <div class="structure-circle affirmative-icon"><span class="structure-symbol">+</span></div>
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-affirmative"></div></div>
     </div>
 
     <!-- ── NEGATIVE ── -->
     <div class="puzzle-section" id="section-negative">
-      <p class="puzzle-title">Negative</p>
+      <div class="structure-circle negative-icon"><span class="structure-symbol">−</span></div>
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-negative"></div></div>
     </div>
 
     <!-- ── QUESTION ── -->
     <div class="puzzle-section" id="section-question">
-      <p class="puzzle-title">Question</p>
+      <div class="structure-circle question-icon"><span class="structure-symbol">?</span></div>
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-question"></div></div>
     </div>
 
@@ -437,6 +457,7 @@
       sectionId:'section-negative', stageId:'stage-negative',
       exampleId:'ex-negative', exTextId:'exText-negative',
       example:"She hasn't visited Paris.",
+      arrowBelow: 1,
       pieces:[
         {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
         {word:"hasn't",  label:'Auxiliary + not', fill:'#ffd6d6', lt:'in',   rt:'out'},
@@ -448,6 +469,7 @@
       sectionId:'section-question', stageId:'stage-question',
       exampleId:'ex-question', exTextId:'exText-question',
       example:'Has she visited Paris?',
+      swapArrows: [0, 1],
       pieces:[
         {word:'Has',     label:'Auxiliary',       fill:'#ede9fb', lt:'none', rt:'out'},
         {word:'she',     label:'Subject',         fill:'#ddeeff', lt:'in',   rt:'out'},
