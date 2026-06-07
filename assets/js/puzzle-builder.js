@@ -256,41 +256,48 @@ var PuzzleBuilder = (function () {
         var idxA = cfg.swapArrows[0], idxB = cfg.swapArrows[1];
         var extraLs = p.lt === 'out' ? TAB_R : 0;
         var vcx = extraLs + W / 2;
-        if (i === idxA) {
-          /* arco superior: sale del centro de A, llega al centro de B, punta apuntando abajo-derecha */
+        if (i === idxA || i === idxB) {
+          var isA = (i === idxA);
           var spanW = W - TAB_R;
-          var colorA2 = pieces[idxA].fill;
-          var sw = spanW + 8, sh = 36;
+          var color = isA ? pieces[idxA].fill : pieces[idxB].fill;
+          var sw = spanW + 8, sh = 36, ah = 8; /* ah = longitud de la punta */
           var sv = document.createElementNS('http://www.w3.org/2000/svg','svg');
           sv.setAttribute('width', sw); sv.setAttribute('height', sh);
           sv.setAttribute('viewBox','0 0 '+sw+' '+sh);
           sv.style.cssText = 'display:block;overflow:visible;';
-          var mx = sw/2;
+
+          /* Bézier cuadrática: P0, control, P1 */
+          var x0, y0, cpx, cpy, x1, y1;
+          if (isA) {
+            /* arco superior: izq→der, curva hacia arriba */
+            x0=4; y0=sh-4; cpx=sw/2; cpy=2; x1=sw-4; y1=sh-4;
+          } else {
+            /* arco inferior: der→izq, curva hacia abajo */
+            x0=sw-4; y0=4; cpx=sw/2; cpy=sh-2; x1=4; y1=4;
+          }
+
+          /* tangente en P1 = P1 - control (normalizada) */
+          var tx = x1 - cpx, ty = y1 - cpy;
+          var tlen = Math.sqrt(tx*tx + ty*ty);
+          tx = tx/tlen * ah; ty = ty/tlen * ah;
+
+          /* puntos de la punta: P1 ± perpendicular */
+          var px = -ty/ah * (ah*0.5), py = tx/ah * (ah*0.5);
+          var p1x = (x1 - tx + px).toFixed(1), p1y = (y1 - ty + py).toFixed(1);
+          var p2x = (x1 - tx - px).toFixed(1), p2y = (y1 - ty - py).toFixed(1);
+
           sv.innerHTML =
-            '<path d="M 4 30 Q '+mx+' 2 '+(sw-4)+' 30" fill="none" stroke="'+colorA2+'" stroke-width="2.5" stroke-linecap="round"/>' +
-            '<polyline points="'+(sw-12)+',22 '+(sw-3)+',30 '+(sw-14)+',34" fill="none" stroke="'+colorA2+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+            '<path d="M '+x0+' '+y0+' Q '+cpx+' '+cpy+' '+x1+' '+y1+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round"/>' +
+            '<polyline points="'+p1x+','+p1y+' '+x1+','+y1+' '+p2x+','+p2y+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+
           var ac = document.createElement('div');
-          ac.style.cssText = 'position:absolute;top:-40px;left:'+vcx+'px;transform:translateX(-4px);pointer-events:none;overflow:visible;';
+          if (isA) {
+            ac.style.cssText = 'position:absolute;top:-'+(sh+4)+'px;left:'+vcx+'px;transform:translateX(-4px);pointer-events:none;overflow:visible;';
+          } else {
+            ac.style.cssText = 'position:absolute;bottom:-'+(sh+4)+'px;left:'+(vcx-sw+4)+'px;pointer-events:none;overflow:visible;';
+          }
           ac.appendChild(sv);
           wrap.appendChild(ac);
-        }
-        if (i === idxB) {
-          /* arco inferior: sale del centro de B, llega al centro de A, punta apuntando arriba-izquierda */
-          var spanW2 = W - TAB_R;
-          var colorB2 = pieces[idxB].fill;
-          var sw2 = spanW2 + 8, sh2 = 36;
-          var sv2 = document.createElementNS('http://www.w3.org/2000/svg','svg');
-          sv2.setAttribute('width', sw2); sv2.setAttribute('height', sh2);
-          sv2.setAttribute('viewBox','0 0 '+sw2+' '+sh2);
-          sv2.style.cssText = 'display:block;overflow:visible;';
-          var mx2 = sw2/2;
-          sv2.innerHTML =
-            '<path d="M '+(sw2-4)+' 6 Q '+mx2+' '+(sh2+4)+' 4 6" fill="none" stroke="'+colorB2+'" stroke-width="2.5" stroke-linecap="round"/>' +
-            '<polyline points="14,2 4,6 8,16" fill="none" stroke="'+colorB2+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
-          var ac2 = document.createElement('div');
-          ac2.style.cssText = 'position:absolute;bottom:-40px;left:'+(vcx - sw2 + 4)+'px;pointer-events:none;overflow:visible;';
-          ac2.appendChild(sv2);
-          wrap.appendChild(ac2);
         }
       }
 
@@ -344,7 +351,7 @@ var PuzzleBuilder = (function () {
     /* ── Calcula dimensiones según viewport ── */
     function calcDimensions() {
       var container = sectionEl || stageEl.parentElement;
-      var available = container.clientWidth - 32;
+      var available = container.clientWidth - 12;
       var n = cfg.pieces.length;
       var naturalW = (W_BASE - TAB_R_BASE) * n + TAB_R_BASE * 2;
       if (naturalW > available) {
