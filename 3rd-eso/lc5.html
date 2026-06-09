@@ -9,223 +9,6 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <style>
     html { scroll-behavior: smooth; }
-
-    .fancy-button:focus,
-    .fancy-button:focus-visible { outline: none; }
-
-    /* ── Page label ── */
-    .page-label {
-      font-family: 'Aboreto', system-ui;
-      font-size: clamp(1.8rem, 4.5vw, 2.8rem);
-      text-align: center;
-      color: var(--color-contrast);
-      letter-spacing: 0.05em;
-      font-weight: 700;
-      margin-bottom: 0;
-    }
-
-    /* ── Section labels ── */
-    .section-label {
-      font-family: 'Caveat Brush', cursive;
-      font-size: clamp(1.8rem, 5vw, 2.8rem);
-      text-align: center;
-      margin: 2.5rem 0 1rem;
-    }
-    .section-label.grammar { color: var(--color-contrast); }
-    .section-label.exs     { color: var(--color-accent-3); }
-
-    /* ── Nav buttons ── */
-    .nav-buttons {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin: 2.5rem 0 2rem;
-    }
-    .nav-group {
-      display: flex;
-      align-items: flex-end;
-      gap: 0.4rem;
-    }
-    .btn-exs .button_top {
-      background: #fff0f0 !important;
-      color: var(--color-accent-3) !important;
-      border-color: var(--color-accent-3) !important;
-    }
-    .fancy-button.btn-exs {
-      background: var(--color-accent-3) !important;
-    }
-
-    /* ── Grammar tables ── */
-    .grammar-table-wrap { width: 100%; text-align: center; margin: 20px 0; }
-    .grammar-table {
-      border-collapse: collapse;
-      border: 1px solid #000;
-      background-color: #f8f8f8;
-      color: #000;
-      text-align: center;
-      margin: 0 auto;
-      display: table;
-      word-wrap: break-word;
-      white-space: normal;
-      width: auto;
-      max-width: 100%;
-      font-size: 1.15rem;
-    }
-    .grammar-table th.caption-row {
-      background-color: #d1f6ff;
-      padding: 10px 18px;
-      border: 1px solid black;
-      font-weight: bold;
-      text-align: center;
-      font-size: 1.2rem;
-    }
-    .grammar-table th.subheader {
-      background-color: #aaf0c9;
-      padding: 10px 14px;
-      border: 1px solid black;
-      font-weight: bold;
-      text-align: center;
-      font-size: 1.15rem;
-    }
-    .grammar-table td {
-      padding: 8px 14px;
-      border: 1px solid black;
-      text-align: center;
-      vertical-align: middle;
-      word-wrap: break-word;
-      white-space: normal;
-      font-size: 1.15rem;
-    }
-    .c-blue   { color: blue; }
-    .c-red    { color: red; }
-    .c-green  { color: green; }
-    .c-purple { color: purple; }
-
-    /* ── Exercise heading ── */
-    .ex-heading {
-      font-family: 'Caveat Brush', cursive;
-      color: var(--color-accent-3);
-      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
-      font-weight: 400;
-      margin: 2rem 0 0.5rem;
-      text-align: center;
-    }
-
-    /* ── fill_gaps ── */
-    .fill_gaps-wrapper { display: flex; justify-content: center; padding: 1rem 0; }
-    .fill_gaps {
-      font-family: 'Caveat Brush', cursive;
-      font-size: 1.5rem;
-      color: var(--color-accent-3);
-      max-width: 50rem;
-      width: 100%;
-      border: 1px solid var(--color-accent-3);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 10px 0 var(--color-accent-3);
-      margin-bottom: 14px;
-      background: #fff0f0;
-    }
-    .fill_gaps-list { display: flex; flex-direction: column; gap: 1rem; }
-    .fill_gaps-item { display: block; padding: 10px 0; border-bottom: 1px solid var(--color-accent-3); line-height: 2.6; }
-    .fill_gaps-item:last-child { border-bottom: none; }
-    .fill_gaps input[type="text"] {
-      font-family: inherit;
-      font-size: inherit;
-      text-align: center;
-      padding: 6px 10px;
-      border: 1px solid var(--color-accent-3);
-      border-radius: 1.25rem;
-      background: none;
-      color: var(--color-accent-3);
-      min-width: 80px;
-      width: auto;
-      transition: width 0.25s ease, color 0.35s ease, background 0.35s ease, border-color 0.35s ease;
-    }
-    .fill_gaps input.correct   { color: green; background: #d4edda; border-color: green; }
-    .fill_gaps input.incorrect { color: red;   background: #f8d7da; border-color: red; }
-    .correct-answer {
-      color: #856404; background: #fff3cd;
-      border: 1px solid #ffc107; border-radius: 0.75rem;
-      padding: 2px 8px; margin-left: 0.5rem; font-size: 0.9em;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    .correct-answer.visible { opacity: 1; }
-    .fill_gaps-buttons { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .fill_gaps { transition: border-color 0.35s ease, box-shadow 0.35s ease; }
-    .fill_gaps.checked-state { border-color: var(--score-color, green); box-shadow: 0 10px 0 var(--score-color, green); }
-    .fill_gaps.checked-state .fill_gaps-item { border-bottom-color: var(--score-color, green); transition: border-color 0.35s ease; }
-    @keyframes fg-shake {
-      0%   { transform: translateX(0); }
-      30%  { transform: translateX(-3px) rotate(-0.2deg); }
-      70%  { transform: translateX( 2px) rotate( 0.15deg); }
-      100% { transform: translateX(0); }
-    }
-    .fill_gaps.shake { animation: fg-shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
-    .feedback {
-      margin-top: 1rem; font-size: 2rem; text-align: center;
-      overflow: hidden;
-      max-height: 0;
-      color: transparent;
-      transition: max-height 0.4s ease, color 0.4s ease;
-    }
-    .feedback.visible {
-      max-height: 4rem;
-    }
-
-    .back-row { margin-bottom: 2rem; }
-
-    /* ── Structure icons ── */
-    .structure-icons-row {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 2.5rem;
-      flex-wrap: wrap;
-      margin: 1.5rem 0 2rem;
-    }
-    .structure-icon {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-      max-width: 200px;
-    }
-    .structure-circle {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      border: 1px solid #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-    }
-    .structure-symbol {
-      font-family: 'Caveat Brush', cursive;
-      font-size: 2.4rem;
-      line-height: 1;
-    }
-    .affirmative-icon .structure-symbol,
-    .negative-icon    .structure-symbol,
-    .question-icon    .structure-symbol { color: #000; }
-    .structure-example {
-      font-size: 1rem;
-      text-align: center;
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    /* ── Puzzle builder ── */
-    .puzzle-section { margin: 1rem 0; overflow: visible; display: flex; flex-direction: column; align-items: center; }
-    .puzzle-title { font-family: 'Caveat Brush', cursive; color: var(--color-accent-3); font-size: clamp(1.2rem,3vw,1.6rem); text-align: center; margin-bottom: .3rem; font-weight: 400; }
-    .puzzle-stage { width: 100%; overflow: visible; padding: 40px 10px 50px; margin-bottom: 1.2rem; position: relative; }
-    .puzzle-stage-inner { display: flex; align-items: center; justify-content: center; gap: 0; min-width: max-content; margin: 0 auto; }
-    .puzzle-piece-wrap { display: block; opacity: 0; flex-shrink: 0; }
-    .puzzle-piece-wrap + .puzzle-piece-wrap { margin-left: var(--puzzle-overlap, -20px); }
   </style>
 </head>
 <body id="top">
@@ -261,6 +44,8 @@
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-question"></div></div>
     </div>
 
+    <h1 class="wp-block-heading" style="text-align:center; margin-bottom:1rem;">Since / For</h1>
+
     <div class="grammar-table-wrap">
       <table class="grammar-table">
         <tr><th class="caption-row" colspan="3">Keywords</th></tr>
@@ -270,24 +55,24 @@
           <th class="subheader">Examples</th>
         </tr>
         <tr>
-          <td><span class="c-purple">for</span></td>
-          <td><span class="c-purple">periods of time</span></td>
-          <td>five years<br>ten months<br>four hours<br>a lot of time<br>a while<br>ages</td>
+          <td><span class="c-keyword">for</span></td>
+          <td>periods of time</td>
+          <td>I <span class="c-aux">have</span> <span class="c-pp">lived</span> here <span class="c-keyword">for</span> five years.</td>
         </tr>
         <tr>
-          <td><span class="c-purple">since</span></td>
-          <td><span class="c-purple">dates</span></td>
-          <td>1995<br>I was a kid<br>you left university<br>my childhood<br>last week<br>my first birthday</td>
+          <td><span class="c-keyword">since</span></td>
+          <td>a point in time</td>
+          <td>He <span class="c-aux">has</span> <span class="c-pp">played</span> the guitar <span class="c-keyword">since</span> 1994.</td>
         </tr>
         <tr>
-          <td><span class="c-purple">ever</span></td>
-          <td><span class="c-purple">'alguna vez'</span></td>
-          <td><span class="c-green">Have</span> you <span class="c-purple">ever</span> <span class="c-green">watched</span> this movie?<br><span class="c-green">Has</span> she <span class="c-purple">ever</span> <span class="c-green">visited</span> New York?</td>
+          <td><span class="c-keyword">ever</span></td>
+          <td>'alguna vez'</td>
+          <td><span class="c-aux">Have</span> you <span class="c-keyword">ever</span> <span class="c-pp">watched</span> this movie?</td>
         </tr>
         <tr>
-          <td><span class="c-purple">never</span></td>
-          <td><span class="c-purple">'nunca'</span></td>
-          <td>We <span class="c-blue">have</span> <span class="c-purple">never</span> <span class="c-blue">done</span> this before.<br>My brother <span class="c-blue">has</span> <span class="c-purple">never</span> <span class="c-blue">broken</span> any glass at home.</td>
+          <td><span class="c-keyword">never</span></td>
+          <td>'nunca'</td>
+          <td>We <span class="c-aux">have</span> <span class="c-keyword">never</span> <span class="c-pp">done</span> this before.</td>
         </tr>
       </table>
     </div>
@@ -298,24 +83,24 @@
       <table class="grammar-table">
         <tr><th class="caption-row" colspan="2">Uses</th></tr>
         <tr>
-          <th class="subheader">(for/since/ever/never)<br>we don't mention when it happened</th>
-          <th class="subheader">(yesterday, last week, this morning…)<br>we mention when it happened</th>
+          <th class="subheader">Present Perfect<br>(for/since/ever/never)<br>we don't say when</th>
+          <th class="subheader">Past Simple<br>(yesterday, last week…)<br>we say when</th>
         </tr>
         <tr>
-          <td>Jane <span class="c-blue">has won</span> many awards as an actress.</td>
-          <td>Jane <span class="c-blue">volunteered</span> for Green Peace <span class="c-purple">in 2010</span>.</td>
+          <td>Jane <span class="c-aux">has</span> <span class="c-pp">won</span> many awards as an actress.</td>
+          <td>Jane <span class="c-pp">volunteered</span> for Green Peace <span class="c-keyword">in 2010</span>.</td>
         </tr>
         <tr>
-          <td>Alfred <span class="c-blue">has looked after</span> Bruce <span class="c-purple">since</span> he was 11.</td>
-          <td>Bruce <span class="c-blue">lost</span> his parents <span class="c-purple">when he was only a child</span>.</td>
+          <td>Alfred <span class="c-aux">has</span> <span class="c-pp">looked after</span> Bruce <span class="c-keyword">since</span> he was 11.</td>
+          <td>Bruce <span class="c-pp">lost</span> his parents <span class="c-keyword">when he was only a child</span>.</td>
         </tr>
         <tr>
-          <td>I <span class="c-blue">have</span> <span class="c-purple">never</span> <span class="c-blue">designed</span> a website before.</td>
-          <td>I <span class="c-blue">designed</span> a website <span class="c-purple">last year</span> at work.</td>
+          <td>I <span class="c-aux">have</span> <span class="c-keyword">never</span> <span class="c-pp">designed</span> a website before.</td>
+          <td>I <span class="c-pp">designed</span> a website <span class="c-keyword">last year</span> at work.</td>
         </tr>
         <tr>
-          <td><span class="c-green">Have</span> you <span class="c-purple">ever</span> <span class="c-green">wondered</span> what you would do if your house was set on fire?</td>
-          <td><span class="c-purple">Last night</span> I <span class="c-blue">wondered</span> what I would do if my house was set on fire.</td>
+          <td><span class="c-aux">Have</span> you <span class="c-keyword">ever</span> <span class="c-pp">wondered</span> what you would do if your house was on fire?</td>
+          <td><span class="c-keyword">Last night</span> I <span class="c-pp">wondered</span> what I would do if my house was on fire.</td>
         </tr>
       </table>
     </div>
@@ -323,7 +108,7 @@
     <img src="../assets/images/Separator-2.svg" alt="" style="display:block; margin:2.5rem auto; max-width:600px; width:100%; height:auto;">
 
     <!-- GRAMMAR EXS -->
-    <p class="section-label exs" id="grammarexs">Grammar Exam Simulation</p>
+    <p class="section-label exs" id="grammarexs">Grammar Exam</p>
 
     <h2 class="ex-heading">a. Use the correct form of the Present Perfect</h2>
     <div class="fill_gaps-wrapper"><div class="fill_gaps">
@@ -340,10 +125,10 @@
         <div class="fill_gaps-item">10. <input type="text" data-answers='["Have they lived"]'> (they/live) in Spain for a long time?</div>
       </div>
       <div class="fill_gaps-buttons">
-        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+        <a href="#" class="fancy-button btn-check">
           <span class="button_top"><span class="button-text">Check Answers</span></span>
         </a>
-        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+        <a href="#" class="fancy-button btn-reload" style="display:none;">
           <span class="button_top"><span class="button-text">Reload</span></span>
         </a>
       </div>
@@ -365,10 +150,10 @@
         <div class="fill_gaps-item">10. Have they lived in Spain <input type="text" data-answers='["for"]'> a long time?</div>
       </div>
       <div class="fill_gaps-buttons">
-        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+        <a href="#" class="fancy-button btn-check">
           <span class="button_top"><span class="button-text">Check Answers</span></span>
         </a>
-        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+        <a href="#" class="fancy-button btn-reload" style="display:none;">
           <span class="button_top"><span class="button-text">Reload</span></span>
         </a>
       </div>
@@ -390,10 +175,10 @@
         <div class="fill_gaps-item">10. I have <input type="text" data-answers='["never"]'> broken a bone playing football.</div>
       </div>
       <div class="fill_gaps-buttons">
-        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+        <a href="#" class="fancy-button btn-check">
           <span class="button_top"><span class="button-text">Check Answers</span></span>
         </a>
-        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+        <a href="#" class="fancy-button btn-reload" style="display:none;">
           <span class="button_top"><span class="button-text">Reload</span></span>
         </a>
       </div>
@@ -415,10 +200,10 @@
         <div class="fill_gaps-item">10. My parents <input type="text" data-answers='["have lived"]'> (live) in this house since I was born.</div>
       </div>
       <div class="fill_gaps-buttons">
-        <a href="#" class="fancy-button btn-check" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3);">
+        <a href="#" class="fancy-button btn-check">
           <span class="button_top"><span class="button-text">Check Answers</span></span>
         </a>
-        <a href="#" class="fancy-button btn-reload" style="--button-outline: var(--color-accent-3); --button-color:#fff0f0; background: var(--color-accent-3); display:none;">
+        <a href="#" class="fancy-button btn-reload" style="display:none;">
           <span class="button_top"><span class="button-text">Reload</span></span>
         </a>
       </div>
@@ -430,8 +215,7 @@
 
   <footer class="site-footer"></footer>
   <script src="../assets/js/components.js"></script>
-  <script src="../assets/js/cursor.js"></script>
-
+  
   <script>
     const LC_BACK = '../3rd-eso.html';
     const LC_NAV  = ['grammar', 'grammarExs'];
@@ -448,9 +232,9 @@
       example:'She has visited Paris twice.',
       pieces:[
         {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
-        {word:'has',     label:'Auxiliary',       fill:'#ede9fb', lt:'in',   rt:'out'},
+        {word:'has',     label:'Auxiliary',       fill:'#fef4dc', lt:'in',   rt:'out'},
         {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
-        {word:'Paris',   label:'Object',          fill:'#fef4dc', lt:'in',   rt:'none'}
+        {word:'Paris',   label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
       ]
     });
     PuzzleBuilder.init({
@@ -460,9 +244,9 @@
       arrowBelow: 1,
       pieces:[
         {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
-        {word:"hasn't",  label:'Auxiliary + not', fill:'#ffd6d6', lt:'in',   rt:'out'},
+        {word:"hasn't",  label:'Auxiliary + not', fill:'#fef4dc', lt:'in',   rt:'out'},
         {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
-        {word:'Paris',   label:'Object',          fill:'#fef4dc', lt:'in',   rt:'none'}
+        {word:'Paris',   label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
       ]
     });
     PuzzleBuilder.init({
@@ -471,12 +255,13 @@
       example:'Has she visited Paris?',
       swapArrows: [0, 1],
       pieces:[
-        {word:'Has',     label:'Auxiliary',       fill:'#ede9fb', lt:'none', rt:'out'},
+        {word:'Has',     label:'Auxiliary',       fill:'#fef4dc', lt:'none', rt:'out'},
         {word:'she',     label:'Subject',         fill:'#ddeeff', lt:'in',   rt:'out'},
         {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
-        {word:'Paris?',  label:'Object',          fill:'#fef4dc', lt:'in',   rt:'none'}
+        {word:'Paris?',  label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
       ]
     });
   </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             

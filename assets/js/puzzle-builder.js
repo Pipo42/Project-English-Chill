@@ -395,7 +395,7 @@ var PuzzleBuilder = (function () {
         playPuzzle(stageEl, exampleEl, exTextEl, cfg.pieces, cfg.example || '');
         obs.disconnect();
       }
-    }, { rootMargin: '0px', threshold: 0.3 });
+    }, { rootMargin: '-30% 0px -30% 0px', threshold: 0 });
 
     obs.observe(trigger);
   }

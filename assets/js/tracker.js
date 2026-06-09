@@ -279,7 +279,7 @@
       .tracker-line {
         width: 0.125rem;
         height: 2rem;
-        background: #560319;
+        background: #000;
         border-radius: 0.125rem;
       }
     }
@@ -310,7 +310,7 @@
       .tracker-line {
         height: 0.1875rem;
         width: 1rem;
-        background: #560319;
+        background: #000;
         border-radius: 0.1875rem;
       }
     }
@@ -319,9 +319,9 @@
       width: 2.2rem;
       height: 2.2rem;
       border-radius: 50%;
-      border: 0.0625rem solid #560319;
-      background: #fff0f0;
-      color: #560319;
+      border: 2px solid #000;
+      background: #99aebb;
+      color: #000;
       font-family: 'Caveat Brush', cursive;
       font-size: 1.5rem;
       display: flex;
