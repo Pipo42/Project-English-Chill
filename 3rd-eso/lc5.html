@@ -225,7 +225,7 @@
     .puzzle-stage { width: 100%; overflow: visible; padding: 40px 10px 50px; margin-bottom: 1.2rem; position: relative; }
     .puzzle-stage-inner { display: flex; align-items: center; justify-content: center; gap: 0; min-width: max-content; margin: 0 auto; }
     .puzzle-piece-wrap { display: block; opacity: 0; flex-shrink: 0; }
-    .puzzle-piece-wrap + .puzzle-piece-wrap { margin-left: -20px; }
+    .puzzle-piece-wrap + .puzzle-piece-wrap { margin-left: var(--puzzle-overlap, -20px); }
   </style>
 </head>
 <body id="top">

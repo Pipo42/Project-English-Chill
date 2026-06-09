@@ -232,6 +232,7 @@ var PuzzleBuilder = (function () {
 
   /* ── Construye el stage DOM ── */
   function buildStage(stageEl, pieces, cfg) {
+    stageEl.style.setProperty('--puzzle-overlap', '-' + TAB_R + 'px');
     stageEl.innerHTML = '';
     pieces.forEach(function (p, i) {
       var wrap = document.createElement('div');
