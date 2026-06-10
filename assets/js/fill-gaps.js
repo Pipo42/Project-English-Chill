@@ -57,9 +57,24 @@
   }
 
   /* ── Init: hide btn-reload, make btn-check the single toggle ── */
+  /* ── Move .ex-heading into .fill_gaps as a title bar ── */
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.btn-reload').forEach(btn => { btn.style.display = 'none'; });
     document.querySelectorAll('.btn-check').forEach(btn => { btn.dataset.state = 'check'; });
+    document.querySelectorAll('.fill_gaps').forEach(form => {
+      // Wrap existing children in a padded body div
+      const body = document.createElement('div');
+      body.className = 'fill_gaps-body';
+      while (form.firstChild) body.appendChild(form.firstChild);
+      form.appendChild(body);
+      // Find preceding .ex-heading — may be before the wrapper or before the form itself
+      const anchor = form.closest('.fill_gaps-wrapper') || form;
+      const heading = anchor.previousElementSibling;
+      if (heading && heading.classList.contains('ex-heading')) {
+        form.insertBefore(heading, form.firstChild);
+        heading.classList.add('ex-heading--bar');
+      }
+    });
   });
 
   function check(button) {
@@ -139,9 +154,9 @@
     button.style.width = '';
     button.dataset.state = 'check';
     button.querySelector('.button-text').textContent = 'Check Answers';
-    /* Restore scarlet */
-    button.style.setProperty('--button-outline', 'var(--color-accent-3)');
-    button.style.background = 'var(--color-accent-3)';
+    /* Restore default */
+    button.style.removeProperty('--button-outline');
+    button.style.background = '';
     container.style.removeProperty('--score-color');
     container.classList.remove('checked-state', 'shake');
   }

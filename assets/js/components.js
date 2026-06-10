@@ -40,13 +40,6 @@
     var thumb = document.createElement('div');
     bar.id    = 'custom-scrollbar';
     thumb.id  = 'custom-scrollbar-thumb';
-    var isMobile = window.matchMedia('(pointer: coarse)').matches;
-    if (!isMobile) {
-      const img = document.createElement('img');
-      img.src = base + 'images/ChatGPT-Image-4-may-2025-11_07_11.png';
-      img.style.cssText = 'width:32px;height:32px;object-fit:contain;display:block;';
-      thumb.appendChild(img);
-    }
     bar.appendChild(thumb);
     document.body.appendChild(bar);
 
