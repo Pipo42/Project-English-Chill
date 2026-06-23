@@ -583,7 +583,7 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 .c-aux     { background: #fef4dc; } /* auxiliary — amarillo */
 .c-pp      { background: #dff2e1; } /* past participle — verde */
 .c-subj    { background: #ddeeff; } /* subject — azul */
-.c-keyword { background: #ffd6d6; } /* keyword — rosa */
+.c-keyword { background: #fce8e8; } /* keyword — rosa pastel */
 
 /* ─────────────────────────────────────────────
    Fill-gaps

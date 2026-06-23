@@ -34,6 +34,12 @@
 
   /* ── Custom scrollbar ── */
   (function () {
+    function initScrollbar() {
+    // Skip on pages that opt out
+    if (document.body.hasAttribute('data-no-extras')) return;
+    // Only inject on pages tall enough to scroll
+    if (document.documentElement.scrollHeight <= window.innerHeight * 1.5) return;
+
     var THUMB = 48; // px — must match CSS height/width
 
     var bar   = document.createElement('div');
@@ -94,34 +100,45 @@
     });
 
     updateThumb();
+    } // end initScrollbar
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollbar);
+    } else {
+      initScrollbar();
+    }
   })();
 
   /* ── Scroll-to-top button (all pages) ── */
   (function () {
-    // Don't inject if already in the HTML
-    if (document.getElementById('scroll-top')) return;
+    function initScrollTop() {
+      // Skip on pages that opt out
+      if (document.body.hasAttribute('data-no-extras')) return;
+      // Don't inject if already in the HTML
+      if (document.getElementById('scroll-top')) return;
+      // Only show if page is tall enough to warrant scrolling
+      if (document.documentElement.scrollHeight <= window.innerHeight * 1.5) return;
 
-    // Only show if page is tall enough to warrant scrolling
-    function hasEnoughScroll() {
-      return document.documentElement.scrollHeight > window.innerHeight * 1.5;
+      var canvas = document.createElement('canvas');
+      canvas.id = 'drops-canvas';
+      document.body.appendChild(canvas);
+
+      var btn = document.createElement('a');
+      btn.href = '#top';
+      btn.id = 'scroll-top';
+      btn.className = 'fancy-button';
+      btn.style.cssText = '--button-outline:#000000; --button-color:var(--color-accent-1);';
+      btn.innerHTML = '<span class="button_top"><span class="button-text">↑</span></span>';
+      document.body.appendChild(btn);
+
+      var s = document.createElement('script');
+      s.src = base + 'js/scroll-top.js';
+      document.body.appendChild(s);
     }
-    if (!hasEnoughScroll()) return;
-
-    var canvas = document.createElement('canvas');
-    canvas.id = 'drops-canvas';
-    document.body.appendChild(canvas);
-
-    var btn = document.createElement('a');
-    btn.href = '#top';
-    btn.id = 'scroll-top';
-    btn.className = 'fancy-button';
-    btn.style.cssText = '--button-outline:#000000; --button-color:var(--color-accent-1);';
-    btn.innerHTML = '<span class="button_top"><span class="button-text">↑</span></span>';
-    document.body.appendChild(btn);
-
-    var s = document.createElement('script');
-    s.src = base + 'js/scroll-top.js';
-    document.body.appendChild(s);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initScrollTop);
+    } else {
+      initScrollTop();
+    }
   })();
 
 })();

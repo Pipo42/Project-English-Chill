@@ -10,8 +10,16 @@
     return el;
   }
 
-  /* ── Get exercise letter from the .ex-heading before a fill_gaps-wrapper ── */
+  /* ── Get exercise letter from the .ex-heading (may be inside .fill_gaps after fill-gaps.js moves it) ── */
   function getExLabel(wrapper) {
+    // First: check inside the fill_gaps (fill-gaps.js moves ex-heading inside)
+    const inner = wrapper.querySelector('.fill_gaps > .ex-heading, .fill_gaps .ex-heading--bar');
+    if (inner) {
+      const text = inner.textContent.trim();
+      const m = text.match(/^([a-z])\./i);
+      if (m) return m[1].toLowerCase();
+    }
+    // Fallback: look at previousElementSiblings
     let prev = wrapper.previousElementSibling;
     while (prev) {
       if (prev.classList.contains('ex-heading')) {

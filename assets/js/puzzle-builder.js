@@ -231,9 +231,16 @@ var PuzzleBuilder = (function () {
   }
 
   /* ── Construye el stage DOM ── */
+  /* Normaliza el fill según el label */
+  function normalizeFill(p) {
+    if (p.label && /auxiliary\s*\+\s*not/i.test(p.label)) return '#f9d0d8';
+    return p.fill;
+  }
+
   function buildStage(stageEl, pieces, cfg) {
     stageEl.style.setProperty('--puzzle-overlap', '-' + TAB_R + 'px');
     stageEl.innerHTML = '';
+    pieces = pieces.map(function(p) { return Object.assign({}, p, { fill: normalizeFill(p) }); });
     pieces.forEach(function (p, i) {
       var wrap = document.createElement('div');
       wrap.className = 'puzzle-piece-wrap';
