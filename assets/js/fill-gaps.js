@@ -187,15 +187,18 @@
     }
   });
 
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.fill_gaps input[type="text"]').forEach(input => {
-      input.placeholder = '...';
-      adjustInputWidth(input);
+  function initInputs() {
+    document.querySelectorAll('.fill_gaps').forEach(form => {
+      const inputs = form.querySelectorAll('input[type="text"]');
+      const total = inputs.length;
+      inputs.forEach((input, i) => {
+        input.placeholder = '...';
+        input.setAttribute('aria-label', 'Gap ' + (i + 1) + ' of ' + total);
+        adjustInputWidth(input);
+      });
     });
-  });
-  document.querySelectorAll('.fill_gaps input[type="text"]').forEach(input => {
-    input.placeholder = '...';
-    adjustInputWidth(input);
-  });
+  }
+  document.addEventListener('DOMContentLoaded', initInputs);
+  initInputs();
 
 })();

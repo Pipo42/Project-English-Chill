@@ -356,6 +356,19 @@ var PuzzleBuilder = (function () {
 
     if (!stageEl) { console.warn('PuzzleBuilder: stageId "' + cfg.stageId + '" not found'); return; }
 
+    /* ── Mini header +-? ── */
+    if (cfg.mode && sectionEl && !sectionEl.querySelector('.puzzle-mode-header')) {
+      var modeMap = { aff: { symbol: '+', color: '#dff2e1' }, neg: { symbol: '−', color: '#f9d0d8' }, int: { symbol: '?', color: '#d4b8f0' } };
+      var m = modeMap[cfg.mode];
+      if (m) {
+        var mh = document.createElement('div');
+        mh.className = 'puzzle-mode-header';
+        mh.textContent = m.symbol;
+        mh.style.cssText = 'font-family:"Caveat Brush",cursive;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:700;text-align:center;background:' + m.color + ';border:2px solid #222;border-radius:999px;width:2.4em;height:2.4em;line-height:2.4em;margin:0 auto 0.2rem;box-shadow:2px 2px 0 #222;';
+        sectionEl.insertBefore(mh, sectionEl.firstChild);
+      }
+    }
+
     /* ── Calcula dimensiones según viewport ── */
     function calcDimensions() {
       var container = sectionEl || stageEl.parentElement;

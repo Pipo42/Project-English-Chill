@@ -56,9 +56,24 @@
   const requested = new Set(LC_NAV);
   const ordered = NAV_CATALOG.filter(def => requested.has(def.key));
 
-  ordered.forEach(def => {
-    const btn = makeButton(def);
-    navContainer.appendChild(btn);
-  });
+  /* Group base + its Exs together in a .nav-group div */
+  let i = 0;
+  while (i < ordered.length) {
+    const def = ordered[i];
+    const next = ordered[i + 1];
+    const hasExsPair = next && next.exs && next.key === def.key + 'Exs';
+
+    if (!def.exs && hasExsPair) {
+      const group = document.createElement('div');
+      group.className = 'nav-group';
+      group.appendChild(makeButton(def));
+      group.appendChild(makeButton(next));
+      navContainer.appendChild(group);
+      i += 2;
+    } else {
+      navContainer.appendChild(makeButton(def));
+      i += 1;
+    }
+  }
 
 })();
