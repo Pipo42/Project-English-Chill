@@ -59,6 +59,8 @@ En tablas, estos colores se aplican con las clases: `.c-subj`, `.c-aux`, `.c-pp`
 - El fondo de la pieza (el SVG) toma el color de fondo del `body` via `getComputedStyle` — se integra con la página.
 - Texto de la palabra: Caveat Brush. Label (badge inferior): Manrope bold uppercase.
 - Escala automáticamente al viewport. Animación: vuela desde la izquierda al entrar en la franja central del viewport (`rootMargin: '-30% 0px -30% 0px'`), con squash/bounce al impactar y shake del vecino.
+- **Icono +-?:** se genera automáticamente via `mode: 'aff'|'neg'|'int'` en el `PuzzleBuilder.init`. NO usar divs manuales (`structure-circle`, etc.) en el HTML — eso es patrón obsoleto. El icono es un círculo Caveat Brush generado por JS con colores: aff `#dff2e1`, neg `#f9d0d8`, int `#d4b8f0`.
+- **Puntuación en piezas:** la última pieza de cada puzzle lleva el signo de puntuación dentro del `word`: `.` en afirmativas y negativas, `?` en interrogativas.
 
 ## Tablas (`style.css`)
 - Clase `.grammar-table` dentro de `.grammar-table-wrap`.

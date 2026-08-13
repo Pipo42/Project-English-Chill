@@ -26,19 +26,16 @@
 
     <!-- ── AFFIRMATIVE ── -->
     <div class="puzzle-section" id="section-affirmative">
-      <div class="structure-circle affirmative-icon"><span class="structure-symbol">+</span></div>
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-affirmative"></div></div>
     </div>
 
     <!-- ── NEGATIVE ── -->
     <div class="puzzle-section" id="section-negative">
-      <div class="structure-circle negative-icon"><span class="structure-symbol">−</span></div>
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-negative"></div></div>
     </div>
 
     <!-- ── QUESTION ── -->
     <div class="puzzle-section" id="section-question">
-      <div class="structure-circle question-icon"><span class="structure-symbol">?</span></div>
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-question"></div></div>
     </div>
 
@@ -226,17 +223,19 @@
   <script>
     PuzzleBuilder.init({
       sectionId:'section-affirmative', stageId:'stage-affirmative',
+      mode:'aff',
       exampleId:'ex-affirmative', exTextId:'exText-affirmative',
       example:'She has visited Paris twice.',
       pieces:[
         {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
         {word:'has',     label:'Auxiliary',       fill:'#fef4dc', lt:'in',   rt:'out'},
         {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
-        {word:'Paris',   label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
+        {word:'Paris.',  label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
       ]
     });
     PuzzleBuilder.init({
       sectionId:'section-negative', stageId:'stage-negative',
+      mode:'neg',
       exampleId:'ex-negative', exTextId:'exText-negative',
       example:"She hasn't visited Paris.",
       arrowBelow: 1,
@@ -244,11 +243,12 @@
         {word:'She',     label:'Subject',        fill:'#ddeeff', lt:'none', rt:'out'},
         {word:"hasn't",  label:'Auxiliary + not', fill:'#fef4dc', lt:'in',   rt:'out'},
         {word:'visited', label:'Past participle', fill:'#dff2e1', lt:'in',   rt:'out'},
-        {word:'Paris',   label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
+        {word:'Paris.',  label:'(Object)',        fill:'transparent', lt:'in',   rt:'none'}
       ]
     });
     PuzzleBuilder.init({
       sectionId:'section-question', stageId:'stage-question',
+      mode:'int',
       exampleId:'ex-question', exTextId:'exText-question',
       example:'Has she visited Paris?',
       swapArrows: [0, 1],
