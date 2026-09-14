@@ -5,14 +5,18 @@
 - `assets/js/` — **fuente de verdad de lógica**. Cada componente tiene su JS centralizado:
   - `puzzle-builder.js` — lógica y estilos base de puzzles
   - `fill-gaps.js` — lógica de fill-in-the-gaps
+  - `flashcards.js` — vocab cards con flip (lee `.flashcards-grid[data-words]`, formato `"term:traducción,..."`)
   - `tracker.js` — progress tracker
   - `nav.js` — navegación y botón back
   - `scroll-top.js` — botón ↑ flotante + animación drops
   - `components.js` — header, footer y scrollbar custom
-- `assets/images/` — `E&C Logo.svg` (logo sitio), `Separator-2.svg`, favicon PNG
+- `assets/fonts/` — Aboreto, Caveat Brush, Manrope (woff2).
+- `assets/images/` — `E&C Logo.svg` (logo sitio), `Separator-2.svg`, favicon PNG (`ChatGPT-Image-4-may-2025-11_07_11.png`). El resto de assets en esta carpeta (Dotted-Lines, EC-Logo, Quill, quill-cursor) son restos del sitio WordPress anterior, sin uso — no referenciarlos en páginas nuevas.
 - `index.html` — home (Choose your level).
-- `1st/2nd/3rd/4th-eso.html` — páginas de nivel.
-- `3rd-eso/lc5.html` — referencia de LC page.
+- `1st/2nd/3rd/4th-eso.html` — páginas de nivel, cada una con `.button-grid` listando sus LC pages (1st y 4th aún sin contenido — "Coming soon").
+- `2nd-eso/lc1.html`, `3rd-eso/lc5.html` — LC pages activas; `3rd-eso/lc5.html` es la referencia de estructura más completa.
+- `puzzle-builder-demo.html`, `sentence-builder-demo.html` — páginas sueltas de demo/prueba de componentes, no forman parte de la navegación del sitio.
+- `context/` — export del WordPress antiguo (contenido de referencia para migrar, no código vivo).
 
 ## Principio de centralización
 **Las páginas HTML solo contienen datos y estructura, nunca lógica ni estilos de componentes.**
