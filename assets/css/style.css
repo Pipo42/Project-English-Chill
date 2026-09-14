@@ -172,6 +172,7 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
   appearance: none;
   vertical-align: middle;
   max-width: 100%;
+  touch-action: manipulation;
 }
 
 .fancy-button .button_top {
@@ -195,6 +196,20 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 
 .fancy-button:hover .button_top  { transform: translateY(-0.5em); }
 .fancy-button:active .button_top { transform: translateY(0); }
+
+/* ── Táctil/móvil: sin hover 3D, press instantáneo (sin transition) ── */
+@media (pointer: coarse) {
+  .fancy-button:hover .button_top { transform: translateY(-0.35em); }
+  .fancy-button .button_top,
+  .fancy-button.btn-check .button_top,
+  .fancy-button.btn-reload .button_top {
+    transition: background 0.35s ease, color 0.35s ease, border-color 0.35s ease;
+  }
+  .fancy-button:active .button_top,
+  .fancy-button.is-pressed .button_top {
+    transform: translateY(0);
+  }
+}
 
 /* ── Check/reload buttons ── */
 .fancy-button.btn-check,
@@ -295,13 +310,8 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 #custom-scrollbar-thumb.thumb-faded { opacity: 0; pointer-events: none; }
 
 @media (pointer: coarse) {
-  #custom-scrollbar { width: 20px; }
-  #custom-scrollbar-thumb {
-    width: 20px;
-    height: 36px;
-    border-radius: 2px;
-    right: 2px;
-  }
+  /* Móvil/táctil: sin barra de scroll custom — se usa el scroll nativo */
+  #custom-scrollbar { display: none !important; }
 }
 
 /* ── Footer ── */
@@ -623,7 +633,8 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
   background: transparent;
   transition: border-color 0.35s ease, box-shadow 0.35s ease;
 }
-.fill_gaps-body { padding: 20px; }
+.fill_gaps-body { padding: 20px; background: transparent; transition: background 0.5s ease; }
+.fill_gaps.checked-state .fill_gaps-body { background: var(--score-color-pastel, transparent); }
 .fill_gaps-list { display: flex; flex-direction: column; gap: 1rem; }
 .fill_gaps-item { display: block; padding: 10px 0; border-bottom: 1px solid #000; line-height: 2.6; }
 .fill_gaps-item:last-child { border-bottom: none; }
@@ -654,8 +665,8 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 }
 .correct-answer.visible { opacity: 1; }
 .fill_gaps-buttons { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-.fill_gaps.checked-state { border-color: var(--score-color, green); box-shadow: 0 10px 0 var(--score-color, green); }
-.fill_gaps.checked-state .fill_gaps-item { border-bottom-color: var(--score-color, green); transition: border-color 0.35s ease; }
+.fill_gaps.checked-state { border-color: #000; box-shadow: 0 10px 0 #000; }
+.fill_gaps.checked-state .fill_gaps-item { border-bottom-color: #000; transition: border-color 0.35s ease; }
 @keyframes input-jelly {
   0%   { transform: scale(1); }
   25%  { transform: scaleX(1.18) scaleY(0.82); }

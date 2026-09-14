@@ -56,6 +56,14 @@
     return `rgb(${r},${g},${b})`;
   }
 
+  /* Mezcla un color rgb(...) con blanco al 45% para versión pastel (misma fórmula que tracker.js) */
+  function pastelize(color) {
+    const m = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+    if (!m) return color;
+    const mix = (c) => Math.round(parseInt(c) * 0.55 + 255 * 0.45);
+    return `rgb(${mix(m[1])},${mix(m[2])},${mix(m[3])})`;
+  }
+
   /* ── Init: hide btn-reload, make btn-check the single toggle ── */
   /* ── Move .ex-heading into .fill_gaps as a title bar ── */
   document.addEventListener('DOMContentLoaded', function () {
@@ -109,6 +117,7 @@
     const totalCorrect = correctCount;
     const ratio = inputs.length > 0 ? totalCorrect / inputs.length : 0;
     const color = scoreColor(ratio);
+    const pastel = pastelize(color);
     const fb = container.querySelector('.feedback');
     const afterStagger = delay + 100;
     /* Flip button to reload immediately, lock until animation ends; expand feedback space now */
@@ -121,15 +130,17 @@
     fb.classList.add('visible');
     setTimeout(() => {
       /* Apply score colour to button and form — same tick as shake */
-      button.style.setProperty('--button-outline', color);
-      button.style.background = color;
+      /* --button-outline queda en negro (contorno/zócalo siempre con buen contraste);
+         el color de score solo tiñe el relleno del botón (--button-color) */
+      button.style.setProperty('--button-color', pastel);
       container.style.setProperty('--score-color', color);
+      container.style.setProperty('--score-color-pastel', pastel);
       container.classList.add('checked-state');
       container.classList.remove('shake');
       void container.offsetWidth; // reflow para reiniciar animación shake
       container.classList.add('shake');
-      /* Fade in: transicionar de transparent al color real */
-      fb.style.color = color;
+      /* Fade in: transicionar de transparent a negro (sin zócalo detrás, necesita máximo contraste) */
+      fb.style.color = '#000';
       /* Unlock reload after shake completes (400ms) */
       setTimeout(() => { button.dataset.locked = 'false'; }, 400);
     }, afterStagger);
@@ -155,9 +166,9 @@
     button.dataset.state = 'check';
     button.querySelector('.button-text').textContent = 'Check Answers';
     /* Restore default */
-    button.style.removeProperty('--button-outline');
-    button.style.background = '';
+    button.style.removeProperty('--button-color');
     container.style.removeProperty('--score-color');
+    container.style.removeProperty('--score-color-pastel');
     container.classList.remove('checked-state', 'shake');
   }
 

@@ -37,6 +37,8 @@
     function initScrollbar() {
     // Skip on pages that opt out
     if (document.body.hasAttribute('data-no-extras')) return;
+    // Skip entirely on touch devices — mobile has native touch scrolling
+    if (window.matchMedia('(pointer: coarse)').matches) return;
     // Only inject on pages tall enough to scroll
     if (document.documentElement.scrollHeight <= window.innerHeight * 1.5) return;
 
@@ -139,6 +141,26 @@
     } else {
       initScrollTop();
     }
+  })();
+
+  /* ── Táctil: press instantáneo en .fancy-button (sin esperar a :active) ── */
+  (function () {
+    if (!window.matchMedia('(pointer: coarse)').matches) return;
+
+    function press(e) {
+      var btn = e.target.closest('.fancy-button');
+      if (btn) btn.classList.add('is-pressed');
+    }
+    function release(e) {
+      var btn = e.target.closest('.fancy-button');
+      if (btn) btn.classList.remove('is-pressed');
+      document.querySelectorAll('.fancy-button.is-pressed').forEach(function (b) {
+        b.classList.remove('is-pressed');
+      });
+    }
+    document.addEventListener('touchstart', press, { passive: true });
+    document.addEventListener('touchend', release, { passive: true });
+    document.addEventListener('touchcancel', release, { passive: true });
   })();
 
 })();
