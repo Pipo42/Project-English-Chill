@@ -379,8 +379,31 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .site-title { font-size: 2rem; }
-  .fancy-button { font-size: 1.2rem; }
-  .fancy-button .button_top { padding: 0.65em 1em; }
+  /* Botones más grandes y fáciles de tocar en móvil (en vez de encogerlos) */
+  .fancy-button { font-size: 1.65rem; }
+  .fancy-button .button_top { padding: 0.75em 1.2em; }
+
+  /* Nav buttons: una columna, todos del mismo ancho, sin agrupar por pares */
+  .nav-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+  }
+  .nav-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2rem;
+    width: 100%;
+  }
+  .nav-buttons .fancy-button,
+  .nav-group .fancy-button {
+    width: 100%;
+    font-size: 1.65rem;
+  }
+  .nav-buttons .fancy-button .button_top,
+  .nav-group .fancy-button .button_top {
+    padding: 0.85em 1.2em;
+  }
 }
 
 /* ── Floating scroll-to-top ── */
@@ -533,24 +556,31 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 /* ─────────────────────────────────────────────
    Grammar tables
    ───────────────────────────────────────────── */
-.grammar-table-wrap { width: 100%; text-align: center; margin: 20px 0; }
-.grammar-table {
-  border-collapse: separate;
-  border-spacing: 0;
+.grammar-table-wrap {
+  width: fit-content;
+  max-width: 100%;
+  text-align: center;
+  margin: 20px auto;
   border: 2px solid #000;
   border-radius: 16px;
   box-shadow: 0 8px 0 #000;
+  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.grammar-table {
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: transparent;
   color: #000;
   text-align: center;
-  margin: 0 auto;
+  margin: 0;
   display: table;
   word-wrap: break-word;
   white-space: normal;
   width: auto;
-  max-width: 100%;
+  max-width: none;
   font-size: 1.15rem;
-  overflow: hidden;
 }
 .grammar-table th.caption-row {
   background-color: #ffe0b2;
@@ -583,6 +613,7 @@ h1, h2, h3, h4, h5, h6 { text-wrap: pretty; }
 }
 .grammar-table td:last-child { border-right: none; }
 .grammar-table tr:first-child td { border-top: none; }
+
 .c-blue   { color: blue; }
 .c-red    { color: red; }
 .c-green  { color: green; }

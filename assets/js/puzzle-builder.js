@@ -12,9 +12,30 @@ var PuzzleBuilder = (function () {
   var W = W_BASE, H = H_BASE, TAB_R = TAB_R_BASE, TAB_H = TAB_H_BASE;
   var FONT_WORD = FONT_WORD_BASE, FONT_LBL = FONT_LBL_BASE;
 
-  /* ── Genera el path SVG de una pieza ── */
-  function makePath(lt, rt) {
-    var my = H / 2;
+  /* ── Parte un texto en como máximo 2 líneas por palabras, buscando el corte
+       que deje ambas líneas lo más equilibradas posible sin superar maxChars ── */
+  function wrapLabel(text, maxChars) {
+    if (text.length <= maxChars) return [text];
+    var words = text.split(' ');
+    if (words.length < 2) return [text];
+    var best = null, bestDiff = Infinity;
+    for (var i = 1; i < words.length; i++) {
+      var line1 = words.slice(0, i).join(' ');
+      var line2 = words.slice(i).join(' ');
+      if (line1.length > maxChars || line2.length > maxChars) continue;
+      var diff = Math.abs(line1.length - line2.length);
+      if (diff < bestDiff) { bestDiff = diff; best = [line1, line2]; }
+    }
+    if (best) return best;
+    /* ninguna combinación cabe en maxChars: usa el corte más equilibrado igualmente */
+    var mid = Math.ceil(words.length / 2);
+    return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+  }
+
+  /* ── Genera el path SVG de una pieza (H puede venir sobreescrita por pieza) ── */
+  function makePath(lt, rt, hOverride) {
+    var pieceH = hOverride || H;
+    var my = pieceH / 2;
     var d = [];
     d.push('M ' + CR + ' 0');
     d.push('L ' + (W - CR) + ' 0');
@@ -28,10 +49,10 @@ var PuzzleBuilder = (function () {
       d.push('C ' + W + ' ' + (my - TAB_H) + ' ' + (W - TAB_R) + ' ' + (my - TAB_H) + ' ' + (W - TAB_R) + ' ' + my);
       d.push('C ' + (W - TAB_R) + ' ' + (my + TAB_H) + ' ' + W + ' ' + (my + TAB_H) + ' ' + W + ' ' + (my + TAB_H));
     }
-    d.push('L ' + W + ' ' + (H - CR));
-    d.push('Q ' + W + ' ' + H + ' ' + (W - CR) + ' ' + H);
-    d.push('L ' + CR + ' ' + H);
-    d.push('Q 0 ' + H + ' 0 ' + (H - CR));
+    d.push('L ' + W + ' ' + (pieceH - CR));
+    d.push('Q ' + W + ' ' + pieceH + ' ' + (W - CR) + ' ' + pieceH);
+    d.push('L ' + CR + ' ' + pieceH);
+    d.push('Q 0 ' + pieceH + ' 0 ' + (pieceH - CR));
     if (lt === 'out') {
       d.push('L 0 ' + (my + TAB_H));
       d.push('C 0 ' + (my + TAB_H) + ' ' + (-TAB_R) + ' ' + (my + TAB_H) + ' ' + (-TAB_R) + ' ' + my);
@@ -47,18 +68,52 @@ var PuzzleBuilder = (function () {
     return d.join(' ');
   }
 
-  /* ── Crea el SVG de una pieza ── */
+  /* ── Crea el SVG de una pieza ──
+     Si el label no cabe en una línea, la pieza crece en altura (extraH)
+     para acomodar 2 líneas, en vez de encoger la fuente. ── */
   function makeSVG(piece) {
     var extraL = piece.lt === 'out' ? TAB_R : 0;
     var extraR = piece.rt === 'out' ? TAB_R : 0;
     var svgW = W + extraL + extraR;
     var fid = 'f' + Math.random().toString(36).slice(2, 7);
 
+    var cx = W / 2;
+    var maxTextW = W - 12; /* margen interno para que nada roce los bordes de la pieza */
+
+    /* ── Palabra: si es muy larga, la partimos en 2 líneas en vez de encogerla mucho ── */
+    var wordFontSize = FONT_WORD;
+    var maxWordChars = maxTextW / (wordFontSize * 0.56);
+    var wordLines = wrapLabel(piece.word, maxWordChars);
+    if (wordLines.length > 1) {
+      /* si tras partir sigue sin caber, reduce un poco (nunca por debajo de 15) */
+      var longest = Math.max(wordLines[0].length, wordLines[1] ? wordLines[1].length : 0);
+      var estW = longest * wordFontSize * 0.56;
+      if (estW > maxTextW) wordFontSize = Math.max(15, wordFontSize * (maxTextW / estW));
+    }
+
+    /* ── Label: parte en máx. 2 líneas si no cabe en una ── */
+    var lblText = piece.label.toUpperCase();
+    var lblFontSize = FONT_LBL;
+    var lblLetterSpacing = 1.2;
+    /* ancho real estimado por carácter en mayúsculas + letter-spacing 1.2 */
+    var lblCharW = lblFontSize * 0.62 + lblLetterSpacing;
+    var maxLblChars = maxTextW / lblCharW;
+    var lblLines = wrapLabel(lblText, maxLblChars);
+
+    /* ── Calcula cuánta altura extra necesita la pieza para dar cabida a
+         2 líneas de label y/o 2 líneas de palabra ── */
+    var lblLineH = lblFontSize + 6;
+    var wordLineH0 = wordFontSize * 1.05;
+    var extraHLbl  = lblLines.length  > 1 ? lblLineH   : 0;
+    var extraHWord = wordLines.length > 1 ? wordLineH0 : 0;
+    var extraH = extraHLbl + extraHWord;
+    var pieceH = H + extraH;
+
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     var SHADOW_DY = 6;
     svg.setAttribute('width', svgW);
-    svg.setAttribute('height', H + SHADOW_DY);
-    svg.setAttribute('viewBox', (-extraL) + ' 0 ' + svgW + ' ' + (H + SHADOW_DY));
+    svg.setAttribute('height', pieceH + SHADOW_DY);
+    svg.setAttribute('viewBox', (-extraL) + ' 0 ' + svgW + ' ' + (pieceH + SHADOW_DY));
     svg.style.display = 'block';
     svg.style.overflow = 'visible';
 
@@ -66,7 +121,7 @@ var PuzzleBuilder = (function () {
     /* clipPath que solo deja ver la sombra por debajo del path original */
     var clipId = 'c' + fid;
     defs.innerHTML = '<clipPath id="' + clipId + '">' +
-      '<rect x="' + (-extraL - 10) + '" y="' + (H / 2) + '" width="' + (svgW + 20) + '" height="' + (H / 2 + SHADOW_DY + 10) + '"/>' +
+      '<rect x="' + (-extraL - 10) + '" y="' + (pieceH / 2) + '" width="' + (svgW + 20) + '" height="' + (pieceH / 2 + SHADOW_DY + 10) + '"/>' +
       '</clipPath>';
     svg.appendChild(defs);
 
@@ -74,7 +129,7 @@ var PuzzleBuilder = (function () {
 
     /* capa inferior: sombra sólida negra, visible solo en la mitad inferior */
     var shadowEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    shadowEl.setAttribute('d', makePath(piece.lt, piece.rt));
+    shadowEl.setAttribute('d', makePath(piece.lt, piece.rt, pieceH));
     shadowEl.setAttribute('fill', '#222');
     shadowEl.setAttribute('stroke', '#222');
     shadowEl.setAttribute('stroke-width', '1.5');
@@ -84,7 +139,7 @@ var PuzzleBuilder = (function () {
 
     /* capa superior: fondo del color de página + borde del color de énfasis */
     var pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    pathEl.setAttribute('d', makePath(piece.lt, piece.rt));
+    pathEl.setAttribute('d', makePath(piece.lt, piece.rt, pieceH));
     pathEl.setAttribute('fill', getComputedStyle(document.body).backgroundColor || '#99aebb');
     pathEl.setAttribute('stroke', '#222');
     pathEl.classList.add('piece-path');
@@ -93,40 +148,50 @@ var PuzzleBuilder = (function () {
     pathEl.setAttribute('stroke-linecap', 'round');
     g.appendChild(pathEl);
 
-    var cx = W / 2;
+    /* ── Palabra y label se posicionan respecto al centro REAL de la pieza
+         (pieceH/2), que baja extraH/2 respecto al centro original (H/2),
+         porque la pieza crece simétricamente arriba y abajo. ── */
+    var midY = pieceH / 2;
+    var wordCY = midY - 8 - extraHWord / 2;
+    var wordLineH = wordLineH0;
+    wordLines.forEach(function (line, i) {
+      var word = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      var ly = wordLines.length > 1 ? wordCY + (i - (wordLines.length - 1) / 2) * wordLineH : wordCY;
+      word.setAttribute('x', cx); word.setAttribute('y', ly);
+      word.setAttribute('text-anchor', 'middle'); word.setAttribute('dominant-baseline', 'middle');
+      word.setAttribute('fill', '#111'); word.setAttribute('font-family', "'Caveat Brush', cursive");
+      word.setAttribute('font-size', wordFontSize);
+      word.textContent = line;
+      g.appendChild(word);
+    });
 
-    var word = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    word.setAttribute('x', cx); word.setAttribute('y', H / 2 - 8);
-    word.setAttribute('text-anchor', 'middle'); word.setAttribute('dominant-baseline', 'middle');
-    word.setAttribute('fill', '#111'); word.setAttribute('font-family', "'Caveat Brush', cursive");
-    word.setAttribute('font-size', FONT_WORD);
-    word.textContent = piece.word;
-    g.appendChild(word);
-
-    var lblY = H / 2 + 16;
-    var lblText = piece.label.toUpperCase();
-    var lblFontSize = FONT_LBL;
-    /* estima ancho del texto para el rect de fondo */
-    var lblW = lblText.length * lblFontSize * 0.62 + 16;
-    var lblH = lblFontSize + 10;
+    /* ── Label badge (baja lo que la palabra ha crecido hacia abajo,
+         y se centra en el espacio propio ganado por extraHLbl) ── */
+    var lblCY = midY + 16 + extraHWord / 2 + extraHLbl / 2;
+    var longestLine = lblLines.reduce(function (a, b) { return b.length > a.length ? b : a; }, '');
+    var lblW = Math.min(longestLine.length * lblCharW + 16, maxTextW + 16);
+    var lblBadgeH = lblLines.length * lblLineH + 6;
     var lblRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     lblRect.setAttribute('x', cx - lblW / 2);
-    lblRect.setAttribute('y', lblY - lblH / 2);
+    lblRect.setAttribute('y', lblCY - lblBadgeH / 2);
     lblRect.setAttribute('width', lblW);
-    lblRect.setAttribute('height', lblH);
-    lblRect.setAttribute('rx', lblH / 2);
-    lblRect.setAttribute('ry', lblH / 2);
+    lblRect.setAttribute('height', lblBadgeH);
+    lblRect.setAttribute('rx', lblLines.length > 1 ? 10 : lblBadgeH / 2);
+    lblRect.setAttribute('ry', lblLines.length > 1 ? 10 : lblBadgeH / 2);
     lblRect.setAttribute('fill', piece.fill);
     g.appendChild(lblRect);
 
-    var lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    lbl.setAttribute('x', cx); lbl.setAttribute('y', lblY);
-    lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('dominant-baseline', 'middle');
-    lbl.setAttribute('fill', '#111'); lbl.setAttribute('font-family', "'Manrope', sans-serif");
-    lbl.setAttribute('font-size', lblFontSize); lbl.setAttribute('font-weight', '700');
-    lbl.setAttribute('letter-spacing', '1.2');
-    lbl.textContent = lblText;
-    g.appendChild(lbl);
+    lblLines.forEach(function (line, i) {
+      var lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      var ly = lblLines.length > 1 ? lblCY + (i - (lblLines.length - 1) / 2) * lblLineH : lblCY;
+      lbl.setAttribute('x', cx); lbl.setAttribute('y', ly);
+      lbl.setAttribute('text-anchor', 'middle'); lbl.setAttribute('dominant-baseline', 'middle');
+      lbl.setAttribute('fill', '#111'); lbl.setAttribute('font-family', "'Manrope', sans-serif");
+      lbl.setAttribute('font-size', lblFontSize); lbl.setAttribute('font-weight', '700');
+      lbl.setAttribute('letter-spacing', lblLetterSpacing);
+      lbl.textContent = line;
+      g.appendChild(lbl);
+    });
 
     svg.appendChild(g);
     return svg;
