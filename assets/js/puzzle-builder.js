@@ -68,6 +68,29 @@ var PuzzleBuilder = (function () {
     return d.join(' ');
   }
 
+  /* ── Mide el ancho real (px) de un texto SVG renderizado con una fuente/tamaño dados.
+       Más fiable que estimar por nº de caracteres (evita que el badge quede
+       más estrecho que el texto real con letras anchas, comas, apóstrofes…). ── */
+  var _measureSvg = null;
+  function measureTextWidth(text, fontFamily, fontSize, fontWeight, letterSpacing) {
+    if (!_measureSvg) {
+      _measureSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      _measureSvg.style.cssText = 'position:absolute;visibility:hidden;width:0;height:0;overflow:hidden;';
+      document.body.appendChild(_measureSvg);
+    }
+    var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('font-family', fontFamily);
+    t.setAttribute('font-size', fontSize);
+    if (fontWeight) t.setAttribute('font-weight', fontWeight);
+    if (letterSpacing) t.setAttribute('letter-spacing', letterSpacing);
+    t.textContent = text;
+    _measureSvg.appendChild(t);
+    var w = 0;
+    try { w = t.getBBox().width; } catch (e) { w = text.length * fontSize * 0.6; }
+    _measureSvg.removeChild(t);
+    return w;
+  }
+
   /* ── Crea el SVG de una pieza ──
      Si el label no cabe en una línea, la pieza crece en altura (extraH)
      para acomodar 2 líneas, en vez de encoger la fuente. ── */
@@ -91,14 +114,50 @@ var PuzzleBuilder = (function () {
       if (estW > maxTextW) wordFontSize = Math.max(15, wordFontSize * (maxTextW / estW));
     }
 
-    /* ── Label: parte en máx. 2 líneas si no cabe en una ── */
+    /* ── Label: parte en máx. 2 líneas si no cabe en una ──
+       El badge nunca debe sobrepasar el ancho interior seguro de la pieza
+       (maxTextW), así que decidimos el wrap MIDIENDO el ancho real del
+       texto renderizado (measureTextWidth), no estimando por nº de
+       caracteres — una estimación puede fallar y dejar el badge más
+       ancho que la pieza (texto largo en mayúsculas, letras anchas). */
     var lblText = piece.label.toUpperCase();
     var lblFontSize = FONT_LBL;
     var lblLetterSpacing = 1.2;
-    /* ancho real estimado por carácter en mayúsculas + letter-spacing 1.2 */
-    var lblCharW = lblFontSize * 0.62 + lblLetterSpacing;
-    var maxLblChars = maxTextW / lblCharW;
-    var lblLines = wrapLabel(lblText, maxLblChars);
+    var LBL_PAD = 16; /* padding horizontal interno del badge */
+    var LBL_SAFETY = 4; /* margen de seguridad extra para redondeos de fuente */
+    var lblBadgeMaxW = maxTextW - LBL_PAD - LBL_SAFETY; /* ancho de texto disponible dentro del badge */
+
+    function measureLbl(text) {
+      return measureTextWidth(text, "'Manrope', sans-serif", lblFontSize, '700', lblLetterSpacing);
+    }
+
+    var lblLines;
+    if (measureLbl(lblText) <= lblBadgeMaxW) {
+      lblLines = [lblText];
+    } else {
+      /* busca el mejor corte en 2 líneas probando cada espacio, midiendo de verdad */
+      var words = lblText.split(' ');
+      if (words.length < 2) {
+        lblLines = [lblText]; /* una sola palabra larga: no se puede partir, se reduce fuente más abajo */
+      } else {
+        var bestPair = null, bestMax = Infinity;
+        for (var wi = 1; wi < words.length; wi++) {
+          var l1 = words.slice(0, wi).join(' ');
+          var l2 = words.slice(wi).join(' ');
+          var w1 = measureLbl(l1), w2 = measureLbl(l2);
+          var m = Math.max(w1, w2);
+          if (m < bestMax) { bestMax = m; bestPair = [l1, l2]; }
+        }
+        lblLines = bestPair;
+      }
+      /* si incluso partido en 2 líneas la más ancha no cabe, encoge la fuente
+         del label hasta que quepa (nunca por debajo de 6px) */
+      var widest = Math.max.apply(null, lblLines.map(measureLbl));
+      if (widest > lblBadgeMaxW && widest > 0) {
+        var shrink = lblBadgeMaxW / widest;
+        lblFontSize = Math.max(6, lblFontSize * shrink);
+      }
+    }
 
     /* ── Calcula cuánta altura extra necesita la pieza para dar cabida a
          2 líneas de label y/o 2 líneas de palabra ── */
@@ -168,8 +227,14 @@ var PuzzleBuilder = (function () {
     /* ── Label badge (baja lo que la palabra ha crecido hacia abajo,
          y se centra en el espacio propio ganado por extraHLbl) ── */
     var lblCY = midY + 16 + extraHWord / 2 + extraHLbl / 2;
-    var longestLine = lblLines.reduce(function (a, b) { return b.length > a.length ? b : a; }, '');
-    var lblW = Math.min(longestLine.length * lblCharW + 16, maxTextW + 16);
+    /* Ancho real medido de la línea más ancha, con el lblFontSize ya
+       ajustado (posiblemente encogido) arriba para que quepa siempre. */
+    var lblRealW = lblLines.reduce(function (max, line) {
+      return Math.max(max, measureLbl(line));
+    }, 0);
+    /* El badge nunca debe sobrepasar el ancho interior seguro de la pieza,
+       para que no toque ni cruce el contorno (nunca > maxTextW). */
+    var lblW = Math.min(lblRealW + LBL_PAD + LBL_SAFETY, maxTextW);
     var lblBadgeH = lblLines.length * lblLineH + 6;
     var lblRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     lblRect.setAttribute('x', cx - lblW / 2);

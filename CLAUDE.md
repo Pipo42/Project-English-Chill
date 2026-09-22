@@ -4,19 +4,24 @@
 - `assets/css/style.css` — **fuente de verdad de estilos**. Todos los estilos de componentes van aquí, nunca en `<style>` dentro de las páginas HTML.
 - `assets/js/` — **fuente de verdad de lógica**. Cada componente tiene su JS centralizado:
   - `puzzle-builder.js` — lógica y estilos base de puzzles
+  - `charts.js` — genera tablas gramaticales (`.grammar-table`) desde datos JS (`ChartBuilder.init({targetId, caption, subheaders, rows})`), alternativa a escribir la tabla a mano en el HTML
   - `fill-gaps.js` — lógica de fill-in-the-gaps
   - `flashcards.js` — vocab cards con flip (lee `.flashcards-grid[data-words]`, formato `"term:traducción,..."`)
   - `tracker.js` — progress tracker
   - `nav.js` — navegación y botón back
   - `scroll-top.js` — botón ↑ flotante + animación drops
   - `components.js` — header, footer y scrollbar custom
+  - `cursor.js` — no referenciado por ninguna página actual; código muerto (revisar antes de reutilizar)
 - `assets/fonts/` — Aboreto, Caveat Brush, Manrope (woff2).
 - `assets/images/` — `E&C Logo.svg` (logo sitio), `Separator-2.svg`, favicon PNG (`ChatGPT-Image-4-may-2025-11_07_11.png`). El resto de assets en esta carpeta (Dotted-Lines, EC-Logo, Quill, quill-cursor) son restos del sitio WordPress anterior, sin uso — no referenciarlos en páginas nuevas.
 - `index.html` — home (Choose your level).
-- `1st/2nd/3rd/4th-eso.html` — páginas de nivel, cada una con `.button-grid` listando sus LC pages (1st y 4th aún sin contenido — "Coming soon").
-- `2nd-eso/lc1.html`, `3rd-eso/lc5.html` — LC pages activas; `3rd-eso/lc5.html` es la referencia de estructura más completa.
+- `1st/2nd/3rd/4th-eso.html` — páginas de nivel, cada una con `.button-grid` listando sus LC pages. 2nd, 3rd y 4th ya tienen contenido; 1st sigue "Coming soon" (no hay contenido migrable en el XML de WordPress para 1st ESO).
+- `2nd-eso/`: `lc0`, `lc1`, `lc1-extra-practice`, `lc2`, `lc4`, `final-review`. No tiene LC3: en el WordPress original esa página solo remitía a un libro de lectura explicado en clase, sin gramática ni ejercicios migrables.
+- `3rd-eso/`: `lc1`, `lc2`, `lc4`, `lc5`. `lc5.html` es la referencia de estructura más completa (puzzles + tablas + tracker). No tiene LC3 por el mismo motivo que 2nd ESO (solo libro de lectura).
+- `4th-eso/`: `lc5` (único LC con contenido migrable en el XML de WordPress para este nivel).
 - `puzzle-builder-demo.html`, `sentence-builder-demo.html` — páginas sueltas de demo/prueba de componentes, no forman parte de la navegación del sitio.
 - `context/` — export del WordPress antiguo (contenido de referencia para migrar, no código vivo).
+- `Claude outputs/` — capturas y páginas de prueba generadas durante el trabajo con Claude (no código vivo del sitio).
 
 ## Principio de centralización
 **Las páginas HTML solo contienen datos y estructura, nunca lógica ni estilos de componentes.**
@@ -32,6 +37,12 @@
 ## Footer (`components.js`)
 - Generado por JS: solo `©año` en `.footer-copy` (Aboreto, 1.1rem). Sin logo, sin links.
 
+## Navegación (`nav.js`)
+- `NAV_CATALOG` define las claves válidas para `LC_NAV`: `vocabulary(Exs)`, `grammar(Exs)`, `irregularVerbsExs`, `extraPractice`, `reading(Exs)`, `listening(Exs)`, `writing(Exs)`, `project(Exs)`. Para añadir una sección nueva (ej. otro bloque de ejercicios temático), extender este catálogo en vez de usar una clave no registrada.
+- Botones base+Exs consecutivos (ej. `grammar`+`grammarExs`) se agrupan automáticamente en un `.nav-group` (misma fila, pegados).
+- `SOLO_KEYS` (`extraPractice`, `writing`, `project`) fuerza que ese botón ocupe su propia fila completa (`.nav-solo`, `flex-basis: 100%`), nunca agrupado ni compartiendo fila con otro.
+- `extraPractice` es un botón especial (`link: true`): no apunta a un ancla `#...` sino a una URL fija (por defecto `lc1-extra-practice.html`, o `LC_EXTRA_PRACTICE_HREF` si la página la define). Úsalo para enlazar una página aparte de refuerzo/práctica extra desde dentro de una LC.
+
 ## Botones (`style.css` + `nav.js`)
 - Clase base `.fancy-button`: fondo negro (`--button-outline: #000`), `.button_top` elevado con `translateY(-0.35em)`, sube a `-0.5em` en hover, baja a `0` en active. Color de relleno: `--button-color: var(--color-accent-1)` (azul-gris `#99aebb`).
 - Botón back (←): generado por `nav.js`, misma clase `.fancy-button`, `--button-color: var(--color-accent-1)`.
@@ -46,33 +57,39 @@
 - `@media (prefers-reduced-motion: reduce)` lo desactiva.
 
 ## Sistema de colores semántico
-Consistente entre puzzles, tablas y highlights — el alumno aprende el código una vez:
-- `#ddeeff` azul → **Subject**
-- `#fef4dc` amarillo → **Auxiliary**
-- `#dff2e1` verde → **Past Participle** (u otro verbo principal)
-- `#fce8e8` rosa → **Keywords** (for/since/ever/never…)
-- `#f9d0d8` rosa oscuro → **Auxiliary + not** (variante negativa del auxiliar)
+Consistente entre puzzles, tablas y reminders — el alumno aprende el código una vez:
+- `#ddeeff` azul → **Subject** (`.c-subj`)
+- `#fef4dc` amarillo → **Auxiliary**, siempre, también en interrogativas (`.c-aux`)
+- `#dff2e1` verde pastel → **verbo principal** (participio, infinitivo, -ing, forma base…) — es el ÚNICO verde válido (`.c-pp`)
+- `#ffb3b3` salmón → **negativo** (auxiliar/verbo negado: *isn't, don't, can't, wasn't*…), en afirmativa o interrogativa (`.c-neg`)
+- `#ecdcf7` morado pastel → **Keywords** (for/since/when/while/too/enough/if…) (`.c-keyword`) — mismo tono que el icono `?` del puzzle (`#d4b8f0`, ver más abajo), para que el alumno asocie keyword ↔ interrogativo visualmente.
+- `#f9d0d8` rosa oscuro → variante "auxiliar + not" fusionados en una sola pieza de puzzle (ver más abajo)
+- `#b2dfb2` / `#d4b8f0` (`.c-aff` / `.c-int`) → **solo** para el icono +/−/? del modo del puzzle o casos sin auxiliar propio (p.ej. iconos de estructura). **Nunca** usarlos como color de una palabra/verbo suelto en un reminder — para eso siempre `.c-pp` (verde) o `.c-neg` (rojo) según corresponda. Si ves `.c-aff` pintando una palabra en un reminder, es un bug: dos verdes distintos conviviendo en la misma página confunde al alumno.
 
-En tablas, estos colores se aplican con las clases: `.c-subj`, `.c-aux`, `.c-pp`, `.c-keyword` (display inline-block, border-radius 999px, padding 0 8px, font-weight 700).
+**Reminders con negativo/interrogativo**: cuando un reminder combina afirmativo+negativo+interrogativo en un solo bloque de forma poco clara, se separa en dos `.puzzle-reminder`: uno con afirmativo+negativo, y otro aparte solo con el interrogativo (aux en amarillo + sujeto + verbo en verde, sin la palabra literal "subject" — se listan los pronombres reales: *I, we, you, they* / *he, she, it*). Excepción: si la estructura es igual para todos los sujetos (ej. Past Simple con action verbs: *didn't + infinitive*), usar "Subject" literal es correcto, no hace falta listar pronombres.
+
+**Excepción — tabla "Examples" de futuros (`3rd-eso/lc2.html`)**: en esa tabla concreta, el objetivo pedagógico es diferenciar los distintos tiempos de futuro entre sí (Will / Going to / Present Continuous / Present Simple), no distinguir auxiliar de verbo principal. Por eso ahí el bloque aux+verbo completo ("will rise", "'m going to visit"…) se pinta entero en `.c-keyword` (morado pastel) en vez de separar aux (amarillo) y verbo (verde). No es un bug del sistema de colores — es una excepción documentada, válida solo en esa tabla.
 
 ## Puzzles (`puzzle-builder.js` + `style.css`)
 - Cada instancia: `PuzzleBuilder.init(cfg)` con `sectionId`, `stageId`, `pieces`, `example` (opcional), `arrowBelow` (índice de pieza con flecha ↑ bajo ella), `swapArrows` ([idxA, idxB] para flechas curvas de intercambio).
 - `exampleId` y `exTextId` son opcionales — si no hay elementos con esos IDs en el DOM, se ignoran sin error.
 - Cada pieza: `{ word, label, fill, lt, rt }`. `lt`/`rt`: `'none'|'in'|'out'` (encaje puzzle).
 - El `fill` del label badge usa el sistema de colores semántico. Si `label` contiene "auxiliary + not", el fill se normaliza automáticamente a `#f9d0d8`.
+- El ancho del badge del label se calcula midiendo el texto SVG real (`getBBox`, función `measureTextWidth`), no estimando por nº de caracteres. El label nunca puede sobrepasar el ancho interior seguro de la pieza: si un label largo (ej. "Present Participle") no cabe en una línea, se parte en 2 líneas probando cada corte posible y midiendo de verdad cuál dejar más equilibrado; si ni así cabe, se encoge la fuente del label (mínimo 6px) hasta que quepa. Esto evita que el badge sobresalga o cruce el contorno de la pieza, en los 3 modos (+/−/?).
 - El fondo de la pieza (el SVG) toma el color de fondo del `body` via `getComputedStyle` — se integra con la página.
 - Texto de la palabra: Caveat Brush. Label (badge inferior): Manrope bold uppercase.
 - Escala automáticamente al viewport. Animación: vuela desde la izquierda al entrar en la franja central del viewport (`rootMargin: '-30% 0px -30% 0px'`), con squash/bounce al impactar y shake del vecino.
 - **Icono +-?:** se genera automáticamente via `mode: 'aff'|'neg'|'int'` en el `PuzzleBuilder.init`. NO usar divs manuales (`structure-circle`, etc.) en el HTML — eso es patrón obsoleto. El icono es un círculo Caveat Brush generado por JS con colores: aff `#dff2e1`, neg `#f9d0d8`, int `#d4b8f0`.
 - **Puntuación en piezas:** la última pieza de cada puzzle lleva el signo de puntuación dentro del `word`: `.` en afirmativas y negativas, `?` en interrogativas.
 
-## Tablas (`style.css`)
+## Tablas (`style.css` + `charts.js`)
 - Clase `.grammar-table` dentro de `.grammar-table-wrap`.
 - Borde 2px negro, `border-radius: 16px`, `box-shadow: 0 8px 0 #000`.
 - Fila de título (`.caption-row`): fondo `#ffe0b2` (naranja pastel), bold, 1.2rem.
 - Fila de subheaders (`.subheader`): fondo `#c8f0d8` (verde pastel), bold, 1.15rem.
 - Celdas: fondo transparente, 1.15rem, separadores grises `#ccc`.
 - Highlights semánticos en celdas: `.c-subj`, `.c-aux`, `.c-pp`, `.c-keyword` (ver sistema de colores).
+- Se puede escribir el `<table class="grammar-table">` a mano en el HTML, o generarlo con `ChartBuilder.init({targetId, caption, subheaders, rows})` (`charts.js`) apuntando a un `<div id="...">` vacío — útil cuando la tabla se repite entre páginas o se prefiere mantener el HTML de la página solo con datos.
 
 ## Estructura de una LC page
 - `<html lang="en">`, favicon `ChatGPT-Image-4-may-2025-11_07_11.png`.
@@ -142,3 +159,8 @@ En tablas, estos colores se aplican con las clases: `.c-subj`, `.c-aux`, `.c-pp`
 ## Reglas de edición
 - **No reescribir archivos enteros.** Editar solo la parte mínima necesaria. Edit tool para cambios puntuales, nunca Write para sobrescribir un existente salvo que sea imprescindible.
 - Verificar tras editar HTML largo: `tail -3` debe terminar en `</html>`.
+
+## Reglas de exploración (ahorro de contexto/tokens)
+- **No listar ni leer `.git/` ni `context/tema/` salvo que se pida explícitamente** (historial de commits y tema WordPress de referencia, respectivamente — no son código vivo del sitio).
+- Evitar listados recursivos de toda la raíz del proyecto para tareas puntuales. Ir directo a los archivos relevantes según la sección "Arquitectura" de arriba (normalmente `assets/css/style.css`, el JS del componente en cuestión, y la página HTML concreta).
+- Si hace falta explorar, preferir un listado no recursivo o acotado a la subcarpeta relevante (`assets/`, la carpeta del nivel ESO en cuestión) en vez de recursivo desde la raíz.

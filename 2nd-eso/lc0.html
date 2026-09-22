@@ -35,9 +35,9 @@
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-ps-tobe-int"></div></div>
     </div>
     <div class="puzzle-reminder">
-      <strong>I</strong> → <span class="c-aff">am</span> / <span class="c-neg">'m not</span> / <span class="c-int">Am</span> … ?<br><br>
-      <strong>You, we, they</strong> → <span class="c-aff">are</span> / <span class="c-neg">aren't</span> / <span class="c-int">Are</span> … ?<br><br>
-      <strong>He, she, it</strong> → <span class="c-aff">is</span> / <span class="c-neg">isn't</span> / <span class="c-int">Is</span> … ?
+      <strong>I</strong> → <span class="c-pp">am</span><br><br>
+      <strong>You, we, they</strong> → <span class="c-pp">are</span><br><br>
+      <strong>He, she, it</strong> → <span class="c-pp">is</span>
     </div>
 
     <h2 class="wp-block-heading" style="text-align:center; margin:1.5rem 0 1rem;">Present Simple (Actions)</h2>
@@ -52,8 +52,12 @@
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-ps-act-int"></div></div>
     </div>
     <div class="puzzle-reminder">
-      <strong>I, we, you, they</strong> → <span class="c-aff">play</span> / <span class="c-neg">don't play</span> / <span class="c-int">Do</span> … play?<br><br>
-      <strong>He, she, it</strong> → <span class="c-aff">plays</span> / <span class="c-neg">doesn't play</span> / <span class="c-int">Does</span> … play?
+      <strong>I, we, you, they</strong> → <span class="c-pp">play</span> / <span class="c-neg">don't play</span><br><br>
+      <strong>He, she, it</strong> → <span class="c-pp">plays</span> / <span class="c-neg">doesn't play</span>
+    </div>
+    <div class="puzzle-reminder">
+      <span class="c-aux">Do</span> + I, we, you, they + <span class="c-pp">play</span>?<br><br>
+      <span class="c-aux">Does</span> + he, she, it + <span class="c-pp">play</span>?
     </div>
 
     <p class="flashcards-label" style="text-align:center; margin-top:2rem;">Keywords</p>
@@ -73,9 +77,14 @@
       <div class="puzzle-stage"><div class="puzzle-stage-inner" id="stage-pc-int"></div></div>
     </div>
     <div class="puzzle-reminder">
-      <strong>I</strong> → <span class="c-aff">am playing</span> / <span class="c-neg">am not playing</span> / <span class="c-int">Am</span> … playing?<br><br>
-      <strong>You, we, they</strong> → <span class="c-aff">are playing</span> / <span class="c-neg">aren't playing</span> / <span class="c-int">Are</span> … playing?<br><br>
-      <strong>He, she, it</strong> → <span class="c-aff">is playing</span> / <span class="c-neg">isn't playing</span> / <span class="c-int">Is</span> … playing?
+      <strong>I</strong> → <span class="c-aux">am</span> <span class="c-pp">playing</span> / <span class="c-aux">am not</span> <span class="c-pp">playing</span><br><br>
+      <strong>You, we, they</strong> → <span class="c-aux">are</span> <span class="c-pp">playing</span> / <span class="c-aux">aren't</span> <span class="c-pp">playing</span><br><br>
+      <strong>He, she, it</strong> → <span class="c-aux">is</span> <span class="c-pp">playing</span> / <span class="c-aux">isn't</span> <span class="c-pp">playing</span>
+    </div>
+    <div class="puzzle-reminder">
+      <span class="c-aux">Am</span> + I + <span class="c-pp">playing</span>?<br><br>
+      <span class="c-aux">Are</span> + you, we, they + <span class="c-pp">playing</span>?<br><br>
+      <span class="c-aux">Is</span> + he, she, it + <span class="c-pp">playing</span>?
     </div>
 
     <p class="flashcards-label" style="text-align:center; margin-top:2rem;">Keywords</p>
@@ -419,7 +428,8 @@
       example: 'He is playing football.',
       pieces: [
         { word: 'He',      label: 'Subject',      fill: '#ddeeff', lt: 'none', rt: 'out' },
-        { word: 'is playing', label: 'Present Continuous', fill: '#dff2e1', lt: 'in', rt: 'out' },
+        { word: 'is',      label: 'Auxiliary',    fill: '#fef4dc', lt: 'in',   rt: 'out' },
+        { word: 'playing', label: 'Present Participle', fill: '#dff2e1', lt: 'in', rt: 'out' },
         { word: 'football.', label: '(Object)',   fill: 'transparent', lt: 'in', rt: 'none' }
       ]
     });
@@ -429,9 +439,10 @@
       example: "They aren't playing football.",
       arrowBelow: 1,
       pieces: [
-        { word: 'They',          label: 'Subject',                     fill: '#ddeeff', lt: 'none', rt: 'out' },
-        { word: "aren't playing", label: 'Present Continuous + not',   fill: '#f9d0d8', lt: 'in',   rt: 'out' },
-        { word: 'football.',     label: '(Object)',                    fill: 'transparent', lt: 'in', rt: 'none' }
+        { word: 'They',    label: 'Subject',            fill: '#ddeeff', lt: 'none', rt: 'out' },
+        { word: "aren't",  label: 'Auxiliary + not',     fill: '#f9d0d8', lt: 'in',   rt: 'out' },
+        { word: 'playing', label: 'Present Participle',  fill: '#dff2e1', lt: 'in',   rt: 'out' },
+        { word: 'football.', label: '(Object)',          fill: 'transparent', lt: 'in', rt: 'none' }
       ]
     });
     PuzzleBuilder.init({
@@ -440,9 +451,10 @@
       example: 'Is she playing football?',
       swapArrows: [0, 1],
       pieces: [
-        { word: 'Is',      label: 'Present To Be', fill: '#dff2e1', lt: 'none', rt: 'out' },
-        { word: 'she',     label: 'Subject',       fill: '#ddeeff', lt: 'in',   rt: 'out' },
-        { word: 'playing football?', label: '(Verb + Object)', fill: 'transparent', lt: 'in', rt: 'none' }
+        { word: 'Is',      label: 'Auxiliary',           fill: '#fef4dc', lt: 'none', rt: 'out' },
+        { word: 'she',     label: 'Subject',             fill: '#ddeeff', lt: 'in',   rt: 'out' },
+        { word: 'playing', label: 'Present Participle',  fill: '#dff2e1', lt: 'in',   rt: 'out' },
+        { word: 'football?', label: '(Object)',          fill: 'transparent', lt: 'in', rt: 'none' }
       ]
     });
   </script>

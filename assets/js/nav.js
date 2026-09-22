@@ -7,6 +7,8 @@
     { key: 'vocabularyExs', label: 'Vocabulary Exam', anchor: 'vocabularyexs', exs: true  },
     { key: 'grammar',       label: 'Grammar',        anchor: 'grammar',       exs: false },
     { key: 'grammarExs',    label: 'Grammar Exam',   anchor: 'grammarexs',    exs: true  },
+    { key: 'irregularVerbsExs', label: 'Irregular Verbs Exam', anchor: 'irregularverbsexs', exs: true },
+    { key: 'extraPractice', label: 'LC1 Extra Practice', link: true },
     { key: 'reading',       label: 'Reading',        anchor: 'reading',       exs: false },
     { key: 'readingExs',    label: 'Reading Exam',   anchor: 'readingexs',    exs: true  },
     { key: 'listening',     label: 'Listening',      anchor: 'listening',     exs: false },
@@ -19,7 +21,11 @@
 
   function makeButton(def) {
     const a = document.createElement('a');
-    if (def.exs) {
+    if (def.link) {
+      a.href = (typeof LC_EXTRA_PRACTICE_HREF !== 'undefined' && LC_EXTRA_PRACTICE_HREF) || 'lc1-extra-practice.html';
+      a.className = 'fancy-button';
+      a.style.cssText = '--button-outline: #000000; --button-color: var(--color-accent-1);';
+    } else if (def.exs) {
       a.href = '#' + def.anchor;
       a.className = 'fancy-button btn-exs';
       a.style.cssText = '--button-outline: #000; --button-color: var(--color-accent-1);';
@@ -56,20 +62,29 @@
   const requested = new Set(LC_NAV);
   const ordered = NAV_CATALOG.filter(def => requested.has(def.key));
 
+  /* Keys que siempre van solas en su propia fila (nunca agrupadas ni junto a otro botón) */
+  const SOLO_KEYS = new Set(['extraPractice', 'writing', 'project']);
+
   /* Group base + its Exs together in a .nav-group div */
   let i = 0;
   while (i < ordered.length) {
     const def = ordered[i];
     const next = ordered[i + 1];
-    const hasExsPair = next && next.exs && next.key === def.key + 'Exs';
+    const hasExsPair = !def.link && next && next.exs && next.key === def.key + 'Exs';
 
-    if (!def.exs && hasExsPair) {
+    if (!def.exs && !def.link && hasExsPair && !SOLO_KEYS.has(def.key)) {
       const group = document.createElement('div');
       group.className = 'nav-group';
       group.appendChild(makeButton(def));
       group.appendChild(makeButton(next));
       navContainer.appendChild(group);
       i += 2;
+    } else if (SOLO_KEYS.has(def.key)) {
+      const solo = document.createElement('div');
+      solo.className = 'nav-solo';
+      solo.appendChild(makeButton(def));
+      navContainer.appendChild(solo);
+      i += 1;
     } else {
       navContainer.appendChild(makeButton(def));
       i += 1;
