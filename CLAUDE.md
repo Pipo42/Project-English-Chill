@@ -16,7 +16,7 @@
 - `assets/images/` — `E&C Logo.svg` (logo sitio), `Separator-2.svg`, favicon PNG (`ChatGPT-Image-4-may-2025-11_07_11.png`). El resto de assets en esta carpeta (Dotted-Lines, EC-Logo, Quill, quill-cursor) son restos del sitio WordPress anterior, sin uso — no referenciarlos en páginas nuevas.
 - `index.html` — home (Choose your level).
 - `1st/2nd/3rd/4th-eso.html` — páginas de nivel, cada una con `.button-grid` listando sus LC pages. 2nd, 3rd y 4th ya tienen contenido; 1st sigue "Coming soon" (no hay contenido migrable en el XML de WordPress para 1st ESO).
-- `2nd-eso/`: `lc0`, `lc1`, `lc1-extra-practice`, `lc2`, `lc4`, `final-review`. No tiene LC3: en el WordPress original esa página solo remitía a un libro de lectura explicado en clase, sin gramática ni ejercicios migrables.
+- `2nd-eso/`: `lc0`, `lc1`, `lc2`, `lc4`, `final-review`, y `lc1/extra-practice.html` (cuelga de la URL de `lc1` para que el botón back estructural funcione sin caso especial — ver Navegación). No tiene LC3: en el WordPress original esa página solo remitía a un libro de lectura explicado en clase, sin gramática ni ejercicios migrables.
 - `3rd-eso/`: `lc1`, `lc2`, `lc4`, `lc5`. `lc5.html` es la referencia de estructura más completa (puzzles + tablas + tracker). No tiene LC3 por el mismo motivo que 2nd ESO (solo libro de lectura).
 - `4th-eso/`: `lc5` (único LC con contenido migrable en el XML de WordPress para este nivel).
 - `puzzle-builder-demo.html`, `sentence-builder-demo.html` — páginas sueltas de demo/prueba de componentes, no forman parte de la navegación del sitio.
@@ -41,7 +41,8 @@
 - `NAV_CATALOG` define las claves válidas para `LC_NAV`: `vocabulary(Exs)`, `grammar(Exs)`, `irregularVerbsExs`, `extraPractice`, `reading(Exs)`, `listening(Exs)`, `writing(Exs)`, `project(Exs)`. Para añadir una sección nueva (ej. otro bloque de ejercicios temático), extender este catálogo en vez de usar una clave no registrada.
 - Botones base+Exs consecutivos (ej. `grammar`+`grammarExs`) se agrupan automáticamente en un `.nav-group` (misma fila, pegados).
 - `SOLO_KEYS` (`extraPractice`, `writing`, `project`) fuerza que ese botón ocupe su propia fila completa (`.nav-solo`, `flex-basis: 100%`), nunca agrupado ni compartiendo fila con otro.
-- `extraPractice` es un botón especial (`link: true`): no apunta a un ancla `#...` sino a una URL fija (por defecto `lc1-extra-practice.html`, o `LC_EXTRA_PRACTICE_HREF` si la página la define). Úsalo para enlazar una página aparte de refuerzo/práctica extra desde dentro de una LC.
+- `extraPractice` es un botón especial (`link: true`): no apunta a un ancla `#...` sino a una URL fija (por defecto `lc1/extra-practice.html`, o `LC_EXTRA_PRACTICE_HREF` si la página la define). Úsalo para enlazar una página aparte de refuerzo/práctica extra desde dentro de una LC.
+- **Botón back — estructural, no historial.** Por defecto (sin `LC_BACK` definido), `nav.js` calcula la URL del back subiendo un nivel de carpeta y añadiendo `.html` (ej. `2nd-eso/lc1.html` → `../2nd-eso.html`; `2nd-eso/lc1/extra-practice.html` → `../lc1.html`). No usa `history.back()`: así el back siempre lleva al mismo sitio pase lo que pase por el historial del navegador. Una página solo necesita declarar `LC_BACK` a mano si su URL no sigue esa convención (carpeta padre = nombre del nivel/LC).
 
 ## Botones (`style.css` + `nav.js`)
 - Clase base `.fancy-button`: fondo negro (`--button-outline: #000`), `.button_top` elevado con `translateY(-0.35em)`, sube a `-0.5em` en hover, baja a `0` en active. Color de relleno: `--button-color: var(--color-accent-1)` (azul-gris `#99aebb`).

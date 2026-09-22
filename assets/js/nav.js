@@ -22,7 +22,7 @@
   function makeButton(def) {
     const a = document.createElement('a');
     if (def.link) {
-      a.href = (typeof LC_EXTRA_PRACTICE_HREF !== 'undefined' && LC_EXTRA_PRACTICE_HREF) || 'lc1-extra-practice.html';
+      a.href = (typeof LC_EXTRA_PRACTICE_HREF !== 'undefined' && LC_EXTRA_PRACTICE_HREF) || 'lc1/extra-practice.html';
       a.className = 'fancy-button';
       a.style.cssText = '--button-outline: #000000; --button-color: var(--color-accent-1);';
     } else if (def.exs) {
@@ -38,20 +38,29 @@
     return a;
   }
 
-  /* ── Back button ── */
+  /* ── Back button ──
+     Por defecto, "back" es estructural: sube un nivel de carpeta en la URL
+     actual y añade ".html" (quita el último segmento de path, y el
+     penúltimo pasa de carpeta a archivo — ej. 2nd-eso/lc1.html → 2nd-eso.html),
+     no depende del historial del navegador. Una página solo necesita
+     definir LC_BACK a mano cuando su URL no sigue esa regla (ej.
+     lc1/extra-practice.html, que cuelga de la carpeta de su LC padre en
+     vez de estar un nivel por debajo de ella). */
+  function defaultBackHref() {
+    var segments = window.location.pathname.replace(/\/+$/, '').split('/');
+    segments.pop(); /* quita el archivo actual */
+    var parent = segments.pop(); /* carpeta contenedora (ej. "2nd-eso") */
+    if (!parent) return '../index.html';
+    return '../' + parent + '.html';
+  }
+
   const backRow = document.querySelector('.back-row');
   if (backRow) {
     const backBtn = document.createElement('a');
-    backBtn.href = typeof LC_BACK !== 'undefined' ? LC_BACK : '#';
+    backBtn.href = typeof LC_BACK !== 'undefined' ? LC_BACK : defaultBackHref();
     backBtn.className = 'fancy-button';
     backBtn.style.cssText = '--button-color: var(--color-accent-1); --button-outline: #000000;';
     backBtn.innerHTML = '<span class="button_top"><span class="button-text">←</span></span>';
-    if (typeof LC_BACK === 'undefined') {
-      backBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        history.back();
-      });
-    }
     backRow.appendChild(backBtn);
   }
 
